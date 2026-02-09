@@ -1,0 +1,1532 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z8203 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=1489&amp;RoadNo=Z8203&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=1489&amp;RoadNo=Z8203&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=1489&amp;RoadNo=Z8203&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=1489&amp;RoadNo=Z8203&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=1489&amp;RoadNo=Z8203&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=1489&amp;RoadNo=Z8203&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Road start from R820 at Sayedpur" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road start from R820 at Sayedpur
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6660833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3061667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6660833&amp;Longitued=90.3061667&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Road+start+from+R820+at+Sayedpur&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6119722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3177216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6119722&amp;Longitued=90.3177216&amp;LRP=LRP006a++++&amp;TYPE=Others&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=6%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start of Earthen road" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.647
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Earthen road
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6092222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3184993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6092222&amp;Longitued=90.3184993&amp;LRP=LRP006b++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+of+Earthen+road&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=6%2E647&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP006b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge Gap" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.91
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge Gap
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6070556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.318166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6070556&amp;Longitued=90.318166&amp;LRP=LRP006c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+Gap&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=6%2E91&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP006c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6028889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3178882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6028889&amp;Longitued=90.3178882&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=7%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.564
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6011667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3178327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6011667&amp;Longitued=90.3178327&amp;LRP=LRP007a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E564&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="N8" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;N8
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5986108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3173327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5986108&amp;Longitued=90.3173327&amp;LRP=LRP007b++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=N8&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=7%2E85&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP007b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.034
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5968886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.317416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5968886&amp;Longitued=90.317416&amp;LRP=LRP007c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E034&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP007c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.066
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5967219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3174438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5967219&amp;Longitued=90.3174438&amp;LRP=LRP007d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E066&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP007d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5942219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3174716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5942219&amp;Longitued=90.3174716&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=8%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Keraniganj" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.039
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.588083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3186104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.588083&amp;Longitued=90.3186104&amp;LRP=LRP008a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E039&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP008a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.069
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5878052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3186382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5878052&amp;Longitued=90.3186382&amp;LRP=LRP008b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E069&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP008b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5852219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3191938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5852219&amp;Longitued=90.3191938&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=9%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.597
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5831938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.319666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5831938&amp;Longitued=90.319666&amp;LRP=LRP009a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E597&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.628
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5829438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3197216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5829438&amp;Longitued=90.3197216&amp;LRP=LRP009b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E628&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP009b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5773882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3217771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5773882&amp;Longitued=90.3217771&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=10&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.418
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.576166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3219438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.576166&amp;Longitued=90.3219438&amp;LRP=LRP010a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E418&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.445
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5759438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3219716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5759438&amp;Longitued=90.3219716&amp;LRP=LRP010b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E445&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5690827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3240271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5690827&amp;Longitued=90.3240271&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=11%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.345
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5682216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3243049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5682216&amp;Longitued=90.3243049&amp;LRP=LRP011a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E345&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP011a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.38
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.567916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3244438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.567916&amp;Longitued=90.3244438&amp;LRP=LRP011b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E38&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP011b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.782
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5646111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3259438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5646111&amp;Longitued=90.3259438&amp;LRP=LRP011c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E782&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP011c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.807
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5644167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3260271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5644167&amp;Longitued=90.3260271&amp;LRP=LRP011d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E807&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP011d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5598611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3273882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5598611&amp;Longitued=90.3273882&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=12%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.561
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5579167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3279993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5579167&amp;Longitued=90.3279993&amp;LRP=LRP012a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=12%2E561&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP012a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.59
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5576944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3280827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5576944&amp;Longitued=90.3280827&amp;LRP=LRP012b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=12%2E59&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP012b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5518056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3303049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5518056&amp;Longitued=90.3303049&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=13%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="Z8004" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.616
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z8004
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.548833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3314716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.548833&amp;Longitued=90.3314716&amp;LRP=LRP013a++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=Z8004&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=13%2E616&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP013a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.686
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5493886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3314993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5493886&amp;Longitued=90.3314993&amp;LRP=LRP013b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=13%2E686&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP013b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End of Bituminous road" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.695
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bituminous road
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.548833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3317771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.548833&amp;Longitued=90.3317771&amp;LRP=LRP013c++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+of+Bituminous+road&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=13%2E695&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP013c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.022
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5461663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3335274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5461663&amp;Longitued=90.3335274&amp;LRP=LRP013d++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=14%2E022&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP013d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.544833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3348052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.544833&amp;Longitued=90.3348052&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=14%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start of Earthen road" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.504
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Earthen road
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5427219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3354997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5427219&amp;Longitued=90.3354997&amp;LRP=LRP014a++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+of+Earthen+road&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=14%2E504&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP014a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5366108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3378886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5366108&amp;Longitued=90.3378886&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=15%2E3&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End of the road as the Portion of the road has Completed" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.905
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of the road as the Portion of the road has Completed
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.5318882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3395552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.5318882&amp;Longitued=90.3395552&amp;LRP=LRP015a++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+of+the+road+as+the+Portion+of+the+road+has+Completed&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=15%2E905&amp;RoadName=&amp;Division=Munshiganj&amp;SubDivision=Sreenagar" target="_blank" onclick="ShowPop(this.href,'LRP015a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Road end at Nagerhat Intersecting R812" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.894
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road end at Nagerhat Intersecting R812
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,2829 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z5456 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=866&amp;RoadNo=Z5456&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=866&amp;RoadNo=Z5456&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=866&amp;RoadNo=Z5456&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=866&amp;RoadNo=Z5456&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=866&amp;RoadNo=Z5456&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=866&amp;RoadNo=Z5456&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Road start from R 545 at Mohadebpur bus stand more infront of three fish island Naogaon." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road start from R 545 at Mohadebpur bus stand more infront of three fish island Naogaon.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9172771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7517778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9172771&amp;Longitued=88.7517778&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Road+start+from+R+545+at+Mohadebpur+bus+stand+more+infront+of+three+fish+island+Naogaon%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Cross drain" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Cross drain
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9173049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7516667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9173049&amp;Longitued=88.7516667&amp;LRP=LRPSa++++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Cross+drain&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=0%2E01&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="Bok Chottor, Z 5463 to Manda ferry ghat" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSb      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.235
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bok Chottor, Z 5463 to Manda ferry ghat
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9168327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7495274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9168327&amp;Longitued=88.7495274&amp;LRP=LRPSb++++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=Bok+Chottor%2C+Z+5463+to+Manda+ferry+ghat&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=0%2E235&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSb',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge Start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSc      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.52
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge Start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9160278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7469441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9160278&amp;Longitued=88.7469441&amp;LRP=LRPSc++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+Start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E52&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSc',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSd      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.658
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9153056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7457774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9153056&amp;Longitued=88.7457774&amp;LRP=LRPSd++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E658&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSd',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9152222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7427497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9152222&amp;Longitued=88.7427497&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=1&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.742
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.919916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7380552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.919916&amp;Longitued=88.7380552&amp;LRP=LRP001a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E742&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.905
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9204993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7364441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9204993&amp;Longitued=88.7364441&amp;LRP=LRP001b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E905&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Saraigachhi 28 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.05
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Saraigachhi 28 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9209993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.735083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9209993&amp;Longitued=88.735083&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Saraigachhi+28+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=2%2E05&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="2v Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.393
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2v Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9215271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7318882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9215271&amp;Longitued=88.7318882&amp;LRP=LRP002a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=2v+Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E393&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.05
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9220549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7258327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9220549&amp;Longitued=88.7258327&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=3%2E05&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="R.C.c Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.08
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R.C.c Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.922166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7250827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.922166&amp;Longitued=88.7250827&amp;LRP=LRP003a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=R%2EC%2Ec+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E08&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="R.C.c Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.12
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R.C.c Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9172216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7248327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9172216&amp;Longitued=88.7248327&amp;LRP=LRP003b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=R%2EC%2Ec+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E12&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.932
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9242771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.717166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9242771&amp;Longitued=88.717166&amp;LRP=LRP003c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=3%2E932&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Sapaher 42 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.03
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Sapaher 42 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9244993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7160556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9244993&amp;Longitued=88.7160556&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Sapaher+42+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=4%2E03&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.127
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9246382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7151389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9246382&amp;Longitued=88.7151389&amp;LRP=LRP004a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E127&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Kajur bazar more" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.19
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Kajur bazar more
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9248327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.71475&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9248327&amp;Longitued=88.71475&amp;LRP=LRP004b++++&amp;TYPE=Others&amp;DESCRIPRIONS=Kajur+bazar+more&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=4%2E19&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.522
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9257771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7118611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9257771&amp;Longitued=88.7118611&amp;LRP=LRP004c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E522&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.03
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9297771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7081389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9297771&amp;Longitued=88.7081389&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=5%2E03&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.012
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.6027222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7023056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.6027222&amp;Longitued=88.7023056&amp;LRP=LRP005a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E012&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Adda bazar 39 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Adda bazar 39 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9363886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7021667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9363886&amp;Longitued=88.7021667&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Adda+bazar+39+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=6%2E04&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="2v Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.697
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2v Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.941833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.7166389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.941833&amp;Longitued=88.7166389&amp;LRP=LRP006a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=2v+Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E697&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.6118333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6996663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.6118333&amp;Longitued=88.6996663&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=7%2E04&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Porsha 30 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Porsha 30 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9541389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6988886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9541389&amp;Longitued=88.6988886&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Porsha+30+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8%2E04&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9629444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6958886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9629444&amp;Longitued=88.6958886&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=9%2E04&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Sapaher 36 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.13
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Sapaher 36 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9549167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6921663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9549167&amp;Longitued=88.6921663&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Sapaher+36+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10%2E13&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Brick Machinary Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.255
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Brick Machinary Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9726938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6916941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9726938&amp;Longitued=88.6916941&amp;LRP=LRP010a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Brick+Machinary+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E255&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.13
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9798327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6881386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9798327&amp;Longitued=88.6881386&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=11%2E13&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Saraigachhi 18 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.09
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Saraigachhi 18 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.987833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.684083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.987833&amp;Longitued=88.684083&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Saraigachhi+18+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12%2E09&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.59
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9086389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6824716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9086389&amp;Longitued=88.6824716&amp;LRP=LRP012a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=12%2E59&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.09
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            24.9962219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6808882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=24.9962219&amp;Longitued=88.6808882&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=13%2E09&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Parsha 24 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.09
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Parsha 24 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.00275&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6739993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.00275&amp;Longitued=88.6739993&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Parsha+24+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=14%2E09&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.058
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0081944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6667216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0081944&amp;Longitued=88.6667216&amp;LRP=LRP014a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=15%2E058&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.09
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0083611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6664444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0083611&amp;Longitued=88.6664444&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=15%2E09&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadRight.jpg" alt="Z 5464, Patnitala road" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.145
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z 5464, Patnitala road
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0086111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6661944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0086111&amp;Longitued=88.6661944&amp;LRP=LRP015a++++&amp;TYPE=Side+Road%2C+Right&amp;DESCRIPRIONS=Z+5464%2C+Patnitala+road&amp;ICON=roadSign%2FsideRoadRight%2Ejpg&amp;RoadChainage=15%2E145&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.543
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0101667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6626111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0101667&amp;Longitued=88.6626111&amp;LRP=LRP015b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=15%2E543&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.841
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0105278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6595556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0105278&amp;Longitued=88.6595556&amp;LRP=LRP015c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=15%2E841&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Adda Bazar 29 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.17
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Adda Bazar 29 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.01225&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6571111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.01225&amp;Longitued=88.6571111&amp;LRP=LRP016+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Adda+Bazar+29+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=16%2E17&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Brick machinary Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.124
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Brick machinary Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0197493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6494163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0197493&amp;Longitued=88.6494163&amp;LRP=LRP016a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Brick+machinary+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=17%2E124&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.17
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0170271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6487219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0170271&amp;Longitued=88.6487219&amp;LRP=LRP017+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=17%2E17&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP017',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Sapaher 28 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.19
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Sapaher 28 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0193604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.639083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0193604&amp;Longitued=88.639083&amp;LRP=LRP018+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Sapaher+28+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=18%2E19&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.778
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.020666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6335274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.020666&amp;Longitued=88.6335274&amp;LRP=LRP018a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=18%2E778&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.19
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0214438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6300827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0214438&amp;Longitued=88.6300827&amp;LRP=LRP019+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=19%2E19&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Matindor Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.84
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Matindor Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0238049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6234716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0238049&amp;Longitued=88.6234716&amp;LRP=LRP019a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Matindor+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=19%2E84&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Matindor Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.875
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Matindor Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0239993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6231104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0239993&amp;Longitued=88.6231104&amp;LRP=LRP019b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Matindor+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=19%2E875&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="2 v Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.132
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2 v Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0241938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6208882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0241938&amp;Longitued=88.6208882&amp;LRP=LRP019c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=2+v+Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=20%2E132&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Saraigachhi 10 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.19
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Saraigachhi 10 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0241938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6201382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0241938&amp;Longitued=88.6201382&amp;LRP=LRP020+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Saraigachhi+10+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=20%2E19&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.902
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0248049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6133889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0248049&amp;Longitued=88.6133889&amp;LRP=LRP020a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=20%2E902&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.19
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0250271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6106389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0250271&amp;Longitued=88.6106389&amp;LRP=LRP021+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=21%2E19&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP021',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Porsha 16 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;22.18
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Porsha 16 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0245827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.6008333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0245827&amp;Longitued=88.6008333&amp;LRP=LRP022+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Porsha+16+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=22%2E18&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP022',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP023     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.18
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0237493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5907774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0237493&amp;Longitued=88.5907774&amp;LRP=LRP023+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=23%2E18&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP023',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Adda bazar 21 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.18
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Adda bazar 21 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0238327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5809438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0238327&amp;Longitued=88.5809438&amp;LRP=LRP024+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Adda+bazar+21+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=24%2E18&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP024',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.69
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.023666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.575916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.023666&amp;Longitued=88.575916&amp;LRP=LRP024a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=24%2E69&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP024a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.885
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0231938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5741382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0231938&amp;Longitued=88.5741382&amp;LRP=LRP024b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=24%2E885&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP024b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.18
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0221938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.571416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0221938&amp;Longitued=88.571416&amp;LRP=LRP025+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=25%2E18&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP025',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.344
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0214716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.570166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0214716&amp;Longitued=88.570166&amp;LRP=LRP025a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=25%2E344&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP025a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0208327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.568916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0208327&amp;Longitued=88.568916&amp;LRP=LRP025b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=25%2E85&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP025b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.004
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.019416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5641944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.019416&amp;Longitued=88.5641944&amp;LRP=LRP025c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=26%2E004&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP025c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Sapaher 20 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP026     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.17
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Sapaher 20 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.019166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5625&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.019166&amp;Longitued=88.5625&amp;LRP=LRP026+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Sapaher+20+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=26%2E17&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP026',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP026a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.374
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0190549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5606111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0190549&amp;Longitued=88.5606111&amp;LRP=LRP026a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=26%2E374&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP026a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP026b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.561
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0188327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5586667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0188327&amp;Longitued=88.5586667&amp;LRP=LRP026b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=26%2E561&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP026b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP027     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;27.17
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0179438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5525&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0179438&amp;Longitued=88.5525&amp;LRP=LRP027+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=27%2E17&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP027',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP027a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;27.963
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0173049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5449719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0173049&amp;Longitued=88.5449719&amp;LRP=LRP027a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=27%2E963&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP027a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP028     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;28.17
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0172493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5426663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0172493&amp;Longitued=88.5426663&amp;LRP=LRP028+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=28%2E17&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP028',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP028a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;29.023
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0171938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5344441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0171938&amp;Longitued=88.5344441&amp;LRP=LRP028a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=29%2E023&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP028a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Porsha 10 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP029     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;29.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Porsha 10 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0172216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5307216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0172216&amp;Longitued=88.5307216&amp;LRP=LRP029+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Porsha+10+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=29%2E4&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP029',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="R 547" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP029a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;29.64
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R 547
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.017416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5281938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.017416&amp;Longitued=88.5281938&amp;LRP=LRP029a++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=R+547&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=29%2E64&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP029a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/roundAbout.jpg" alt="Saraigachi more" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP029b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;29.865
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Round About
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Saraigachi more
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0173604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5278882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0173604&amp;Longitued=88.5278882&amp;LRP=LRP029b++++&amp;TYPE=Round+About&amp;DESCRIPRIONS=Saraigachi+more&amp;ICON=roadSign%2FroundAbout%2Ejpg&amp;RoadChainage=29%2E865&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP029b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP029c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;29.964
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0173327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5249993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0173327&amp;Longitued=88.5249993&amp;LRP=LRP029c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=29%2E964&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP029c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP030     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;30.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0172493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5208882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0172493&amp;Longitued=88.5208882&amp;LRP=LRP030+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=30%2E4&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP030',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP030a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;30.588
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0169716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5189716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0169716&amp;Longitued=88.5189716&amp;LRP=LRP030a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=30%2E588&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP030a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP030b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;31.627
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0173604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5087222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0173604&amp;Longitued=88.5087222&amp;LRP=LRP030b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=31%2E627&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP030b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Nitpur 7 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP031     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;31.67
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Nitpur 7 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0173604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.5084444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0173604&amp;Longitued=88.5084444&amp;LRP=LRP031+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Nitpur+7+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=31%2E67&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP031',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="R.C.C Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP031a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;32.265
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R.C.C Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0188327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.503&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0188327&amp;Longitued=88.503&amp;LRP=LRP031a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=R%2EC%2EC+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=32%2E265&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP031a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP032     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;32.67
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0204438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4989719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0204438&amp;Longitued=88.4989719&amp;LRP=LRP032+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=32%2E67&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP032',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP032a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;32.792
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0208604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4981663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0208604&amp;Longitued=88.4981663&amp;LRP=LRP032a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=32%2E792&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP032a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Z 6852 to Niamatpur" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP032b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;32.97
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z 6852 to Niamatpur
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0215827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4968608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0215827&amp;Longitued=88.4968608&amp;LRP=LRP032b++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Z+6852+to+Niamatpur&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=32%2E97&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP032b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP033     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;33.67
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.021916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4895552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.021916&amp;Longitued=88.4895552&amp;LRP=LRP033+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=33%2E67&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP033',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP034     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;34.67
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0213604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4795827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0213604&amp;Longitued=88.4795827&amp;LRP=LRP034+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=34%2E67&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP034',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="6 V Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP034a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.355
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6 V Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0214438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4735271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0214438&amp;Longitued=88.4735271&amp;LRP=LRP034a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=6+V+Box+Culvert&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=35%2E355&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP034a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP035     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.67
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0214438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4702216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0214438&amp;Longitued=88.4702216&amp;LRP=LRP035+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=35%2E67&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP035',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Nitpur 1 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP036     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.675
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Nitpur 1 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0224993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4603889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0224993&amp;Longitued=88.4603889&amp;LRP=LRP036+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Nitpur+1+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=36%2E675&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP036',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP037     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;37.675
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0241938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4514722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0241938&amp;Longitued=88.4514722&amp;LRP=LRP037+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=37%2E675&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP037',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Cross Drain" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP037a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.142
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Cross Drain
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0263327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4471941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0263327&amp;Longitued=88.4471941&amp;LRP=LRP037a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Cross+Drain&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=38%2E142&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP037a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Cross Drain" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP037b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.252
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Cross Drain
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0263604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4462774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0263604&amp;Longitued=88.4462774&amp;LRP=LRP037b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Cross+Drain&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=38%2E252&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP037b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Road end at B.G.B Camp more itpur, Porsha, Naogaon." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.275
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road end at B.G.B Camp more itpur, Porsha, Naogaon.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.0260549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.4460274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.0260549&amp;Longitued=88.4460274&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Road+end+at+B%2EG%2EB+Camp+more+itpur%2C+Porsha%2C+Naogaon%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=38%2E275&amp;RoadName=&amp;Division=Naogaon+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patnitala+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

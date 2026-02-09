@@ -1,0 +1,1901 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z7024 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=1024&amp;RoadNo=Z7024&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=1024&amp;RoadNo=Z7024&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=1024&amp;RoadNo=Z7024&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=1024&amp;RoadNo=Z7024&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=1024&amp;RoadNo=Z7024&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=1024&amp;RoadNo=Z7024&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start at Zia Nagar bazar more in Front Of Jatri chowni and intersection at Z 7460 and Z 7024 Gopalpur, Jhenaidah." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start at Zia Nagar bazar more in Front Of Jatri chowni and intersection at Z 7460 and Z 7024 Gopalpur, Jhenaidah.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4898052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0371386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4898052&amp;Longitued=89.0371386&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+at+Zia+Nagar+bazar+more+in+Front+Of+Jatri+chowni+and+intersection+at+Z+7460+and+Z+7024+Gopalpur%2C+Jhenaidah%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.748
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4841108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0341108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4841108&amp;Longitued=89.0341108&amp;LRP=LRPSa++++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=0%2E748&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information Not Clear" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.085
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information Not Clear
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4837774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.030916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4837774&amp;Longitued=89.030916&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information+Not+Clear&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=1%2E085&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge Start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.197
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge Start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4836663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0301382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4836663&amp;Longitued=89.0301382&amp;LRP=LRP001a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+Start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=1%2E197&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge End" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.232
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge End
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4833608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.029916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4833608&amp;Longitued=89.029916&amp;LRP=LRP001b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+End&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=1%2E232&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Z 7489 toChandpara" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.664
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z 7489 toChandpara
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4815271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.026666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4815271&amp;Longitued=89.026666&amp;LRP=LRP001c++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Z+7489+toChandpara&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=1%2E664&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Talsar Bazar 1 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.985
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Talsar Bazar 1 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4820827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0242493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4820827&amp;Longitued=89.0242493&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Talsar+Bazar+1+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=1%2E985&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadRight.jpg" alt="Z 7489 to Khalishpur" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.56
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z 7489 to Khalishpur
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4803327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0198604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4803327&amp;Longitued=89.0198604&amp;LRP=LRP002a++++&amp;TYPE=Side+Road%2C+Right&amp;DESCRIPRIONS=Z+7489+to+Khalishpur&amp;ICON=roadSign%2FsideRoadRight%2Ejpg&amp;RoadChainage=2%2E56&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.985
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4763604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0177771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4763604&amp;Longitued=89.0177771&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=2%2E985&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.412
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4710271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0149722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4710271&amp;Longitued=89.0149722&amp;LRP=LRP003a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=3%2E412&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Fulbari 3 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.155
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Fulbari 3 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4671938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0129444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4671938&amp;Longitued=89.0129444&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Fulbari+3+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=4%2E155&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.713
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4626111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0114444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4626111&amp;Longitued=89.0114444&amp;LRP=LRP004a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E713&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.941
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4609167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.01125&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4609167&amp;Longitued=89.01125&amp;LRP=LRP004b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E941&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.155
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4588611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0116944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4588611&amp;Longitued=89.0116944&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=5%2E155&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.17
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4500556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0114167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4500556&amp;Longitued=89.0114167&amp;LRP=LRP005a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E17&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.175
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4499719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0114167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4499719&amp;Longitued=89.0114167&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=6%2E175&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.655
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4458052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0113056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4458052&amp;Longitued=89.0113056&amp;LRP=LRP006a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E655&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.875
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4444997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0113611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4444997&amp;Longitued=89.0113611&amp;LRP=LRP006b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E875&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Azampur 11 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.245
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Azampur 11 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4407774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0105278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4407774&amp;Longitued=89.0105278&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Azampur+11+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=7%2E245&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.893
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4350274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0104167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4350274&amp;Longitued=89.0104167&amp;LRP=LRP007a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E893&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Azampur 10 Km kotchandpur 13 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.245
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Azampur 10 Km kotchandpur 13 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4320271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.01075&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4320271&amp;Longitued=89.01075&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Azampur+10+Km+kotchandpur+13+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8%2E245&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4312493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0107222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4312493&amp;Longitued=89.0107222&amp;LRP=LRP008a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=8%2E32&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Info not clear" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info not clear
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4218882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0107222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4218882&amp;Longitued=89.0107222&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+not+clear&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=9%2E32&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.474
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4217771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0105833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4217771&amp;Longitued=89.0105833&amp;LRP=LRP009a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E474&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/railCrossing.jpg" alt="Ishwardi Khulna rail" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.127
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Rail Road Crossing
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Ishwardi Khulna rail
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4158889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0101667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4158889&amp;Longitued=89.0101667&amp;LRP=LRP009b++++&amp;TYPE=Rail+Road+Crossing&amp;DESCRIPRIONS=Ishwardi+Khulna+rail&amp;ICON=roadSign%2FrailCrossing%2Ejpg&amp;RoadChainage=10%2E127&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadRight.jpg" alt="R 748 to Jibonnagar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.404
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R 748 to Jibonnagar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.41225&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0034722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.41225&amp;Longitued=89.0034722&amp;LRP=LRP009d++++&amp;TYPE=Side+Road%2C+Right&amp;DESCRIPRIONS=R+748+to+Jibonnagar&amp;ICON=roadSign%2FsideRoadRight%2Ejpg&amp;RoadChainage=10%2E404&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="R 748 to Kaliganj" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.404
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R 748 to Kaliganj
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4135556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0102222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4135556&amp;Longitued=89.0102222&amp;LRP=LRP009c++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=R+748+to+Kaliganj&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=10%2E404&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Info not clear" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.406
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info not clear
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.41225&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0034722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.41225&amp;Longitued=89.0034722&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+not+clear&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10%2E406&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.52
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4118611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0043889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4118611&amp;Longitued=89.0043889&amp;LRP=LRP010a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E52&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="R.c.C Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.072
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R.c.C Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.40775&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0058889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.40775&amp;Longitued=89.0058889&amp;LRP=LRP010b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=R%2Ec%2EC+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E072&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="R C C Brideg end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.12
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R C C Brideg end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4072222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0059444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4072222&amp;Longitued=89.0059444&amp;LRP=LRP010c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=R+C+C+Brideg+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E12&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.405
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.4047778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0069167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.4047778&amp;Longitued=89.0069167&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=11%2E405&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.405
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3965274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0071667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3965274&amp;Longitued=89.0071667&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12%2E405&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.953
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3908608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0085278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3908608&amp;Longitued=89.0085278&amp;LRP=LRP012a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=12%2E953&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.161
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3891386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0087778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3891386&amp;Longitued=89.0087778&amp;LRP=LRP012b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=13%2E161&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.405
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3879997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0089444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3879997&amp;Longitued=89.0089444&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=13%2E405&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.806
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3837219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0098611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3837219&amp;Longitued=89.0098611&amp;LRP=LRP013a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=13%2E806&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Azampur 3 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.52
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Azampur 3 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3778327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0082222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3778327&amp;Longitued=89.0082222&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Azampur+3+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=14%2E52&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.52
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3695549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0041389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3695549&amp;Longitued=89.0041389&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=15%2E52&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.952
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3657778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0031944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3657778&amp;Longitued=89.0031944&amp;LRP=LRP015a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=15%2E952&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Moheshpur 9 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.52
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Moheshpur 9 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3649444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9979441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3649444&amp;Longitued=88.9979441&amp;LRP=LRP016+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Moheshpur+9+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=16%2E52&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.057
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3628056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.993333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3628056&amp;Longitued=88.993333&amp;LRP=LRP016a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=17%2E057&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.52
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3606389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9891941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3606389&amp;Longitued=88.9891941&amp;LRP=LRP017+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=17%2E52&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP017',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.917
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3591111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9857774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3591111&amp;Longitued=88.9857774&amp;LRP=LRP017a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=17%2E917&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP017a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostbroken.gif" alt="Km Post Broken" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.55
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Broken
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3577778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9801382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3577778&amp;Longitued=88.9801382&amp;LRP=LRP018+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Broken&amp;ICON=roadSign%2FkmPostbroken%2Egif&amp;RoadChainage=18%2E55&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.835
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3568889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9775549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3568889&amp;Longitued=88.9775549&amp;LRP=LRP018a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=18%2E835&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.55
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3546667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9712771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3546667&amp;Longitued=88.9712771&amp;LRP=LRP019+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=19%2E55&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.55
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.35725&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9621389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.35725&amp;Longitued=88.9621389&amp;LRP=LRP020+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=20%2E55&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Moheshpur 4 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.57
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Moheshpur 4 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3548056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9526111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3548056&amp;Longitued=88.9526111&amp;LRP=LRP021+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Moheshpur+4+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=21%2E57&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP021',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information Not Clear" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;22.59
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information Not Clear
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3553056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9442774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3553056&amp;Longitued=88.9442774&amp;LRP=LRP022+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information+Not+Clear&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=22%2E59&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP022',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Mohespur 2 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP023     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.61
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Mohespur 2 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3560556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9343886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3560556&amp;Longitued=88.9343886&amp;LRP=LRP023+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Mohespur+2+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=23%2E61&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP023',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.65
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3557222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9244716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3557222&amp;Longitued=88.9244716&amp;LRP=LRP024+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=24%2E65&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP024',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.65
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3595833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.920166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3595833&amp;Longitued=88.920166&amp;LRP=LRP025+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=25%2E65&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP025',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Intersection with Z-7023 at food Godoun, Mohespur." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.83
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Intersection with Z-7023 at food Godoun, Mohespur.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.3608056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9196938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.3608056&amp;Longitued=88.9196938&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Intersection+with+Z%2D7023+at+food+Godoun%2C+Mohespur%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=25%2E83&amp;RoadName=&amp;Division=Jhenaidah+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhenaidah+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

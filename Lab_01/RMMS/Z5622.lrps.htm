@@ -1,0 +1,2452 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z5622 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=1359&amp;RoadNo=Z5622&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=1359&amp;RoadNo=Z5622&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=1359&amp;RoadNo=Z5622&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=1359&amp;RoadNo=Z5622&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=1359&amp;RoadNo=Z5622&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=1359&amp;RoadNo=Z5622&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start at traffic Island Shapla Chattare Kurigram and Intersection with N506." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start at traffic Island Shapla Chattare Kurigram and Intersection with N506.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8129722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6431386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8129722&amp;Longitued=89.6431386&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+at+traffic+Island+Shapla+Chattare+Kurigram+and+Intersection+with+N506%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/monument.jpg" alt="Shahid Mukti Joddha sriti shoudha" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.182
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Monument
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Shahid Mukti Joddha sriti shoudha
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8132222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6448608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8132222&amp;Longitued=89.6448608&amp;LRP=LRPSa++++++&amp;TYPE=Monument&amp;DESCRIPRIONS=Shahid+Mukti+Joddha+sriti+shoudha&amp;ICON=roadSign%2Fmonument%2Ejpg&amp;RoadChainage=0%2E182&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 38 Km Nageswari 21 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.88
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 38 Km Nageswari 21 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8150833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6511111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8150833&amp;Longitued=89.6511111&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+38+Km+Nageswari+21+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=0%2E88&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.33
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8186104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6530833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8186104&amp;Longitued=89.6530833&amp;LRP=LRP001a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E33&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP001a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/turnoffright.jpg" alt="Turn off Right" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.88
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Turn off, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Turn off Right
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8227771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6561111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8227771&amp;Longitued=89.6561111&amp;LRP=LRP001b++++&amp;TYPE=Turn+off%2C+Right&amp;DESCRIPRIONS=Turn+off+Right&amp;ICON=roadSign%2Fturnoffright%2Ejpg&amp;RoadChainage=1%2E88&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP001b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 37 Km Nageswari 20 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.93
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 37 Km Nageswari 20 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8228327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6564167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8228327&amp;Longitued=89.6564167&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+37+Km+Nageswari+20+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=1%2E93&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 36 Km, Sonahat Bridge 41 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.93
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 36 Km, Sonahat Bridge 41 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8177771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6631111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8177771&amp;Longitued=89.6631111&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+36+Km%2C+Sonahat+Bridge+41+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=2%2E93&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge (Dorolla)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.19
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge (Dorolla)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8185549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6655278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8185549&amp;Longitued=89.6655278&amp;LRP=LRP003a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge+%28Dorolla%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E19&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge (Dorolla)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.838
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge (Dorolla)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8204716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6717493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8204716&amp;Longitued=89.6717493&amp;LRP=LRP003b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge+%28Dorolla%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E838&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP003b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 35 Km,Phulbari 38 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.96
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 35 Km,Phulbari 38 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8207771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6724993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8207771&amp;Longitued=89.6724993&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+35+Km%2CPhulbari+38+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=3%2E96&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Burungamari 34 Km Madarganj 64 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.95
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Burungamari 34 Km Madarganj 64 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8292493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.672666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8292493&amp;Longitued=89.672666&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Burungamari+34+Km+Madarganj+64+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=4%2E95&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Burungamari 33 Km Nageswari 16 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.89
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Burungamari 33 Km Nageswari 16 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8360274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6693049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8360274&amp;Longitued=89.6693049&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Burungamari+33+Km+Nageswari+16+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=5%2E89&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 32 Km Nageswari 15 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.79
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 32 Km Nageswari 15 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8438886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6681104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8438886&amp;Longitued=89.6681104&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+32+Km+Nageswari+15+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=6%2E79&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 31 Km Nageswari 14 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 31 Km Nageswari 14 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8526944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6692216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8526944&amp;Longitued=89.6692216&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+31+Km+Nageswari+14+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=7%2E8&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.78
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8607778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6727216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8607778&amp;Longitued=89.6727216&amp;LRP=LRP008a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=8%2E78&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP008a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 30 Km Nageswari 13 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.79
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 30 Km Nageswari 13 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8608611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6727493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8608611&amp;Longitued=89.6727493&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+30+Km+Nageswari+13+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8%2E79&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 29 Km Nageswari 12 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 29 Km Nageswari 12 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8698327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6745271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8698327&amp;Longitued=89.6745271&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+29+Km+Nageswari+12+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=9%2E8&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8739993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6779993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8739993&amp;Longitued=89.6779993&amp;LRP=LRP010a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E4&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 28 Km Nageswari 11 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 28 Km Nageswari 11 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.877416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6797216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.877416&amp;Longitued=89.6797216&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+28+Km+Nageswari+11+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10%2E8&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.904
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.878166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6800827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.878166&amp;Longitued=89.6800827&amp;LRP=LRP011a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E904&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP011a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.928
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8783604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6801938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8783604&amp;Longitued=89.6801938&amp;LRP=LRP011b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E928&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP011b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8854441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6840552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8854441&amp;Longitued=89.6840552&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=11%2E8&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 26 Km Nageswari 9 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 26 Km Nageswari 9 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8928608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6892774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8928608&amp;Longitued=89.6892774&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+26+Km+Nageswari+9+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12%2E8&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.06
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8947774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6906386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8947774&amp;Longitued=89.6906386&amp;LRP=LRP013a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=13%2E06&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP013a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge (R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.07
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge (R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.8948608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6906941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.8948608&amp;Longitued=89.6906941&amp;LRP=LRP013b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge+%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=13%2E07&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP013b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9006389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6947497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9006389&amp;Longitued=89.6947497&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=13%2E8&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.208
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9036944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6964719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9036944&amp;Longitued=89.6964719&amp;LRP=LRP014a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=14%2E208&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP014a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 24 Km Nageswari 7 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 24 Km Nageswari 7 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9091389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6991108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9091389&amp;Longitued=89.6991108&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+24+Km+Nageswari+7+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=14%2E85&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9179716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6992774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9179716&amp;Longitued=89.6992774&amp;LRP=LRP016+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=15%2E85&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP016',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Masonry culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Masonry culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9224438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6982774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9224438&amp;Longitued=89.6982774&amp;LRP=LRP016a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Masonry+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=16%2E35&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP016a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 22 Km Nageswari 5 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.83
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 22 Km Nageswari 5 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9262216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6964163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9262216&amp;Longitued=89.6964163&amp;LRP=LRP017+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+22+Km+Nageswari+5+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=16%2E83&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP017',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 21 Km Nageswari 4 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 21 Km Nageswari 4 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9343886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6917497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9343886&amp;Longitued=89.6917497&amp;LRP=LRP018+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+21+Km+Nageswari+4+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=17%2E85&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP018',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 20 Km Nageswari 3 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.88
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 20 Km Nageswari 3 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9431386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6934163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9431386&amp;Longitued=89.6934163&amp;LRP=LRP019+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+20+Km+Nageswari+3+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=18%2E88&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP019',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge (R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.49
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge (R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9484997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.695333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9484997&amp;Longitued=89.695333&amp;LRP=LRP019a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge+%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=19%2E49&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP019a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.516
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9487219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6953886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9487219&amp;Longitued=89.6953886&amp;LRP=LRP019b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=19%2E516&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP019b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 19 Km Nageswari 2 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 19 Km Nageswari 2 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9515833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6964163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9515833&amp;Longitued=89.6964163&amp;LRP=LRP020+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+19+Km+Nageswari+2+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=19%2E85&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP020',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="R.C.C culvert start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.578
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R.C.C culvert start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9576944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.696083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9576944&amp;Longitued=89.696083&amp;LRP=LRP020a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=R%2EC%2EC+culvert+start&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=20%2E578&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP020a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="R.C.C culvert end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.59
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R.C.C culvert end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9578056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6959997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9578056&amp;Longitued=89.6959997&amp;LRP=LRP020b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=R%2EC%2EC+culvert+end&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=20%2E59&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP020b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 18 Km Nageswari 1 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.84
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 18 Km Nageswari 1 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.95975&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.694833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.95975&amp;Longitued=89.694833&amp;LRP=LRP021+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+18+Km+Nageswari+1+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=20%2E84&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP021',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Z5616" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.618
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z5616
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9660278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6912219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9660278&amp;Longitued=89.6912219&amp;LRP=LRP021a++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Z5616&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=21%2E618&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP021a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadRight.jpg" alt="Z5624" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.62
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z5624
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9660278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6912219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9660278&amp;Longitued=89.6912219&amp;LRP=LRP021b++++&amp;TYPE=Side+Road%2C+Right&amp;DESCRIPRIONS=Z5624&amp;ICON=roadSign%2FsideRoadRight%2Ejpg&amp;RoadChainage=21%2E62&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP021b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.84
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9679993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6901108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9679993&amp;Longitued=89.6901108&amp;LRP=LRP022+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=21%2E84&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP022',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Z5617 to Phulbari" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;22.227
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z5617 to Phulbari
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.971416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6881386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.971416&amp;Longitued=89.6881386&amp;LRP=LRP022a++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Z5617+to+Phulbari&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=22%2E227&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP022a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 16 Km Madarganj 46 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP023     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;22.88
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 16 Km Madarganj 46 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9759993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6855552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9759993&amp;Longitued=89.6855552&amp;LRP=LRP023+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+16+Km+Madarganj+46+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=22%2E88&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP023',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP023a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.409
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9803049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6832216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9803049&amp;Longitued=89.6832216&amp;LRP=LRP023a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=23%2E409&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP023a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 15 Km Kachakata 39 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.9
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 15 Km Kachakata 39 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9846108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6818604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9846108&amp;Longitued=89.6818604&amp;LRP=LRP024+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+15+Km+Kachakata+39+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=23%2E9&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP024',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge (R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.944
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge (R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9849719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6817493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9849719&amp;Longitued=89.6817493&amp;LRP=LRP024a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge+%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=23%2E944&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP024a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge (R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.966
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge (R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9851386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6816938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9851386&amp;Longitued=89.6816938&amp;LRP=LRP024b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge+%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=23%2E966&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP024b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 14 Km Madarganj 44 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.92
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 14 Km Madarganj 44 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9935274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6807493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9935274&amp;Longitued=89.6807493&amp;LRP=LRP025+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+14+Km+Madarganj+44+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=24%2E92&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP025',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostbroken.gif" alt="Km post Broken" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP026     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.95
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post Broken
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0024444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6822493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0024444&amp;Longitued=89.6822493&amp;LRP=LRP026+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+Broken&amp;ICON=roadSign%2FkmPostbroken%2Egif&amp;RoadChainage=25%2E95&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP026',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 12 Km Madarganj 42 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP027     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.95
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 12 Km Madarganj 42 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0111667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6810827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0111667&amp;Longitued=89.6810827&amp;LRP=LRP027+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+12+Km+Madarganj+42+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=26%2E95&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP027',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 11 Km Kachakata 35 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP028     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;27.95
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 11 Km Kachakata 35 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0196104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6783882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0196104&amp;Longitued=89.6783882&amp;LRP=LRP028+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+11+Km+Kachakata+35+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=27%2E95&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP028',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 10 km,Madarganj 40 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP029     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;28.95
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 10 km,Madarganj 40 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.028166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6797771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.028166&amp;Longitued=89.6797771&amp;LRP=LRP029+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+10+km%2CMadarganj+40+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=28%2E95&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP029',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP030     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;29.95
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.037083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6814993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.037083&amp;Longitued=89.6814993&amp;LRP=LRP030+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=29%2E95&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP030',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge(P.C Girder)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP030a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;30.043
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge(P.C Girder)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0377219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6818049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0377219&amp;Longitued=89.6818049&amp;LRP=LRP030a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge%28P%2EC+Girder%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=30%2E043&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP030a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge(P.C Girder)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP030b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;30.145
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge(P.C Girder)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0386108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6820549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0386108&amp;Longitued=89.6820549&amp;LRP=LRP030b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge%28P%2EC+Girder%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=30%2E145&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP030b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 8 Km Madargang 38   Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP031     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;31.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 8 Km Madargang 38   Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0461108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6846663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0461108&amp;Longitued=89.6846663&amp;LRP=LRP031+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+8+Km+Madargang+38+++Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=31%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP031',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km post broken" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP032     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;32.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post broken
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0544444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6877219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0544444&amp;Longitued=89.6877219&amp;LRP=LRP032+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+broken&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=32%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP032',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 06 Km Madarganj 36 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP033     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;33.03
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 06 Km Madarganj 36 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0621389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6829438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0621389&amp;Longitued=89.6829438&amp;LRP=LRP033+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+06+Km+Madarganj+36+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=33%2E03&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP033',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 05 Km Kachkata 29 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP034     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;33.99
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 05 Km Kachkata 29 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0687771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6769716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0687771&amp;Longitued=89.6769716&amp;LRP=LRP034+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+05+Km+Kachkata+29+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=33%2E99&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP034',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 04 Km Madarganj 34 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP035     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.02
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 04 Km Madarganj 34 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.076166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6704716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.076166&amp;Longitued=89.6704716&amp;LRP=LRP035+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+04+Km+Madarganj+34+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=35%2E02&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP035',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP035a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.93
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0836941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6680549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0836941&amp;Longitued=89.6680549&amp;LRP=LRP035a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=35%2E93&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP035a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP035b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.95
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0840552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6680549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0840552&amp;Longitued=89.6680549&amp;LRP=LRP035b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=35%2E95&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP035b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 03 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP036     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.99
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 03 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0842219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6680827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0842219&amp;Longitued=89.6680827&amp;LRP=LRP036+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+03+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=35%2E99&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP036',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP036a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.821
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0917774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6685827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0917774&amp;Longitued=89.6685827&amp;LRP=LRP036a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=36%2E821&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP036a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 02 Km Madarganj 32 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP037     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.99
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 02 Km Madarganj 32 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0933052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6686938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0933052&amp;Longitued=89.6686938&amp;LRP=LRP037+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+02+Km+Madarganj+32+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=36%2E99&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP037',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bhurungamari 01 Km Kachkata 25 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP038     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;37.99
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bhurungamari 01 Km Kachkata 25 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.1019444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6708327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.1019444&amp;Longitued=89.6708327&amp;LRP=LRP038+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bhurungamari+01+Km+Kachkata+25+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=37%2E99&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP038',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP038a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.76
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.1083056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6738049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.1083056&amp;Longitued=89.6738049&amp;LRP=LRP038a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=38%2E76&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP038a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Z5624 to Madarganj" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP038b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z5624 to Madarganj
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.1091944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6739993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.1091944&amp;Longitued=89.6739993&amp;LRP=LRP038b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Z5624+to+Madarganj&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=38%2E8&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP038b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="R.C.C culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP038c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.9
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;R.C.C culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.1091944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6729438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.1091944&amp;Longitued=89.6729438&amp;LRP=LRP038c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=R%2EC%2EC+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=38%2E9&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP038c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP039     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.99
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.1096667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6720827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.1096667&amp;Longitued=89.6720827&amp;LRP=LRP039+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=38%2E99&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP039',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP039a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;39.335
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.1112778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6693604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.1112778&amp;Longitued=89.6693604&amp;LRP=LRP039a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=39%2E335&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP039a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End at Jamtala more infront of Upazilla." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;39.519
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End at Jamtala more infront of Upazilla.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.1121667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6676938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.1121667&amp;Longitued=89.6676938&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+at+Jamtala+more+infront+of+Upazilla%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=39%2E519&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

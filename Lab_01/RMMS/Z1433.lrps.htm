@@ -1,0 +1,1408 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z1433 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=1451&amp;RoadNo=Z1433&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=1451&amp;RoadNo=Z1433&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=1451&amp;RoadNo=Z1433&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=1451&amp;RoadNo=Z1433&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=1451&amp;RoadNo=Z1433&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=1451&amp;RoadNo=Z1433&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Road Start Z1425 at Kalar Dokaner More" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road Start Z1425 at Kalar Dokaner More
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9343608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3200549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9343608&amp;Longitued=91.3200549&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Road+Start+Z1425+at+Kalar+Dokaner+More&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.067
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9338052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3199716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9338052&amp;Longitued=91.3199716&amp;LRP=LRPSa++++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=0%2E067&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSb      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.119
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9333608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.319916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9333608&amp;Longitued=91.319916&amp;LRP=LRPSb++++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=0%2E119&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRPSb',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9260271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3206104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9260271&amp;Longitued=91.3206104&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=1&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.021
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9256382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3207771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9256382&amp;Longitued=91.3207771&amp;LRP=LRP001a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E021&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP001a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.24
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.923916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3216938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.923916&amp;Longitued=91.3216938&amp;LRP=LRP001b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E24&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP001b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9178604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3243327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9178604&amp;Longitued=91.3243327&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=2&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Road right turn" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.137
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road right turn
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9165278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3242493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9165278&amp;Longitued=91.3242493&amp;LRP=LRP002a++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Road+right+turn&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=2%2E137&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.709
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9147222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3201938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9147222&amp;Longitued=91.3201938&amp;LRP=LRP002b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E709&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP002b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.918
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9131111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3196382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9131111&amp;Longitued=91.3196382&amp;LRP=LRP002c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E918&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP002c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9125&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3198049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9125&amp;Longitued=91.3198049&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=3&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.73
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9012778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3179438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9012778&amp;Longitued=91.3179438&amp;LRP=LRP003a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=3%2E73&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9065278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3176382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9065278&amp;Longitued=91.3176382&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=4&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.059
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9062778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3172493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9062778&amp;Longitued=91.3172493&amp;LRP=LRP004a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E059&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start (Damage)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.31
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start (Damage)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9038889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3173604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9038889&amp;Longitued=91.3173604&amp;LRP=LRP004b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start+%28Damage%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E31&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP004b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9036667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3173882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9036667&amp;Longitued=91.3173882&amp;LRP=LRP004c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E34&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP004c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Chowdhury hat/ Right turn" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.498
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Chowdhury hat/ Right turn
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9024167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3171104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9024167&amp;Longitued=91.3171104&amp;LRP=LRP004d++++&amp;TYPE=Others&amp;DESCRIPRIONS=Chowdhury+hat%2F+Right+turn&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=4%2E498&amp;RoadName=&amp;Division=Feni&amp;SubDivision=Feni%2D1" target="_blank" onclick="ShowPop(this.href,'LRP004d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Chowdhury hat/ Right turn" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.498
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Chowdhury hat/ Right turn
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9024167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3171104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9024167&amp;Longitued=91.3171104&amp;LRP=LRP004d++++&amp;TYPE=Others&amp;DESCRIPRIONS=Chowdhury+hat%2F+Right+turn&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=4%2E498&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP004d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004e    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.114
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9028056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.31125&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9028056&amp;Longitued=91.31125&amp;LRP=LRP004e++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=5%2E114&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP004e',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004f    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.124
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9028333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3112222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9028333&amp;Longitued=91.3112222&amp;LRP=LRP004f++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=5%2E124&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP004f',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004g    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.313
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9028333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3094167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9028333&amp;Longitued=91.3094167&amp;LRP=LRP004g++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E313&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP004g',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bashurhat 5km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bashurhat 5km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9026389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3091944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9026389&amp;Longitued=91.3091944&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bashurhat+5km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=5%2E34&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.41
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9018611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3084722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9018611&amp;Longitued=91.3084722&amp;LRP=LRP005a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E41&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.225
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8972497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3026944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8972497&amp;Longitued=91.3026944&amp;LRP=LRP005b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E225&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP005b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bashurhat 4km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bashurhat 4km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8966663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3019722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8966663&amp;Longitued=91.3019722&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bashurhat+4km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=6%2E3&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.373
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8963608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3014167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8963608&amp;Longitued=91.3014167&amp;LRP=LRP006a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=6%2E373&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.385
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.896333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.3013611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.896333&amp;Longitued=91.3013611&amp;LRP=LRP006b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=6%2E385&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP006b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.74
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8944441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2984719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8944441&amp;Longitued=91.2984719&amp;LRP=LRP006c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E74&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP006c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.081
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8923608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.296083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8923608&amp;Longitued=91.296083&amp;LRP=LRP006d++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E081&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP006d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bashur hat 3 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.132
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bashur hat 3 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.892083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2956941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.892083&amp;Longitued=91.2956941&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bashur+hat+3+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=7%2E132&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.33
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8853608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2873052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8853608&amp;Longitued=91.2873052&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=8%2E33&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.51
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8845552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2852497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8845552&amp;Longitued=91.2852497&amp;LRP=LRP008a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=8%2E51&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP008a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.013
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8801382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2851941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8801382&amp;Longitued=91.2851941&amp;LRP=LRP008b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E013&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP008b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.19
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8786382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2849997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8786382&amp;Longitued=91.2849997&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=9%2E19&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.211
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8785271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2849163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8785271&amp;Longitued=91.2849163&amp;LRP=LRP009a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E211&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.194
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8760271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2779993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8760271&amp;Longitued=91.2779993&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=10%2E194&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Road Connect with Z1441 at Basurhat" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.2
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road Connect with Z1441 at Basurhat
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.8759993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            91.2779438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.8759993&amp;Longitued=91.2779438&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Road+Connect+with+Z1441+at+Basurhat&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=10%2E2&amp;RoadName=&amp;Division=Noakhali&amp;SubDivision=Noakhali" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

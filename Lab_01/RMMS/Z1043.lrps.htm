@@ -1,0 +1,1582 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z1043 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=919&amp;RoadNo=Z1043&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=919&amp;RoadNo=Z1043&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=919&amp;RoadNo=Z1043&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=919&amp;RoadNo=Z1043&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=919&amp;RoadNo=Z1043&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=919&amp;RoadNo=Z1043&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start of road from Jagannathpur more, Bancharampur (from R203)." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of road from Jagannathpur more, Bancharampur (from R203).
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7775549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7948608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7775549&amp;Longitued=90.7948608&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+of+road+from+Jagannathpur+more%2C+Bancharampur+%28from+R203%29%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.602
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7740549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7973886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7740549&amp;Longitued=90.7973886&amp;LRP=LRPSa++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E602&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSb      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.642
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7737771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7974441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7737771&amp;Longitued=90.7974441&amp;LRP=LRPSb++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E642&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRPSb',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Road right turn" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSc      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.87
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Road right turn
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7721938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7994719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7721938&amp;Longitued=90.7994719&amp;LRP=LRPSc++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Road+right+turn&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0%2E87&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRPSc',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7713049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7993052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7713049&amp;Longitued=90.7993052&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=1&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.115
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7703604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7991108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7703604&amp;Longitued=90.7991108&amp;LRP=LRP001a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E115&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP001a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Homna 11 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.86
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Homna 11 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7645278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.8&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7645278&amp;Longitued=90.8&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Homna+11+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=1%2E86&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.924
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7640278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7997774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7640278&amp;Longitued=90.7997774&amp;LRP=LRP002a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=1%2E924&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.932
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7639722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7997774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7639722&amp;Longitued=90.7997774&amp;LRP=LRP002b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=1%2E932&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP002b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.472
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7601667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7992219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7601667&amp;Longitued=90.7992219&amp;LRP=LRP002c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=2%2E472&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP002c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.572
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7601111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7991941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7601111&amp;Longitued=90.7991941&amp;LRP=LRP002d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=2%2E572&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP002d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Information missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.872
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7565278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7986941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7565278&amp;Longitued=90.7986941&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=2%2E872&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.416
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7518056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7974997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7518056&amp;Longitued=90.7974997&amp;LRP=LRP003a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=3%2E416&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Homna 9 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.88
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Homna 9 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7481941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7951663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7481941&amp;Longitued=90.7951663&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Homna+9+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=3%2E88&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.405
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.744583&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7920274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.744583&amp;Longitued=90.7920274&amp;LRP=LRP004a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E405&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.413
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7445274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7919997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7445274&amp;Longitued=90.7919997&amp;LRP=LRP004b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E413&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP004b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Homna 8 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.903
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Homna 8 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7411108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7891386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7411108&amp;Longitued=90.7891386&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Homna+8+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=4%2E903&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Homna 7 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.915
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Homna 7 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7381386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7832771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7381386&amp;Longitued=90.7832771&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Homna+7+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=5%2E915&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.947
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7367219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7787771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7367219&amp;Longitued=90.7787771&amp;LRP=LRP006a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E947&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Infor.missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.924
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Infor.missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.732916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.776666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.732916&amp;Longitued=90.776666&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Infor%2Emissing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=6%2E924&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.556
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7276382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7745549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7276382&amp;Longitued=90.7745549&amp;LRP=LRP007a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E556&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.582
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7277216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7744438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7277216&amp;Longitued=90.7744438&amp;LRP=LRP007b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E582&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP007b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.814
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7255271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.773666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7255271&amp;Longitued=90.773666&amp;LRP=LRP007c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E814&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP007c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.827
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.725416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.757&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.725416&amp;Longitued=90.757&amp;LRP=LRP007d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E827&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP007d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.924
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7245827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7734438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7245827&amp;Longitued=90.7734438&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=7%2E924&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.427
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7205827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7738604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7205827&amp;Longitued=90.7738604&amp;LRP=LRP008a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=8%2E427&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP008a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Bancharampur 9 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.948
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bancharampur 9 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7160278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7727771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7160278&amp;Longitued=90.7727771&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Bancharampur+9+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8%2E948&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.413
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7169438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7734438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7169438&amp;Longitued=90.7734438&amp;LRP=LRP009a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E413&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.45
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7116667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7734716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7116667&amp;Longitued=90.7734716&amp;LRP=LRP009b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E45&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP009b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.62
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7101111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.773666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7101111&amp;Longitued=90.773666&amp;LRP=LRP009c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E62&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP009c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km post misisng" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.948
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post misisng
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7074167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7742493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7074167&amp;Longitued=90.7742493&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+misisng&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=9%2E948&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.131
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7060278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7743604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7060278&amp;Longitued=90.7743604&amp;LRP=LRP010a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E131&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.157
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7057222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7743882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7057222&amp;Longitued=90.7743882&amp;LRP=LRP010b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E157&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.539
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7023056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7746104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7023056&amp;Longitued=90.7746104&amp;LRP=LRP010c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E539&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP010c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Homna 2 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.009
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Homna 2 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7024722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.777666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7024722&amp;Longitued=90.777666&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Homna+2+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=11%2E009&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.342
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.7000556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.779166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.7000556&amp;Longitued=90.779166&amp;LRP=LRP011a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=11%2E342&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP011a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Infor.Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.029
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Infor.Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.694333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7811382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.694333&amp;Longitued=90.7811382&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Infor%2EMissing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12%2E029&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.279
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6921108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7809716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6921108&amp;Longitued=90.7809716&amp;LRP=LRP012a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=12%2E279&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP012a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Infor.Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.029
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Infor.Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.691833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7811104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.691833&amp;Longitued=90.7811104&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Infor%2EMissing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=13%2E029&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.156
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.685333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7775271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.685333&amp;Longitued=90.7775271&amp;LRP=LRP013a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=13%2E156&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP013a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.376
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6833608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7778049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6833608&amp;Longitued=90.7778049&amp;LRP=LRP013b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=13%2E376&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP013b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.484
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.683333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7778049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.683333&amp;Longitued=90.7778049&amp;LRP=LRP013c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=13%2E484&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRP013c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End of Homna Bridge Aproach (South) with Z-1053." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.684
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Homna Bridge Aproach (South) with Z-1053.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.6816104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.7781104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.6816104&amp;Longitued=90.7781104&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+of+Homna+Bridge+Aproach+%28South%29+with+Z%2D1053%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=13%2E684&amp;RoadName=&amp;Division=Brahmanbaria&amp;SubDivision=Bancharampur" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

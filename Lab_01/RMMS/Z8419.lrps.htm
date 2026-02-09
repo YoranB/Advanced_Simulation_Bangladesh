@@ -1,0 +1,1869 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z8419 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=1501&amp;RoadNo=Z8419&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=1501&amp;RoadNo=Z8419&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=1501&amp;RoadNo=Z8419&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=1501&amp;RoadNo=Z8419&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=1501&amp;RoadNo=Z8419&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=1501&amp;RoadNo=Z8419&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start of road from R850 at Satpar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of road from R850 at Satpar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1361108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9200827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1361108&amp;Longitued=89.9200827&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+of+road+from+R850+at+Satpar&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.128
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.136833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9191104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.136833&amp;Longitued=89.9191104&amp;LRP=LRPSa++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E128&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSb      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.262
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1375552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9180827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1375552&amp;Longitued=89.9180827&amp;LRP=LRPSb++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E262&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSb',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.139833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9117778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.139833&amp;Longitued=89.9117778&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=1&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.139833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9117778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.139833&amp;Longitued=89.9117778&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=2&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.6
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1428608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8969163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1428608&amp;Longitued=89.8969163&amp;LRP=LRP002a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=2%2E6&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.64
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1430552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8966108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1430552&amp;Longitued=89.8966108&amp;LRP=LRP002b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=2%2E64&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1435552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8935274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1435552&amp;Longitued=89.8935274&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=3&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Unpaved road start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.02
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Unpaved road start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.143583&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8931663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.143583&amp;Longitued=89.8931663&amp;LRP=LRP003a++++&amp;TYPE=Others&amp;DESCRIPRIONS=Unpaved+road+start&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=3%2E02&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.38
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1429719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8897774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1429719&amp;Longitued=89.8897774&amp;LRP=LRP003b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=3%2E38&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.48
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1430274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8889441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1430274&amp;Longitued=89.8889441&amp;LRP=LRP003c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E48&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.51
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1432497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8889163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1432497&amp;Longitued=89.8889163&amp;LRP=LRP003d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E51&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Earth road start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003e    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.7
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Earth road start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1449719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8888886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1449719&amp;Longitued=89.8888886&amp;LRP=LRP003e++++&amp;TYPE=Others&amp;DESCRIPRIONS=Earth+road+start&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=3%2E7&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003e',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1477219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8887219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1477219&amp;Longitued=89.8887219&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=4&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.43
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1514167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8886386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1514167&amp;Longitued=89.8886386&amp;LRP=LRP004a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E43&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.445
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1515833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.888583&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1515833&amp;Longitued=89.888583&amp;LRP=LRP004b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E445&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1565833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8876663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1565833&amp;Longitued=89.8876663&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=5&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.211
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1580833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8865552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1580833&amp;Longitued=89.8865552&amp;LRP=LRP005a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=5%2E211&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.233
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.15825&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8864441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.15825&amp;Longitued=89.8864441&amp;LRP=LRP005b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=5%2E233&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1624167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8817216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1624167&amp;Longitued=89.8817216&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=6&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.343
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1610833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8787771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1610833&amp;Longitued=89.8787771&amp;LRP=LRP006a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E343&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1587222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8733049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1587222&amp;Longitued=89.8733049&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=7&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.899
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1546944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.868166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1546944&amp;Longitued=89.868166&amp;LRP=LRP007a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E899&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.925
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1546944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.867916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1546944&amp;Longitued=89.867916&amp;LRP=LRP007b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E925&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1546111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8671382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1546111&amp;Longitued=89.8671382&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=8&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.284
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.155&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8645556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.155&amp;Longitued=89.8645556&amp;LRP=LRP008a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E284&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.33
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.155&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8640833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.155&amp;Longitued=89.8640833&amp;LRP=LRP008b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E33&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.5
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1549167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8624444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1549167&amp;Longitued=89.8624444&amp;LRP=LRP008c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E5&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.537
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1549167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8620556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1549167&amp;Longitued=89.8620556&amp;LRP=LRP008d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E537&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1543889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8576944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1543889&amp;Longitued=89.8576944&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=9&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.499
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1518333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8546667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1518333&amp;Longitued=89.8546667&amp;LRP=LRP009a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E499&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.522
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1516667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8545278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1516667&amp;Longitued=89.8545278&amp;LRP=LRP009b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E522&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1519167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8506667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1519167&amp;Longitued=89.8506667&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=10&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.406
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1523889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8468608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1523889&amp;Longitued=89.8468608&amp;LRP=LRP010a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E406&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.423
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1524444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8466941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1524444&amp;Longitued=89.8466941&amp;LRP=LRP010b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E423&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Masonry Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.977
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Masonry Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1562778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8448052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1562778&amp;Longitued=89.8448052&amp;LRP=LRP010c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Masonry+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E977&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1564722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8447774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1564722&amp;Longitued=89.8447774&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=11&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.509
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.15825&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8412497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.15825&amp;Longitued=89.8412497&amp;LRP=LRP011a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E509&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.527
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.15825&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.841083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.15825&amp;Longitued=89.841083&amp;LRP=LRP011b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=11%2E527&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1592778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8369719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1592778&amp;Longitued=89.8369719&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=12&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1540556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8328327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1540556&amp;Longitued=89.8328327&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=13&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.459
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1527778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8303604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1527778&amp;Longitued=89.8303604&amp;LRP=LRP013a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=13%2E459&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.484
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1528611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8301382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1528611&amp;Longitued=89.8301382&amp;LRP=LRP013b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=13%2E484&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1541944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8255549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1541944&amp;Longitued=89.8255549&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=14&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.814
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1540556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8178049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1540556&amp;Longitued=89.8178049&amp;LRP=LRP014a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=14%2E814&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.835
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1540833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8175549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1540833&amp;Longitued=89.8175549&amp;LRP=LRP014b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=14%2E835&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1536944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8161111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1536944&amp;Longitued=89.8161111&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=15&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.127
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.154&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8149722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.154&amp;Longitued=89.8149722&amp;LRP=LRP015a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=15%2E127&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.819
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.15625&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8091111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.15625&amp;Longitued=89.8091111&amp;LRP=LRP015b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=15%2E819&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.949
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1563889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8079167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1563889&amp;Longitued=89.8079167&amp;LRP=LRP015c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=15%2E949&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.012
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1564722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8073611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1564722&amp;Longitued=89.8073611&amp;LRP=LRP015d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=16%2E012&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Ramdia bazar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015e    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.045
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Ramdia bazar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1565&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8070833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1565&amp;Longitued=89.8070833&amp;LRP=LRP015e++++&amp;TYPE=Others&amp;DESCRIPRIONS=Ramdia+bazar&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=16%2E045&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015e',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End of road at Fukurah Launchghat" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of road at Fukurah Launchghat
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

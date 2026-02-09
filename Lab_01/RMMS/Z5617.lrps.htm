@@ -1,0 +1,1582 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z5617 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=1119&amp;RoadNo=Z5617&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=1119&amp;RoadNo=Z5617&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=1119&amp;RoadNo=Z5617&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=1119&amp;RoadNo=Z5617&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=1119&amp;RoadNo=Z5617&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=1119&amp;RoadNo=Z5617&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start of road at Nageswari college more and Intersection of Z5622 and Z5617 ,Nageswari,Kurigram." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of road at Nageswari college more and Intersection of Z5622 and Z5617 ,Nageswari,Kurigram.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9713882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6881663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9713882&amp;Longitued=89.6881663&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+of+road+at+Nageswari+college+more+and+Intersection+of+Z5622+and+Z5617+%2CNageswari%2CKurigram%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.942
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9721938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6791104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9721938&amp;Longitued=89.6791104&amp;LRP=LRPSa++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E942&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSb      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.958
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.972166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6789716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.972166&amp;Longitued=89.6789716&amp;LRP=LRPSb++++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E958&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRPSb',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.2
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9720827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6783327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9720827&amp;Longitued=89.6783327&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=1%2E2&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Fulbari 15 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Fulbari 15 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9709993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6687216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9709993&amp;Longitued=89.6687216&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Fulbari+15+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=2&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.587
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9703049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9703049&amp;Longitued=89.663&amp;LRP=LRP002a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E587&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.611
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9702771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6627778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9702771&amp;Longitued=89.6627778&amp;LRP=LRP002b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E611&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP002b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9693882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6589722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9693882&amp;Longitued=89.6589722&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=3&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Masonry culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.24
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Masonry culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9689993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.639833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9689993&amp;Longitued=89.639833&amp;LRP=LRP003a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Masonry+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=3%2E24&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9663611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.649833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9663611&amp;Longitued=89.649833&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=4&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.142
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9651944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6493052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9651944&amp;Longitued=89.6493052&amp;LRP=LRP004a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E142&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.615
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9653611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6448052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9653611&amp;Longitued=89.6448052&amp;LRP=LRP004b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E615&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP004b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end (R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.625
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end (R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9654444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6446663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9654444&amp;Longitued=89.6446663&amp;LRP=LRP004c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end+%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=4%2E625&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP004c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.967916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6423886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.967916&amp;Longitued=89.6423886&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=5&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9702493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6407219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9702493&amp;Longitued=89.6407219&amp;LRP=LRP005a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E3&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9754716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6368886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9754716&amp;Longitued=89.6368886&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=6%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.625
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9800827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6334163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9800827&amp;Longitued=89.6334163&amp;LRP=LRP006a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=6%2E625&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.646
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9801104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6331938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9801104&amp;Longitued=89.6331938&amp;LRP=LRP006b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=6%2E646&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP006b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9800271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6298049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9800271&amp;Longitued=89.6298049&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=7%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.54
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.978916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6246382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.978916&amp;Longitued=89.6246382&amp;LRP=LRP007a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E54&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge(R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.554
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge(R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9788882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6245827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9788882&amp;Longitued=89.6245827&amp;LRP=LRP007b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E554&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP007b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9782771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6199716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9782771&amp;Longitued=89.6199716&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.977666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6101667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.977666&amp;Longitued=89.6101667&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=9%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.353
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9776382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6066389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9776382&amp;Longitued=89.6066389&amp;LRP=LRP009a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert+start&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E353&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab culvert end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.363
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab culvert end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9776938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6065556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9776938&amp;Longitued=89.6065556&amp;LRP=LRP009b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+culvert+end&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E363&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP009b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.974
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9766382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6007778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9766382&amp;Longitued=89.6007778&amp;LRP=LRP009c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E974&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP009c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9764993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.6002778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9764993&amp;Longitued=89.6002778&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge(R.C.C Girder)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.713
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge(R.C.C Girder)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9743049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.593583&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9743049&amp;Longitued=89.593583&amp;LRP=LRP010a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge%28R%2EC%2EC+Girder%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E713&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge(R.C.C Girder)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.754
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge(R.C.C Girder)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.974166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5931941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.974166&amp;Longitued=89.5931941&amp;LRP=LRP010b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge%28R%2EC%2EC+Girder%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E754&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.99
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9733604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5909441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9733604&amp;Longitued=89.5909441&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10%2E99&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab  culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.679
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab  culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9723882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5843608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9723882&amp;Longitued=89.5843608&amp;LRP=LRP011a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab++culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=11%2E679&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP011a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9724716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5811938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9724716&amp;Longitued=89.5811938&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.192
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9711938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.579916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9711938&amp;Longitued=89.579916&amp;LRP=LRP012a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=12%2E192&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP012a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9672216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5735827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9672216&amp;Longitued=89.5735827&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=13%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9648611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5639444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9648611&amp;Longitued=89.5639444&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=14%2E01&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9648056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5541389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9648056&amp;Longitued=89.5541389&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=15&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Information  Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Information  Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9560556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.55175&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9560556&amp;Longitued=89.55175&amp;LRP=LRP016+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Information++Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=16&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP016',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge (R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.338
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge (R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.95325&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5506389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.95325&amp;Longitued=89.5506389&amp;LRP=LRP016a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge+%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=16%2E338&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP016a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of bridge (R.C.C)" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of bridge (R.C.C)
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9531111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5506667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9531111&amp;Longitued=89.5506667&amp;LRP=LRP016b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+bridge+%28R%2EC%2EC%29&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=16%2E35&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP016b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadRight.jpg" alt="Z5616" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.385
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z5616
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9528333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5506944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9528333&amp;Longitued=89.5506944&amp;LRP=LRP016c++++&amp;TYPE=Side+Road%2C+Right&amp;DESCRIPRIONS=Z5616&amp;ICON=roadSign%2FsideRoadRight%2Ejpg&amp;RoadChainage=16%2E385&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP016c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Infor.missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.03
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Infor.missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9491108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5453052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9491108&amp;Longitued=89.5453052&amp;LRP=LRP017+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Infor%2Emissing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=17%2E03&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP017',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.03
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9435274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5370274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9435274&amp;Longitued=89.5370274&amp;LRP=LRP018+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=18%2E03&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRP018',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End at Ferry ghat Phulbari, Kurigram." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.93
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End at Ferry ghat Phulbari, Kurigram.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9446386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.5288327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9446386&amp;Longitued=89.5288327&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+at+Ferry+ghat+Phulbari%2C+Kurigram%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=18%2E93&amp;RoadName=&amp;Division=Kurigram++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Kurigram+%2D+1" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,2472 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z8052 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=927&amp;RoadNo=Z8052&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=927&amp;RoadNo=Z8052&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=927&amp;RoadNo=Z8052&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=927&amp;RoadNo=Z8052&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=927&amp;RoadNo=Z8052&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=927&amp;RoadNo=Z8052&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start of road from Z8705 at Binapani Baily Bridge, Jhalokati." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of road from Z8705 at Binapani Baily Bridge, Jhalokati.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4401663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1138889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4401663&amp;Longitued=90.1138889&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+of+road+from+Z8705+at+Binapani+Baily+Bridge%2C+Jhalokati%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4391386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1261104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4391386&amp;Longitued=90.1261104&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=1&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.53
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4353886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1261104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4353886&amp;Longitued=90.1261104&amp;LRP=LRP001a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E53&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP001a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.77
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4344441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1279438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4344441&amp;Longitued=90.1279438&amp;LRP=LRP001b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E77&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP001b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4327216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1290271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4327216&amp;Longitued=90.1290271&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=2&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.15
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4315827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.129666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4315827&amp;Longitued=90.129666&amp;LRP=LRP002a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E15&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.68
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4285271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.132916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4285271&amp;Longitued=90.132916&amp;LRP=LRP002b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E68&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP002b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge Start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.96
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge Start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.428416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1354997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.428416&amp;Longitued=90.1354997&amp;LRP=LRP002c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+Start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=2%2E96&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP002c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Within under Constrution Baily Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Within under Constrution Baily Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge End" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.036
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge End
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4283049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1361941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4283049&amp;Longitued=90.1361941&amp;LRP=LRP003a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+End&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E036&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="Left Z8708 to Patharghata" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.636
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Left Z8708 to Patharghata
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4268327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1418052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4268327&amp;Longitued=90.1418052&amp;LRP=LRP003b++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=Left+Z8708+to+Patharghata&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=3%2E636&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP003b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="Right Z8708 to Rajapur/ Eathen road start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.637
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Right Z8708 to Rajapur/ Eathen road start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4269438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1418608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4269438&amp;Longitued=90.1418608&amp;LRP=LRP003c++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=Right+Z8708+to+Rajapur%2F+Eathen+road+start&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=3%2E637&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP003c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.818
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4265549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1436386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4265549&amp;Longitued=90.1436386&amp;LRP=LRP003d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E818&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP003d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003e    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4264716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1439719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4264716&amp;Longitued=90.1439719&amp;LRP=LRP003e++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=3%2E85&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP003e',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4260549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1453608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4260549&amp;Longitued=90.1453608&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=4&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.105
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4254993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1461941&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4254993&amp;Longitued=90.1461941&amp;LRP=LRP004a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E105&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.995
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4225549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1497774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4225549&amp;Longitued=90.1497774&amp;LRP=LRP004b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E995&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP004b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4224993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.149833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4224993&amp;Longitued=90.149833&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=5&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End Jhalikati Road Division" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End Jhalikati Road Division
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4203049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1523611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4203049&amp;Longitued=90.1523611&amp;LRP=LRP005a++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+Jhalikati+Road+Division&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=5%2E4&amp;RoadName=&amp;Division=Jhalokati+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Jhalokati" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End Jhalikati Road Division" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End Jhalikati Road Division
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4203049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1523611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4203049&amp;Longitued=90.1523611&amp;LRP=LRP005a++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+Jhalikati+Road+Division&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=5%2E4&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Wihin River" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Wihin River
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start road Division Barguna from Betagi Bazar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start road Division Barguna from Betagi Bazar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4161944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1647222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4161944&amp;Longitued=90.1647222&amp;LRP=LRP006a++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+road+Division+Barguna+from+Betagi+Bazar&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=6%2E8&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.86
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4161944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.16525&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4161944&amp;Longitued=90.16525&amp;LRP=LRP006b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=6%2E86&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP006b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.915
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4161389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1656944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4161389&amp;Longitued=90.1656944&amp;LRP=LRP006c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=6%2E915&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP006c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4131111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1665556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4131111&amp;Longitued=90.1665556&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=7&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.636
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.411&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1687771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.411&amp;Longitued=90.1687771&amp;LRP=LRP007a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E636&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="Z-8803" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.667
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z-8803
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4108333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1690827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4108333&amp;Longitued=90.1690827&amp;LRP=LRP007b++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=Z%2D8803&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=7%2E667&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP007b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4089444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1718604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4089444&amp;Longitued=90.1718604&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.4038889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1798049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.4038889&amp;Longitued=90.1798049&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=9&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.49
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.40175&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1836108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.40175&amp;Longitued=90.1836108&amp;LRP=LRP009a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E49&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3992497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.187083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3992497&amp;Longitued=90.187083&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.16
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3982219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1882497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3982219&amp;Longitued=90.1882497&amp;LRP=LRP010a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E16&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.397333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1891663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.397333&amp;Longitued=90.1891663&amp;LRP=LRP010b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E3&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Brisge end / start Patuakhali Road Division" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Brisge end / start Patuakhali Road Division
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.397083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1894163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.397083&amp;Longitued=90.1894163&amp;LRP=LRP010c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Brisge+end+%2F+start+Patuakhali+Road+Division&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E34&amp;RoadName=&amp;Division=Barguna+++++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Barguna" target="_blank" onclick="ShowPop(this.href,'LRP010c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Brisge end / start Patuakhali Road Division" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Brisge end / start Patuakhali Road Division
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.397083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1894163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.397083&amp;Longitued=90.1894163&amp;LRP=LRP010c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Brisge+end+%2F+start+Patuakhali+Road+Division&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=10%2E34&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP010c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.86
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3929719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1916663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3929719&amp;Longitued=90.1916663&amp;LRP=LRP010d++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E86&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP010d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3915274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1922774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3915274&amp;Longitued=90.1922774&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=11&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.48
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3879441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1942219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3879441&amp;Longitued=90.1942219&amp;LRP=LRP011a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=11%2E48&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP011a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3834163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1964163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3834163&amp;Longitued=90.1964163&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Inf missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.88
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Inf missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3765827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.1999719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3765827&amp;Longitued=90.1999719&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Inf+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=12%2E88&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Inf mising" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.85
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Inf mising
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.372166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2069167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.372166&amp;Longitued=90.2069167&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Inf+mising&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=13%2E85&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.502
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3713882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2133333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3713882&amp;Longitued=90.2133333&amp;LRP=LRP014a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=14%2E502&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP014a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Inf missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.793
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Inf missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3710271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2159722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3710271&amp;Longitued=90.2159722&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Inf+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=14%2E793&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="Z8810" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.389
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z8810
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3693604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2195271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3693604&amp;Longitued=90.2195271&amp;LRP=LRP015a++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=Z8810&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=15%2E389&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP015a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.441
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3691382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2202771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3691382&amp;Longitued=90.2202771&amp;LRP=LRP015b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=15%2E441&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP015b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.586
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3685549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2214993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3685549&amp;Longitued=90.2214993&amp;LRP=LRP015c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=15%2E586&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP015c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.793
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3669438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2246382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3669438&amp;Longitued=90.2246382&amp;LRP=LRP016+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=15%2E793&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP016',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.553
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3644444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2297771&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3644444&amp;Longitued=90.2297771&amp;LRP=LRP016a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=16%2E553&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP016a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.58
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3642222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2299716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3642222&amp;Longitued=90.2299716&amp;LRP=LRP016b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=16%2E58&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP016b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Inf Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.963
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Inf Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3626389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2332493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3626389&amp;Longitued=90.2332493&amp;LRP=LRP017+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Inf+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=16%2E963&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP017',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.113
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3620556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2344719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3620556&amp;Longitued=90.2344719&amp;LRP=LRP017a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=17%2E113&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP017a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.273
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3615&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2357774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3615&amp;Longitued=90.2357774&amp;LRP=LRP017b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=17%2E273&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP017b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.287
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3614444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2359441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3614444&amp;Longitued=90.2359441&amp;LRP=LRP017c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=17%2E287&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP017c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Patuakhali 10 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.893
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Patuakhali 10 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3604444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.241583&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3604444&amp;Longitued=90.241583&amp;LRP=LRP018+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Patuakhali+10+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=17%2E893&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP018',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Patuakhali 09 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.813
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Patuakhali 09 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3582778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.25025&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3582778&amp;Longitued=90.25025&amp;LRP=LRP019+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Patuakhali+09+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=18%2E813&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP019',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Ferry Ghate start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.513
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Ferry Ghate start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.357&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2568611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.357&amp;Longitued=90.2568611&amp;LRP=LRP019a++++&amp;TYPE=Others&amp;DESCRIPRIONS=Ferry+Ghate+start&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=19%2E513&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP019a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Within river" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.813
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Within river
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            0&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.813
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3556111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2694993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3556111&amp;Longitued=90.2694993&amp;LRP=LRP021+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=20%2E813&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP021',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Ferry ghate end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.814
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Ferry ghate end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3556111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2694993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3556111&amp;Longitued=90.2694993&amp;LRP=LRP021a++++&amp;TYPE=Others&amp;DESCRIPRIONS=Ferry+ghate+end&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=20%2E814&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP021a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.023
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3562778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2714438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3562778&amp;Longitued=90.2714438&amp;LRP=LRP021b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=21%2E023&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP021b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.035
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3563056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2715271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3563056&amp;Longitued=90.2715271&amp;LRP=LRP021c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=21%2E035&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP021c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Patuakhali 5 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;22.403
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Patuakhali 5 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.35975&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2839719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.35975&amp;Longitued=90.2839719&amp;LRP=LRP022+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Patuakhali+5+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=22%2E403&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP022',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.253
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3606111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.292083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3606111&amp;Longitued=90.292083&amp;LRP=LRP022a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=23%2E253&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP022a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.27
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3605833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2922497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3605833&amp;Longitued=90.2922497&amp;LRP=LRP022b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=23%2E27&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP022b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Patuakhali 4km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP023     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.373
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Patuakhali 4km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3606389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.2932219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3606389&amp;Longitued=90.2932219&amp;LRP=LRP023+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Patuakhali+4km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=23%2E373&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP023',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Patuakhali 3km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.333
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Patuakhali 3km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3606111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3025833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3606111&amp;Longitued=90.3025833&amp;LRP=LRP024+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Patuakhali+3km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=24%2E333&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP024',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.713
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3604444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3062778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3604444&amp;Longitued=90.3062778&amp;LRP=LRP024a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=24%2E713&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP024a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge end" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.74
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge end
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3604167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3065556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3604167&amp;Longitued=90.3065556&amp;LRP=LRP024b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+end&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=24%2E74&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP024b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.243
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3604444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3114444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3604444&amp;Longitued=90.3114444&amp;LRP=LRP024c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=25%2E243&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP024c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Patuakhali 2 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.263
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Patuakhali 2 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3604722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3115278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3604722&amp;Longitued=90.3115278&amp;LRP=LRP025+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Patuakhali+2+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=25%2E263&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP025',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="Left n8 right r880" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.993
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Left n8 right r880
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3597778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.318416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3597778&amp;Longitued=90.318416&amp;LRP=LRP025a++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=Left+n8+right+r880&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=25%2E993&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP025a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Patuakhali 1 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP026     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.213
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Patuakhali 1 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3593333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3205827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3593333&amp;Longitued=90.3205827&amp;LRP=LRP026+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Patuakhali+1+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=26%2E213&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP026',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP026a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.673
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3589444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3249438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3589444&amp;Longitued=90.3249438&amp;LRP=LRP026a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=26%2E673&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRP026a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End of road at Patuakhali in front of Water Board Office" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.789
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of road at Patuakhali in front of Water Board Office
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.3589444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.3260827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.3589444&amp;Longitued=90.3260827&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+of+road+at+Patuakhali+in+front+of+Water+Board+Office&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=26%2E789&amp;RoadName=&amp;Division=Patuakhali++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Patuakhali" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

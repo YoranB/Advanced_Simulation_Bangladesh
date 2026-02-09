@@ -1,0 +1,2539 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of R850 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=906&amp;RoadNo=R850&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=906&amp;RoadNo=R850&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=906&amp;RoadNo=R850&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=906&amp;RoadNo=R850&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=906&amp;RoadNo=R850&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=906&amp;RoadNo=R850&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start of road from N8 at round about Takerhat Bus stand." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of road from N8 at round about Takerhat Bus stand.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.227166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.0198882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.227166&amp;Longitued=90.0198882&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+of+road+from+N8+at+round+about+Takerhat+Bus+stand%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Drain Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPSa      
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.22
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Drain Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.229166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.0198049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.229166&amp;Longitued=90.0198049&amp;LRP=LRPSa++++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Drain+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=0%2E22&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPSa',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 38 km, khulna 93 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.315
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 38 km, khulna 93 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2295827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.0190549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2295827&amp;Longitued=90.0190549&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+38+km%2C+khulna+93+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=0%2E315&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 37 km, Khulna 92 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.315
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 37 km, Khulna 92 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2335552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.0106111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2335552&amp;Longitued=90.0106111&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+37+km%2C+Khulna+92+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=1%2E315&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Regalator" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.355
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Regalator
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2336663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.0101667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2336663&amp;Longitued=90.0101667&amp;LRP=LRP002a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Regalator&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=1%2E355&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 36 km, khulna 91 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.315
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 36 km, khulna 91 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2306938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            90.0020833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2306938&amp;Longitued=90.0020833&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+36+km%2C+khulna+91+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=2%2E315&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 35 km, khulna 90 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.315
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 35 km, khulna 90 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2262493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9935552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2262493&amp;Longitued=89.9935552&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+35+km%2C+khulna+90+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=3%2E315&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 34 km, Khulna 89 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 34 km, Khulna 89 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.221916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9849997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.221916&amp;Longitued=89.9849997&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+34+km%2C+Khulna+89+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=4%2E32&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 33 km, khulna 88 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.33
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 33 km, khulna 88 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2184993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9760271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2184993&amp;Longitued=89.9760271&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+33+km%2C+khulna+88+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=5%2E33&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Regulatar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.567
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Regulatar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2178882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9739438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2178882&amp;Longitued=89.9739438&amp;LRP=LRP006a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Regulatar&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E567&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 32 km, khulna 87 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.33
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 32 km, khulna 87 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2135833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9692493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2135833&amp;Longitued=89.9692493&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+32+km%2C+khulna+87+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=6%2E33&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Regulatar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.612
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Regulatar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2108611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9679993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2108611&amp;Longitued=89.9679993&amp;LRP=LRP007a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Regulatar&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E612&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 31 km, khulna 86 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.33
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 31 km, khulna 86 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.2053889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9640278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.2053889&amp;Longitued=89.9640278&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+31+km%2C+khulna+86+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=7%2E33&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 30 km, Khulna 85 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 30 km, Khulna 85 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.197083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9601944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.197083&amp;Longitued=89.9601944&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+30+km%2C+Khulna+85+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8%2E34&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 29 km, Khulna 84 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 29 km, Khulna 84 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.188833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.95625&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.188833&amp;Longitued=89.95625&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+29+km%2C+Khulna+84+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=9%2E34&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.408
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1883052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9558889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1883052&amp;Longitued=89.9558889&amp;LRP=LRP010a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E408&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.29
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1813604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9521111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1813604&amp;Longitued=89.9521111&amp;LRP=LRP010b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E29&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 28 km, Khulna 83 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 28 km, Khulna 83 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1808882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9516944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1808882&amp;Longitued=89.9516944&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+28+km%2C+Khulna+83+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1732493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9471663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1732493&amp;Longitued=89.9471663&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=11%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 26 km, khulna 81 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 26 km, khulna 81 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1647778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9428886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1647778&amp;Longitued=89.9428886&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+26+km%2C+khulna+81+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Regulatar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.518
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Regulatar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1636111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9422497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1636111&amp;Longitued=89.9422497&amp;LRP=LRP013a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Regulatar&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=12%2E518&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Regulatar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.245
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Regulatar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1581389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9384441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1581389&amp;Longitued=89.9384441&amp;LRP=LRP013b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Regulatar&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=13%2E245&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 25 km, khulna 80 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 25 km, khulna 80 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1571389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.938083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1571389&amp;Longitued=89.938083&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+25+km%2C+khulna+80+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=13%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 24 km, Khulna 79 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 24 km, Khulna 79 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.151&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9317216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.151&amp;Longitued=89.9317216&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+24+km%2C+Khulna+79+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=14%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 23 km, Khulna 78 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 23 km, Khulna 78 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1439441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9256938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1439441&amp;Longitued=89.9256938&amp;LRP=LRP016+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+23+km%2C+Khulna+78+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=15%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1364997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9207493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1364997&amp;Longitued=89.9207493&amp;LRP=LRP017+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=16%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP017',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadRight.jpg" alt="Right Z 8419" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.669
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Right Z 8419
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1351663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9178604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1351663&amp;Longitued=89.9178604&amp;LRP=LRP017a++++&amp;TYPE=Side+Road%2C+Right&amp;DESCRIPRIONS=Right+Z+8419&amp;ICON=roadSign%2FsideRoadRight%2Ejpg&amp;RoadChainage=16%2E669&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP017a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 21 km, Khulna 76 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 21 km, Khulna 76 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1305827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9133889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1305827&amp;Longitued=89.9133889&amp;LRP=LRP018+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+21+km%2C+Khulna+76+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=17%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 20 km, Khulna 75 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 20 km, Khulna 75 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1238327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9068889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1238327&amp;Longitued=89.9068889&amp;LRP=LRP019+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+20+km%2C+Khulna+75+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=18%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Regulator" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.028
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Regulator
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1190827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9038333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1190827&amp;Longitued=89.9038333&amp;LRP=LRP019a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Regulator&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=19%2E028&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Left Z8412" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.07
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Left Z8412
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1188327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9033333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1188327&amp;Longitued=89.9033333&amp;LRP=LRP019b++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Left+Z8412&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=19%2E07&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 19 km, Khulna 74 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 19 km, Khulna 74 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1170549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.9013333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1170549&amp;Longitued=89.9013333&amp;LRP=LRP020+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+19+km%2C+Khulna+74+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=19%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 18 km, Khulna 73 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 18 km, Khulna 73 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1109722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8936663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1109722&amp;Longitued=89.8936663&amp;LRP=LRP021+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+18+km%2C+Khulna+73+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=20%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP021',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 17 km, khulna 72 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 17 km, khulna 72 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.1040278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8880274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.1040278&amp;Longitued=89.8880274&amp;LRP=LRP022+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+17+km%2C+khulna+72+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=21%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP022',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Ragulatar" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP022a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;22.124
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Ragulatar
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0980552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8847219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0980552&amp;Longitued=89.8847219&amp;LRP=LRP022a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Ragulatar&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=22%2E124&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP022a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP023     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;22.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0972774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.884083&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0972774&amp;Longitued=89.884083&amp;LRP=LRP023+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=22%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP023',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 15 km, Khulna 70 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP024     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;23.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 15 km, Khulna 70 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0921386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8747216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0921386&amp;Longitued=89.8747216&amp;LRP=LRP024+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+15+km%2C+Khulna+70+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=23%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP024',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP025     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;24.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0859163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8678049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0859163&amp;Longitued=89.8678049&amp;LRP=LRP025+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=24%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP025',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 13 km, Khulna 68 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP026     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;25.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 13 km, Khulna 68 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.079916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8605833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.079916&amp;Longitued=89.8605833&amp;LRP=LRP026+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+13+km%2C+Khulna+68+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=25%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP026',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 12 km, Khulna 67 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP027     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;26.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 12 km, Khulna 67 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0735549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8536389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0735549&amp;Longitued=89.8536389&amp;LRP=LRP027+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+12+km%2C+Khulna+67+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=26%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP027',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 11 km, Khulna 66 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP028     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;27.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 11 km, Khulna 66 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0691104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8460274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0691104&amp;Longitued=89.8460274&amp;LRP=LRP028+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+11+km%2C+Khulna+66+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=27%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP028',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP028a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;28.28
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0637778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8395552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0637778&amp;Longitued=89.8395552&amp;LRP=LRP028a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=28%2E28&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP028a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP028b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;28.293
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0637222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8394163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0637222&amp;Longitued=89.8394163&amp;LRP=LRP028b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=28%2E293&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP028b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 10 km, Khulna 65 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP029     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;28.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 10 km, Khulna 65 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0633056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8388608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0633056&amp;Longitued=89.8388608&amp;LRP=LRP029+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+10+km%2C+Khulna+65+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=28%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP029',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 9 km, Khulna 64 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP030     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;29.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 9 km, Khulna 64 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.059&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8307493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.059&amp;Longitued=89.8307493&amp;LRP=LRP030+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+9+km%2C+Khulna+64+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=29%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP030',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 8 km, Khulna 63 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP031     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;30.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 8 km, Khulna 63 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0557778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8218604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0557778&amp;Longitued=89.8218604&amp;LRP=LRP031+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+8+km%2C+Khulna+63+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=30%2E34&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP031',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP032     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;31.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.048833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8160833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.048833&amp;Longitued=89.8160833&amp;LRP=LRP032+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=31%2E34&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP032',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 6 km, Khulna 61 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP033     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;32.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 6 km, Khulna 61 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0406663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.818416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0406663&amp;Longitued=89.818416&amp;LRP=LRP033+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+6+km%2C+Khulna+61+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=32%2E34&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP033',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP034     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;33.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0317216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8189993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0317216&amp;Longitued=89.8189993&amp;LRP=LRP034+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=33%2E34&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP034',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/turnoffleft.jpg" alt="Turn off Left" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP034a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;33.42
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Turn off, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Turn off Left
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0313049&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8188604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0313049&amp;Longitued=89.8188604&amp;LRP=LRP034a++++&amp;TYPE=Turn+off%2C+Left&amp;DESCRIPRIONS=Turn+off+Left&amp;ICON=roadSign%2Fturnoffleft%2Ejpg&amp;RoadChainage=33%2E42&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP034a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP034b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;33.93
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0298604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8236104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0298604&amp;Longitued=89.8236104&amp;LRP=LRP034b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=33%2E93&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP034b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 4 km, Khulna 59 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP035     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;34.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 4 km, Khulna 59 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0287216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8275549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0287216&amp;Longitued=89.8275549&amp;LRP=LRP035+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+4+km%2C+Khulna+59+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=34%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP035',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/crossRoad.jpg" alt="N805 to Bhanga" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP035a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;34.508
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Cross Road
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;N805 to Bhanga
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0278327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8287216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0278327&amp;Longitued=89.8287216&amp;LRP=LRP035a++++&amp;TYPE=Cross+Road&amp;DESCRIPRIONS=N805+to+Bhanga&amp;ICON=roadSign%2FcrossRoad%2Ejpg&amp;RoadChainage=34%2E508&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP035a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="N805 to Mollarhat" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP035b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.09
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;N805 to Mollarhat
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0263327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8349163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0263327&amp;Longitued=89.8349163&amp;LRP=LRP035b++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=N805+to+Mollarhat&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=35%2E09&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP035b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 3 km, Khulna 58 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP036     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;35.3
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 3 km, Khulna 58 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0245271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8344163&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0245271&amp;Longitued=89.8344163&amp;LRP=LRP036+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+3+km%2C+Khulna+58+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=35%2E3&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP036',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP036a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.005
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0163889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8353886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0163889&amp;Longitued=89.8353886&amp;LRP=LRP036a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=36%2E005&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP036a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP036b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.018
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0163889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8353886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0163889&amp;Longitued=89.8353886&amp;LRP=LRP036b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=36%2E018&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP036b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Gopalgonj 2 km, Khulna 57 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP037     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Gopalgonj 2 km, Khulna 57 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0163333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.835333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0163333&amp;Longitued=89.835333&amp;LRP=LRP037+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Gopalgonj+2+km%2C+Khulna+57+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=36%2E32&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP037',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Left Z8031" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP037a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.36
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Left Z8031
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0161944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8352774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0161944&amp;Longitued=89.8352774&amp;LRP=LRP037a++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Left+Z8031&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=36%2E36&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP037a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP037b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;36.59
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0146111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8335552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0146111&amp;Longitued=89.8335552&amp;LRP=LRP037b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=36%2E59&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP037b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Km post missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP038     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;37.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km post missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.00975&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8292493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.00975&amp;Longitued=89.8292493&amp;LRP=LRP038+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+post+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=37%2E32&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP038',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Khulna 55 km, Tungipara 19 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP039     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;37.88
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Khulna 55 km, Tungipara 19 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0057222&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8264716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0057222&amp;Longitued=89.8264716&amp;LRP=LRP039+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Khulna+55+km%2C+Tungipara+19+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=37%2E88&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP039',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Left Z8408" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP039a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;38.46
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Left Z8408
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            23.0023333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8223327&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=23.0023333&amp;Longitued=89.8223327&amp;LRP=LRP039a++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Left+Z8408&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=38%2E46&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP039a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tungipara 18 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP040     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;39.34
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tungipara 18 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9974719&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8153611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9974719&amp;Longitued=89.8153611&amp;LRP=LRP040+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tungipara+18+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=39%2E34&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP040',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/turnoffleft.jpg" alt="Z8414 to Chapail" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP040a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;39.402
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Turn off, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z8414 to Chapail
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9971386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8151944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9971386&amp;Longitued=89.8151944&amp;LRP=LRP040a++++&amp;TYPE=Turn+off%2C+Left&amp;DESCRIPRIONS=Z8414+to+Chapail&amp;ICON=roadSign%2Fturnoffleft%2Ejpg&amp;RoadChainage=39%2E402&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP040a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP040b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;40.105
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9907497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8146667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9907497&amp;Longitued=89.8146667&amp;LRP=LRP040b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=40%2E105&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP040b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tungipara 17 km, Khulna 53 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP041     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;40.35
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tungipara 17 km, Khulna 53 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9885274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8139444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9885274&amp;Longitued=89.8139444&amp;LRP=LRP041+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tungipara+17+km%2C+Khulna+53+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=40%2E35&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP041',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP041a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;40.98
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9837774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8114722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9837774&amp;Longitued=89.8114722&amp;LRP=LRP041a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=40%2E98&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP041a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tungipara 16 km, Khulna 52 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP042     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;41.38
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tungipara 16 km, Khulna 52 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9808604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.80925&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9808604&amp;Longitued=89.80925&amp;LRP=LRP042+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tungipara+16+km%2C+Khulna+52+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=41%2E38&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP042',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tungipara 15 km, Pirojpur 53 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP043     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;42.39
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tungipara 15 km, Pirojpur 53 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9723882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8124444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9723882&amp;Longitued=89.8124444&amp;LRP=LRP043+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tungipara+15+km%2C+Pirojpur+53+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=42%2E39&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP043',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP043a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;43.17
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9660833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8154167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9660833&amp;Longitued=89.8154167&amp;LRP=LRP043a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=43%2E17&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP043a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tungipara 14 km, Khulna 50 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP044     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;43.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tungipara 14 km, Khulna 50 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9641111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8163889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9641111&amp;Longitued=89.8163889&amp;LRP=LRP044+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tungipara+14+km%2C+Khulna+50+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=43%2E4&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP044',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP044a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;44.27
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.957&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8198882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.957&amp;Longitued=89.8198882&amp;LRP=LRP044a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=44%2E27&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP044a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tungipara 13 km, Pirojpur 51 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP045     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;44.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tungipara 13 km, Pirojpur 51 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9558611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8205271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9558611&amp;Longitued=89.8205271&amp;LRP=LRP045+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tungipara+13+km%2C+Pirojpur+51+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=44%2E4&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP045',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP045a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;44.453
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9553889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.820666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9553889&amp;Longitued=89.820666&amp;LRP=LRP045a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=44%2E453&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP045a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End of road at Mollahhat and Intersection with Z7704 and N805" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;44.83
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of road at Mollahhat and Intersection with Z7704 and N805
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            22.9526389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.8216382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=22.9526389&amp;Longitued=89.8216382&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+of+road+at+Mollahhat+and+Intersection+with+Z7704+and+N805&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=44%2E83&amp;RoadName=&amp;Division=Gopalganj+++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Gopalganj+++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

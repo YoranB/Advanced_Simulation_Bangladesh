@@ -1,0 +1,2365 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+  <head>
+    <title>
+      ::RMMS::
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link href="bmms.css" rel="stylesheet" type="text/css"/>
+    <script src="code.js" type="text/javascript">
+    </script>
+    <script language="JavaScript">
+//<![CDATA[
+
+
+function ShowPop(theURL,winName,myWidth,myHeight) { //v2.0
+lt=(screen.width-myWidth)/2;
+tp=(screen.height-myHeight)/2;
+fea="width="+myWidth+",height="+myHeight+",scrollbars=yes,resizable=yes,left="+lt+",top="+tp+"";
+//alert(fea);
+  window.open(theURL,winName,fea);
+}
+/*
+function filterLinks(PAGE){
+var pDF='L1';
+var pAD='L2';
+var pADM='L3';
+var lColor='#D8D8D8';
+try{
+if(PAGE==pDF){
+document.getElementById(pDF).style.color=lColor;
+document.getElementById(pDF).href='#';
+}else if(PAGE==pAD){
+document.getElementById(pAD).style.color=lColor;
+document.getElementById(pAD).href='#';
+}else if(PAGE==pADM){
+document.getElementById(pADM).style.color=lColor;
+document.getElementById(pADM).href='#';
+}
+}catch(e){
+return false;
+}
+}
+*/
+function exportToExcel()
+{
+var oExcel = new ActiveXObject("Excel.Application");
+var oBook = oExcel.Workbooks.Add;
+var oSheet = oBook.Worksheets(1);
+var y=0;
+var x=0;
+for (y=0;y<detailsTable.rows.length;y++)
+// detailsTable is the table where the content to be exported is
+{
+	for (x=0;x<detailsTable.rows(y).cells.length;x++)
+	{
+	if (detailsTable.rows(y).cells(x).id!="ex"){
+oSheet.Cells(y+1,x+1) =detailsTable.rows(y).cells(x).innerText;
+
+
+}
+	}
+}
+
+
+
+oExcel.Visible = true;
+oExcel.UserControl = true;
+}
+function checkExcel(){
+
+try{
+var oExcel = new ActiveXObject("Excel.Application");
+return true;
+}catch(e){
+return false;
+}
+} 
+function exBodyLoad(){
+if (checkExcel()){
+}else{
+EXCEL.style.display="none";
+}
+}
+function checkForm1(CTRL){
+	var VAL=CTRL.value.trim();
+	try{
+	if(VAL==""){
+		alert("Road name is empty");
+		CTRL.focus();
+		return false;
+	}else{
+		return true;
+	}
+	}catch(e){
+		alert(CTRL.value)
+	}
+}
+String.prototype.trim = function()
+{
+   return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+function blink() {
+            if (x % 2) {
+                col = "rgb(255,0,0)";
+            } else {
+                col = "rgb(255,255,255)";
+            }
+
+            aF.style.color = col;
+			//aF1.style.color = col;
+			//aF2.style.color = col;
+			//aF3.style.color = col;
+            x++;
+
+            if (x > 2)
+                { x = 1 }; 
+            setTimeout("blink()", 2000);
+        }
+
+
+//]]>
+    </script>
+    <style type="text/css">
+      
+.blink {
+font-size: 12px;
+color: red;
+display: inline;
+}
+
+    </style>
+  </head>
+  <body topmargin="5" bottommargin="5" leftmargin="5" rightmargin="5">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border:1px solid #4574A7;" align="center">
+      <tbody>
+        <tr>
+          <td width="472" valign="bottom">
+            &nbsp;
+            <img src="image/RMMS_BANNER.gif" width="468" height="60" border="0"/>
+          </td>
+          <td height="64" align="right">
+            <img src="image/BRIDGE.gif"/>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td colspan="4" height="5">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5" style="color:red; font-size:14px; font-weight:bold;" align="center">
+            <span id="aF">
+              The RMMS Database upgradation is going on.
+              <br/>
+              <font size="4px">
+                ***The information being shown here is under review.***
+              </font>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="3%">
+             &nbsp;
+          </td>
+          <td colspan="3" align="right">
+            <a href="searchbyoffice_2.asp" align="absmiddle" id="L2">
+              <img src="image/SearchSS.gif" width="22" height="22" align="absmiddle" border="0"/>
+              &nbsp;Search by location
+            </a>
+            
+	  &nbsp; &nbsp;
+		
+            <a href="default.asp" align="absmiddle" id="L1">
+              <img src="image/Home.gif" width="23" height="24" align="absmiddle" border="0"/>
+              &nbsp;Home
+            </a>
+            
+	  &nbsp;
+	
+          </td>
+        </tr>
+        <form action="searchresult_2.asp" method="get" onsubmit="checkForm1(this.RoadName);" name="hForm">
+        </form>
+        <tr bgcolor="#F7F7F7">
+          <td height="25" colspan="2" class="tdHead">
+            &nbsp;&nbsp;&nbsp;Location referencing point
+          </td>
+          <td width="43%" align="right" class="tdHead">
+            <span class="text5">
+              Search by Road name
+            </span>
+            &nbsp;
+       
+            <input type="text" name="RoadName" maxlength="50" style="width:125px;border: 1px solid #000066;"/>
+            
+       &nbsp;
+      
+            <input type="submit" name="SEARCH" style="cursor:hand" value=" Go " class="button"/>
+          </td>
+          <td width="3%" align="right" class="tdHead">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+&nbsp;&nbsp;
+
+
+    <p>
+    </p>
+    <table width="100%" align="center" cellpadding="1" cellspacing="1">
+      <tbody>
+        <tr>
+          <td width="5%" valign="top">
+            &nbsp;            
+          </td>
+          <td width="90%" valign="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="clsTbl">
+              <tbody>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td height="20" colspan="8" class="dingbat">
+                            LRPs  of Z5701 , 
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="9%" height="20" class="tdHead" bgcolor="#F0F0F0">
+                            &nbsp;
+                          </td>
+                          <td width="8%" class="tdHead" bgcolor="#F0F0F0">
+                            <a href="?COL=LRPNo&amp;RoadID=1162&amp;RoadNo=Z5701&amp;ORDERBY=2" class="navOrder">
+                              LRP No
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="13%" bgcolor="#F0F0F0" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=RoadChainage&amp;RoadID=1162&amp;RoadNo=Z5701&amp;ORDERBY=2" class="navOrder">
+                              Road Chainage
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td align="left" bgcolor="#F0F0F0" class="tdHead" width="13%">
+                            &nbsp;
+                            <a href="?COL=LRPTypeName&amp;RoadID=1162&amp;RoadNo=Z5701&amp;ORDERBY=2" class="navOrder">
+                              LRP TYPE
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="23%" bgcolor="#EAEAEA" class="tdHead">
+                            &nbsp;
+                            <a href="?COL=LRPLongDescription&amp;RoadID=1162&amp;RoadNo=Z5701&amp;ORDERBY=2" class="navOrder">
+                              Description
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                          </td>
+                          <td width="16%" bgcolor="#EAEAEA" class="tdHead" align="right">
+                            <a href="?COL=LRP.LatitudeDecimal&amp;RoadID=1162&amp;RoadNo=Z5701&amp;ORDERBY=2" class="navOrder">
+                              Latitude Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="14%">
+                            <a href="?COL=LRP.LongituedDecimal&amp;RoadID=1162&amp;RoadNo=Z5701&amp;ORDERBY=2" class="navOrder">
+                              Longitued Decimal
+                            </a>
+                            &nbsp;
+                            <img src="image/ASC.gif" border="0"/>
+                            &nbsp;&nbsp;&nbsp;
+                          </td>
+                          <td align="right" bgcolor="#EAEAEA" class="tdHead" width="4%">
+                            &nbsp;
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="Start At Kalibari More From Z 5707  infront of Pubali bank, Nilphamari." border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPS       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start At Kalibari More From Z 5707  infront of Pubali bank, Nilphamari.
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9377774&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8494997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9377774&amp;Longitued=88.8494997&amp;LRP=LRPS+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=Start+At+Kalibari+More+From+Z+5707++infront+of+Pubali+bank%2C+Nilphamari%2E&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=0&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPS',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Inf Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.237
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Inf Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9382219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8516944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9382219&amp;Longitued=88.8516944&amp;LRP=LRP001+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Inf+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=0%2E237&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge Start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.523
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge Start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9381108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8544722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9381108&amp;Longitued=88.8544722&amp;LRP=LRP001a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+Start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E523&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge End" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.547
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge End
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9382497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8546667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9382497&amp;Longitued=88.8546667&amp;LRP=LRP001b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+End&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=0%2E547&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP001c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;0.77
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9396386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8563333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9396386&amp;Longitued=88.8563333&amp;LRP=LRP001c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=0%2E77&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP001c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 23 Km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.01
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 23 Km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9408886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8581389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9408886&amp;Longitued=88.8581389&amp;LRP=LRP002+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+23+Km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=1%2E01&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadRight.jpg" alt="Z 5709" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.818
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Right
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z 5709
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9456386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8641944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9456386&amp;Longitued=88.8641944&amp;LRP=LRP002a++++&amp;TYPE=Side+Road%2C+Right&amp;DESCRIPRIONS=Z+5709&amp;ICON=roadSign%2FsideRoadRight%2Ejpg&amp;RoadChainage=1%2E818&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Z 5709" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP002b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;1.94
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z 5709
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9462219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8651389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9462219&amp;Longitued=88.8651389&amp;LRP=LRP002b++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Z+5709&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=1%2E94&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP002b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 22 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.03
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 22 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9459441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8659722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9459441&amp;Longitued=88.8659722&amp;LRP=LRP003+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+22+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=2%2E03&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.443
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9451663&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.869916&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9451663&amp;Longitued=88.869916&amp;LRP=LRP003a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=2%2E443&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start Of Bridge R C C" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.7
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start Of Bridge R C C
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.944833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8723882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.944833&amp;Longitued=88.8723882&amp;LRP=LRP003b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+Of+Bridge+R+C+C&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=2%2E7&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End Of Bridge R C C" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP003c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;2.732
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End Of Bridge R C C
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9448886&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8726938&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9448886&amp;Longitued=88.8726938&amp;LRP=LRP003c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+Of+Bridge+R+C+C&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=2%2E732&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP003c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 21 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.02
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 21 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9457219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8753604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9457219&amp;Longitued=88.8753604&amp;LRP=LRP004+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+21+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=3%2E02&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP004a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;3.514
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9474441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8798604&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9474441&amp;Longitued=88.8798604&amp;LRP=LRP004a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=3%2E514&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP004a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tangonmari 10 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.02
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tangonmari 10 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9488052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8846108&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9488052&amp;Longitued=88.8846108&amp;LRP=LRP005+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tangonmari+10+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=4%2E02&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP005a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;4.863
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9506389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8928608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9506389&amp;Longitued=88.8928608&amp;LRP=LRP005a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=4%2E863&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP005a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 19 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.015
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 19 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9505833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.8942497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9505833&amp;Longitued=88.8942497&amp;LRP=LRP006+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+19+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=5%2E015&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.725
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9500278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9013056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9500278&amp;Longitued=88.9013056&amp;LRP=LRP006a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E725&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.751
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9500556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9015278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9500556&amp;Longitued=88.9015278&amp;LRP=LRP006b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E751&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Suice Gate" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.769
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Suice Gate
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9500833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9016944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9500833&amp;Longitued=88.9016944&amp;LRP=LRP006c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Suice+Gate&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E769&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Suice Gate" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;5.794
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Suice Gate
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9500833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9019167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9500833&amp;Longitued=88.9019167&amp;LRP=LRP006d++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Suice+Gate&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=5%2E794&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP006e    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9503056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9038056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9503056&amp;Longitued=88.9038056&amp;LRP=LRP006e++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP006e',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 18 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.02
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 18 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9504167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9040833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9504167&amp;Longitued=88.9040833&amp;LRP=LRP007+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+18+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=6%2E02&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP007a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;6.673
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9521944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.91025&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9521944&amp;Longitued=88.91025&amp;LRP=LRP007a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=6%2E673&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP007a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldkhaka 17 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.02
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldkhaka 17 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9530278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9135278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9530278&amp;Longitued=88.9135278&amp;LRP=LRP008+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldkhaka+17+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=7%2E02&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.196
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.95325&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9152778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.95325&amp;Longitued=88.9152778&amp;LRP=LRP008a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E196&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge Start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.472
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge Start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9535556&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9179438&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9535556&amp;Longitued=88.9179438&amp;LRP=LRP008b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+Start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E472&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge End" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.492
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge End
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9536111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.918166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9536111&amp;Longitued=88.918166&amp;LRP=LRP008c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+End&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=7%2E492&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.629
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9538889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9193882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9538889&amp;Longitued=88.9193882&amp;LRP=LRP008d++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E629&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008e    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.896
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9545278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9220271&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9545278&amp;Longitued=88.9220271&amp;LRP=LRP008e++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E896&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008e',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Slab Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP008f    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;7.957
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Slab Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9546389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9225827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9546389&amp;Longitued=88.9225827&amp;LRP=LRP008f++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Slab+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=7%2E957&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP008f',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Tangonmary 6 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.025
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Tangonmary 6 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9547778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9232216&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9547778&amp;Longitued=88.9232216&amp;LRP=LRP009+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Tangonmary+6+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=8%2E025&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge Start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.593
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge Start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9559722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9277493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9559722&amp;Longitued=88.9277493&amp;LRP=LRP009a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+Start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E593&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge End" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP009b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;8.63
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge End
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.95575&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9279993&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.95575&amp;Longitued=88.9279993&amp;LRP=LRP009b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+End&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=8%2E63&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP009b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 15 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.03
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 15 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.95725&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9309716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.95725&amp;Longitued=88.9309716&amp;LRP=LRP010+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+15+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=9%2E03&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.414
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9576667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9345552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9576667&amp;Longitued=88.9345552&amp;LRP=LRP010a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=9%2E414&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start Of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.545
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start Of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9574444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9358608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9574444&amp;Longitued=88.9358608&amp;LRP=LRP010b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+Of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E545&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End Of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP010c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;9.56
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End Of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9574167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9359997&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9574167&amp;Longitued=88.9359997&amp;LRP=LRP010c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+Of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=9%2E56&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP010c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 14 KM" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 14 KM
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9569167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.940833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9569167&amp;Longitued=88.940833&amp;LRP=LRP011+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+14+KM&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=10%2E04&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.312
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9568056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9434441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9568056&amp;Longitued=88.9434441&amp;LRP=LRP011a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E312&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Pipe Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP011b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;10.4
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Pipe Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9568333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9452219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9568333&amp;Longitued=88.9452219&amp;LRP=LRP011b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Pipe+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=10%2E4&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP011b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 13" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 13
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9566389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9506944&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9566389&amp;Longitued=88.9506944&amp;LRP=LRP012+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+13&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=11%2E04&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP012a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;11.416
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9569167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9543611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9569167&amp;Longitued=88.9543611&amp;LRP=LRP012a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=11%2E416&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP012a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 12 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 12 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9592778&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9596389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9592778&amp;Longitued=88.9596389&amp;LRP=LRP013+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+12+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=12%2E04&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge Start" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.402
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge Start
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9611111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9624722&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9611111&amp;Longitued=88.9624722&amp;LRP=LRP013a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+Start&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=12%2E402&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Baily Bridge End" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.492
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Baily Bridge End
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9615833&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9633611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9615833&amp;Longitued=88.9633611&amp;LRP=LRP013b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Baily+Bridge+End&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=12%2E492&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP013c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;12.556
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9618056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.96375&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9618056&amp;Longitued=88.96375&amp;LRP=LRP013c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=12%2E556&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP013c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Jaldhaka 11 km" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.04
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Jaldhaka 11 km
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9653889&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9666389&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9653889&amp;Longitued=88.9666389&amp;LRP=LRP014+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Jaldhaka+11+km&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=13%2E04&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/sideRoadLeft.jpg" alt="Z5022" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.519
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Side Road, Left
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Z5022
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9680549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9696382&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9680549&amp;Longitued=88.9696382&amp;LRP=LRP014a++++&amp;TYPE=Side+Road%2C+Left&amp;DESCRIPRIONS=Z5022&amp;ICON=roadSign%2FsideRoadLeft%2Ejpg&amp;RoadChainage=13%2E519&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP014b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;13.738
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9700549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.969416&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9700549&amp;Longitued=88.969416&amp;LRP=LRP014b++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=13%2E738&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP014b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9755549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9689716&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9755549&amp;Longitued=88.9689716&amp;LRP=LRP015+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=14%2E32&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP015a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;14.586
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9775549&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9691104&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9775549&amp;Longitued=88.9691104&amp;LRP=LRP015a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=14%2E586&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP015a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9818882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.969166&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9818882&amp;Longitued=88.969166&amp;LRP=LRP016+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=15%2E32&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start  Of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.812
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start  Of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9879441&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.971666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9879441&amp;Longitued=88.971666&amp;LRP=LRP016a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start++Of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=15%2E812&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End Of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;15.823
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End Of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9880274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9717493&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9880274&amp;Longitued=88.9717493&amp;LRP=LRP016b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+Of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=15%2E823&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP016c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.28
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9913052&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9745827&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9913052&amp;Longitued=88.9745827&amp;LRP=LRP016c++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=16%2E28&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP016c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP017     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;16.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9893608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9728882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9893608&amp;Longitued=88.9728882&amp;LRP=LRP017+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=16%2E32&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP017',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9893608&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9728882&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9893608&amp;Longitued=88.9728882&amp;LRP=LRP018+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=17%2E32&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Culvert UC" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;17.428
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Culvert UC
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            25.9985274&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.982666&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=25.9985274&amp;Longitued=88.982666&amp;LRP=LRP018a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Culvert+UC&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=17%2E428&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start of bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.028
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start of bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0008333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9880552&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0008333&amp;Longitued=88.9880552&amp;LRP=LRP018b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+of+bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=18%2E028&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End of Bridge" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP018c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.06
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End of Bridge
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0009444&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9882219&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0009444&amp;Longitued=88.9882219&amp;LRP=LRP018c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+of+Bridge&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=18%2E06&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP018c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPostmissing.gif" alt="Info missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.32
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0023611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9906386&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0023611&amp;Longitued=88.9906386&amp;LRP=LRP019+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+missing&amp;ICON=roadSign%2FkmPostmissing%2Egif&amp;RoadChainage=18%2E32&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/culvert.jpg" alt="Box Culvert" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP019a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;18.93
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Culvert
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Box Culvert
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0054167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            88.9957497&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0054167&amp;Longitued=88.9957497&amp;LRP=LRP019a++++&amp;TYPE=Culvert&amp;DESCRIPRIONS=Box+Culvert&amp;ICON=roadSign%2Fculvert%2Ejpg&amp;RoadChainage=18%2E93&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP019a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Info Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.57
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Info Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.00825&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0013333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.00825&amp;Longitued=89.0013333&amp;LRP=LRP020+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Info+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=19%2E57&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start Of Bridge R C C" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020a    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.661
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start Of Bridge R C C
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0086667&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0021111&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0086667&amp;Longitued=89.0021111&amp;LRP=LRP020a++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+Of+Bridge+R+C+C&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=19%2E661&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020a',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End Of Bridge R C C" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020b    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;19.748
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End Of Bridge R C C
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0090278&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0028611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0090278&amp;Longitued=89.0028611&amp;LRP=LRP020b++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+Of+Bridge+R+C+C&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=19%2E748&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020b',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="Start Of Bridge R C C" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020c    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.149
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Start Of Bridge R C C
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0108056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0063056&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0108056&amp;Longitued=89.0063056&amp;LRP=LRP020c++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=Start+Of+Bridge+R+C+C&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=20%2E149&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020c',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/bridge.gif" alt="End Of Bridge R C C" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP020d    
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.159
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Bridge
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End Of Bridge R C C
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0108611&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0064167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0108611&amp;Longitued=89.0064167&amp;LRP=LRP020d++++&amp;TYPE=Bridge&amp;DESCRIPRIONS=End+Of+Bridge+R+C+C&amp;ICON=roadSign%2Fbridge%2Egif&amp;RoadChainage=20%2E159&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP020d',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/kmPost.gif" alt="Km Post Missing" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRP021     
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;20.57
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Km Post
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;Km Post Missing
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0129167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0104167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0129167&amp;Longitued=89.0104167&amp;LRP=LRP021+++++&amp;TYPE=Km+Post&amp;DESCRIPRIONS=Km+Post+Missing&amp;ICON=roadSign%2FkmPost%2Egif&amp;RoadChainage=20%2E57&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRP021',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" align="center" class="tdRow">
+                            <img src="roadSign/others.gif" alt="End at Jaldhaka in front of Petrol Pump and intersect with R560" border="0"/>
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            LRPE       
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;21.02
+                          </td>
+                          <td height="20" align="left" class="tdRow" valign="top">
+                            &nbsp;Others
+                          </td>
+                          <td align="left" valign="top" class="tdRow">
+                            &nbsp;End at Jaldhaka in front of Petrol Pump and intersect with R560
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            26.0138333&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            89.0124167&nbsp;
+                          </td>
+                          <td align="right" valign="top" class="tdRow">
+                            &nbsp;
+                            <a href="lrpmaps.asp?Latitude=26.0138333&amp;Longitued=89.0124167&amp;LRP=LRPE+++++++&amp;TYPE=Others&amp;DESCRIPRIONS=End+at+Jaldhaka+in+front+of+Petrol+Pump+and+intersect+with+R560&amp;ICON=roadSign%2Fothers%2Egif&amp;RoadChainage=21%2E02&amp;RoadName=&amp;Division=Nilphamari++++++++++++++++++++++++++++++++++++++++&amp;SubDivision=Nilphamari++++++++++++++++++++++++++++++++++++++++" target="_blank" onclick="ShowPop(this.href,'LRPE',850,650);return false;">
+                              <img src="images.jpg" border="0" width="50px"/>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="20" bgcolor="#F7F7F7">
+                    &nbsp;
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="5%" align="left" valign="top">
+            &nbsp;            
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left" valign="top" class="text7">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width="60%" border="0" align="center" class="DONTPrint">
+      <tbody>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" height="20"/>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF" style="border-top:1px solid #dedeca;">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
