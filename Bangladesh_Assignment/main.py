@@ -1,6 +1,7 @@
 # main.py
 import pandas as pd
 from pathlib import Path
+import numpy as np
 
 # Import your custom functions
 from src.clean_roads import clean_and_interpolate_road, get_outliers_only
