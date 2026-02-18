@@ -11,18 +11,24 @@ from src.clean_bridges import clean_bridges_pipeline
 def main():
     # SETUP PATHS (Relative to this script)
     base_dir = Path(__file__).parent
-    
+
     # Road paths
     input_roads_path = base_dir / 'data' / 'raw' / 'Roads_InfoAboutEachLRP.csv'
     output_clean_roads_path = base_dir / 'data' / 'processed' / '_roads3.csv'
     output_outliers_path = base_dir / 'data' / 'processed' / 'outliers_report.csv'
-    
+
     # Bridge paths (Added these)
     input_bridges_path = base_dir / 'data' / 'raw' / 'BMMS_overview.xlsx'
     output_clean_bridges_path = base_dir / 'data' / 'processed' / 'BMMS_overview_CLEANED.xlsx'
 
     print(f"Loading road data from: {input_roads_path}")
     df = pd.read_csv(input_roads_path, low_memory=False)
+
+    # LOG & REMOVE DUPLICATES ROADS
+    count_before = len(df)
+    df = df.drop_duplicates()
+    count_removed = count_before - len(df)
+    print(f"   -> Log: {count_removed} duplicate rows removed from roads dataset.")
 
     # PREPROCESSING ROADS (Type conversion)
     cols = ['chainage', 'lat', 'lon']
@@ -52,7 +58,7 @@ def main():
     df_clean.to_csv(output_clean_roads_path, index=False)
     print(f"Success! Cleaned road data saved to: {output_clean_roads_path}")
 
-### Bridges start here
+    ### Bridges start here
 
     # LOAD BRIDGES
     print(f"Loading bridge data from: {input_bridges_path}")
@@ -62,6 +68,13 @@ def main():
             df_bridges = pd.read_csv(input_bridges_path)
         else:
             df_bridges = pd.read_excel(input_bridges_path)
+
+        # LOG & REMOVE DUPLICATES BRIDGES
+        count_before_bridges = len(df_bridges)
+        df_bridges = df_bridges.drop_duplicates()
+        count_removed_bridges = count_before_bridges - len(df_bridges)
+        print(f"   -> Log: {count_removed_bridges} duplicate rows removed from bridges dataset.")
+
     except Exception as e:
         print(f"Error loading bridges: {e}")
         return
@@ -82,4 +95,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
