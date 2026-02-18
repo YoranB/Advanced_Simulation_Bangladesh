@@ -1,116 +1,84 @@
-# Advanced_Simulation_Bangladesh
 
-# EPA133a Assignment 1: Data Quality Project
+# EPA133a Assignment 1: Advanced Simulation Bangladesh
+**Data Quality & Preprocessing Pipeline**
 
-## 1. Project Structure
+This repository contains the data cleaning, interpolation, and validation pipeline for the Bangladesh road and bridge network. The goal of this project is to process raw, inconsistent infrastructure data into a robust, strictly formatted dataset.
 
-We will follow a standard data science project structure to keep our work organized and avoid merge conflicts.
+## 1. Project Overview & Methodology
+
+The pipeline processes raw `csv` and `xlsx` files to resolve geospatial inaccuracies, missing coordinates, and formatting inconsistencies. 
+
+**Exploration & Prototyping (`notebooks/`)**
+Initial data exploration and algorithm testing were conducted within Jupyter Notebooks. Before processing the entire dataset, we prototyped our cleaning and interpolation algorithms on a single road to visually verify that our logic worked.  Once the outlier detection and coordinate snapping were successfully validated on this micro-level, the code was scaled and modularized into the Python scripts described below.
+
+**Road Network Processing (`src/clean_roads.py`)**
+* **Outlier Detection:** Uses a 5-window rolling median and Haversine distance calculations to detect coordinate jumps greater than 10km.
+* **Correction & Interpolation:** Snaps severe outliers back to the rolling median and linearly interpolates remaining small gaps to ensure strict monotonic chainage.
+
+**Bridge Network Processing (`src/clean_bridges.py`)**
+* **Hierarchical Repair Algorithm:** Resolves missing or broken bridge coordinates using a prioritized logic system:
+    1.  *Exact Match:* Maps to Location Reference Points (LRPs) on the validated road network.
+    2.  *Chainage Interpolation:* Estimates coordinates using valid chainage (km) along the cleaned road paths. 
+    3.  *Typo Correction:* Identifies and resolves human-entry factor-10 scale errors (e.g., meters inputted as kilometers).
+    4.  *Terminus Snapping:* Bridges that slightly overshoot road bounds are snapped to the road terminus to maintain simulation connectivity.
+
+---
+
+## 2. Project Structure
+
+The repository follows a standard data science project hierarchy to separate raw data, source code, and analysis notebooks.
 
 ```text
 EPA133a-Gxx-Assignment1/
 ├── data/
-│   ├── raw/                 # PUT ORIGINAL FILES HERE (Do not edit these!)
+│   ├── raw/                 # Immutable original data files
 │   │   ├── _roads.tsv
 │   │   ├── BMMS_overview.xlsx
 │   │   └── Roads_InfoAboutEachLRP.csv
-│   └── processed/           # OUTPUT FILES GO HERE
+│   └── processed/           # Pipeline outputs (DO NOT EDIT MANUALLY)
 │       ├── _roads3.csv
-│       └── BMMS_overview.csv
-├── notebooks/               # For experimentation and graphs
-│   ├── 01_eda_roads.ipynb   # Analysis of Road issues (Member 1)
-│   ├── 02_eda_bridges.ipynb # Analysis of Bridge issues (Member 2)
-│   └── 03_validation.ipynb  # Checking final files (Member 3)
-├── src/                     # Source code (The actual "Program")
+│       ├── outliers_report.csv
+│       └── BMMS_overview_CLEANED.xlsx
+├── notebooks/               # Jupyter notebooks for EDA and validation
+│   ├── 01_eda_roads.ipynb  
+│   ├── 02_eda_bridges.ipynb 
+│   └── 03_validation.ipynb  
+├── src/                     # Core pipeline modules
 │   ├── __init__.py
-│   ├── clean_roads.py       # Functions to clean road data
-│   ├── clean_bridges.py     # Functions to clean bridge data
-│   └── utils.py             # Shared math (e.g., interpolation formulas)
-├── report/                  # Drafts of your PDF report
-│   ├── images/              # Plots saved from notebooks
-│   └── draft_text.md
-├── main.py                  # Master script that runs the whole cleaning pipeline
-├── README.md                # Instructions on how to run the code
-├── requirements.txt         # List of libraries (pandas, numpy, openpyxl)
-└── .gitignore               # Ignore temp files
+│   ├── clean_roads.py       # Road filtering and interpolation logic
+│   ├── clean_bridges.py     # Bridge location repair logic
+│   └── utils.py             # Geospatial math functions (e.g., Haversine)
+├── main.py                  # Primary execution script
+├── README.md                # Project documentation
+├── requirements.txt         # Python dependencies
+└── .gitignore              
 
 ```
-## 2. Work Division
-We are splitting the work into three distinct roles to allow us to work in parallel.
 
-#### Member A: The Road Specialist
+---
 
-Focus: _roads.tsv → _roads3.csv
+## 3. Usage & Execution
 
-Coding Tasks:
+To execute the data cleaning pipeline and generate the files required for the Java simulation:
 
-Handle file parsing (fix tab-separated vs comma-separated issues).
+**1. Install Dependencies**
+Ensure you have Python 3.8+ installed, then run:
 
+```bash
+pip install -r requirements.txt
 
-Implement logic to convert "wide" format to "long" format or rename columns.
+```
 
-Crucial: Write sorting logic to ensure chainage is monotonic (increasing).
+**2. Run the Pipeline**
+Execute the main script from the root directory. This will process the raw data and populate the `data/processed/` folder.
 
-Crucial: Fix Latitude/Longitude outliers (jumps).
+```bash
+python main.py
 
-Report Contribution: Write the "Diagnosis" and "Strategy" paragraphs for Road Data issues.
+```
 
-### Member B: The Bridge Specialist
+**3. Outputs Generated**
 
-Focus: BMMS_overview.xlsx → Intermediate Cleaned Bridge Data
-
-Coding Tasks:
-
-Load the Excel file correctly.
-
-Clean categorical columns (e.g., standardize condition to A/B/C/D, fix typos in structure type).
-
-Identify which bridges are missing coordinates vs. which ones are missing chainage.
-
-Report Contribution: Write the "Diagnosis" and "Strategy" paragraphs for Bridge Data issues.
-
-### Member C: The Integrator & Analyst
-
-Focus: Merging Data & Interpolation
-
-Coding Tasks:
-
-Algorithm: Write the interpolate_coordinates() function in src/utils.py. This function takes a bridge's chainage, looks at the cleaned road data, finds the two nearest road points, and calculates the estimated Lat/Lon.
-
-Create main.py that imports functions from Member A and B and runs the full flow.
-
-Report Contribution: Write the "Prioritization" section (why interpolation matters) and the "Reflection".
-
-## 3. Workflow
-To avoid overwriting each other's work, we will follow this Git workflow:
-
-### Phase 1: Setup (Day 1)
-
-Initialize: One person creates the repo and uploads the data/raw files.
-
-Protect Main: Treat the main branch as "production ready". Do not push broken code there.
-
-### Phase 2: Development (Days 2-4)
-
-Branching:
-
-Member A works on branch feature/road-cleaning.
-
-Member B works on branch feature/bridge-cleaning.
-
-Member C works on branch feature/interpolation-logic.
-
-Communication: When Member A finishes cleaning road names/sorting, merge into main so Member C can use that clean data to test interpolation.
-
-### Phase 3: Integration (Day 5)
-
-Merge: Pull everyone's branches into main.
-
-Run main.py: Ensure that running this one script produces the final files in data/processed/.
-
-Validate: Member C runs a final check (using notebooks/03_validation.ipynb) to ensure no bridges were lost during the merge and that coordinates look correct on a map plot.
-
-### Phase 4: Reporting (Day 6)
-
-Use the Issues tab in GitHub to list specific data errors found (e.g., "Found typo in N1 chainage").
-
-Copy these notes directly into the "Diagnosis" section of the report.
+* `_roads3.csv`: The cleaned, interpolated road network.
+* `BMMS_overview_CLEANED.xlsx`: The repaired bridge network, formatted strictly for the Java model.
+* `outliers_report.csv`: A diagnostic report of all corrected road outliers.
