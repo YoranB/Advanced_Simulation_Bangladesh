@@ -14,12 +14,12 @@ def main():
 
     # Road paths
     input_roads_path = base_dir / 'data' / 'raw' / 'Roads_InfoAboutEachLRP.csv'
-    output_clean_roads_path = base_dir / 'data' / 'processed' / '_roads3.csv'
+    output_clean_roads_path = base_dir / 'data' / 'processed' / '_roads.csv'
     output_outliers_path = base_dir / 'data' / 'processed' / 'outliers_report.csv'
 
     # Bridge paths (Added these)
     input_bridges_path = base_dir / 'data' / 'raw' / 'BMMS_overview.xlsx'
-    output_clean_bridges_path = base_dir / 'data' / 'processed' / 'BMMS_overview_CLEANED.xlsx'
+    output_clean_bridges_path = base_dir / 'data' / 'processed' / 'BMMS_overview.xlsx'
 
     print(f"Loading road data from: {input_roads_path}")
     df = pd.read_csv(input_roads_path, low_memory=False)
