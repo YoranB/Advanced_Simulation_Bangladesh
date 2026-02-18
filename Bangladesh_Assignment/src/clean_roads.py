@@ -35,10 +35,6 @@ def clean_and_interpolate_road(group):
     group['lat'] = fixed_lats
     group['lon'] = fixed_lons
 
-    # Interpolate remaining small gaps
-    group['lat'] = group['lat'].interpolate(method='linear', limit_direction='both')
-    group['lon'] = group['lon'].interpolate(method='linear', limit_direction='both')
-
     return group
 
 
