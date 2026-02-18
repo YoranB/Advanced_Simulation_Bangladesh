@@ -9,22 +9,21 @@ def clean_and_interpolate_road(group):
     Takes a dataframe group (one specific road), identifies outliers based on
     rolling median deviation (>10km), and snaps them to the median.
     """
-    # 1. Sort by chainage
+    # Sort by chainage
     group = group.sort_values(by='chainage')
 
-    # 2. Calculate Rolling Median
+    # Calculate Rolling Median
     # min_periods=1 ensures we get values even at the edges
     med_lat = group['lat'].rolling(window=5, center=True, min_periods=1).median()
     med_lon = group['lon'].rolling(window=5, center=True, min_periods=1).median()
 
-    # 3. Calculate Distance
+    # Calculate Distance
     dist_error = haversine_dist(group['lat'], group['lon'], med_lat, med_lon)
 
-    # 4. Identify Outliers (> 10km)
+    # Identify Outliers (> 10km)
     is_outlier = dist_error > 10
 
-    # 5. Fix Outliers
-    # Use copy to avoid SettingWithCopy warnings
+    # Fix Outliers
     fixed_lats = group['lat'].copy()
     fixed_lons = group['lon'].copy()
 
@@ -36,7 +35,7 @@ def clean_and_interpolate_road(group):
     group['lat'] = fixed_lats
     group['lon'] = fixed_lons
 
-    # 6. Interpolate remaining small gaps (if any)
+    # 6. Interpolate remaining small gaps
     group['lat'] = group['lat'].interpolate(method='linear', limit_direction='both')
     group['lon'] = group['lon'].interpolate(method='linear', limit_direction='both')
 
