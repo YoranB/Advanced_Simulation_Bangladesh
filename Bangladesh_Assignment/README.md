@@ -82,3 +82,5 @@ python main.py
 * `_roads3.csv`: The cleaned, interpolated road network.
 * `BMMS_overview_CLEANED.xlsx`: The repaired bridge network, formatted strictly for the Java model.
 * `outliers_report.csv`: A diagnostic report of all corrected road outliers.
+
+### To run the java visualisation go to data -> Processed and copy the _roads3.csv and BMMS_overview_CLEANED.xlsx
