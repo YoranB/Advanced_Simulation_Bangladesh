@@ -58,7 +58,7 @@ def main():
     df_clean.to_csv(output_clean_roads_path, index=False)
     print(f"Success! Cleaned road data saved to: {output_clean_roads_path}")
 
-    ### Bridges start here
+    ### Bridges start here ###
 
     # LOAD BRIDGES
     print(f"Loading bridge data from: {input_bridges_path}")
