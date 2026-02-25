@@ -22,13 +22,13 @@ def repair_bridge_location(row, road_dict, road_max_lengths):
     if not pd.isna(row['lat_matched']):
         return row['lat_matched'], row['lon_matched'], "Fixed: Matched on LRP Name"
     
-    # Retrieve road data
+    # Retrieve road data_example
     road_id = row['road_norm']
     km = row['km']
     
     # Error Handling: If road doesn't exist in our clean roads file (should be filtered already)
     if pd.isna(km) or road_id not in road_dict:
-        return row['lat'], row['lon'], "Error: Road data missing"
+        return row['lat'], row['lon'], "Error: Road data_example missing"
 
     road_data = road_dict[road_id]
     max_len = road_max_lengths[road_id]
@@ -57,7 +57,7 @@ def repair_bridge_location(row, road_dict, road_max_lengths):
         lon_10 = np.interp(km_div_10, road_data['chainage'], road_data['lon'])
         return lat_10, lon_10, "Fixed: Typo detected (Chainage / 10)"
 
-    # If it's not a typo and not a small deviation, the road data is likely incomplete/short.
+    # If it's not a typo and not a small deviation, the road data_example is likely incomplete/short.
     # Action: Snap to end to ensure connectivity in simulation.
     used_km = max(0, min(km, max_len)) # Clamp values
     new_lat = np.interp(used_km, road_data['chainage'], road_data['lat'])
@@ -68,10 +68,10 @@ def repair_bridge_location(row, road_dict, road_max_lengths):
 
 def clean_bridges_pipeline(df_bridges, df_roads_clean):
     """
-    Main pipeline to clean bridge data using the clean road network.
+    Main pipeline to clean bridge data_example using the clean road network.
     Returns the cleaned dataframe and a statistics summary.
     """
-    print("   -> Normalizing text and data types...")
+    print("   -> Normalizing text and data_example types...")
     # Normalize Columns
     df_bridges['road_norm'] = normalize_text(df_bridges, 'road')
     df_bridges['lrp_norm'] = normalize_text(df_bridges, 'LRPName')

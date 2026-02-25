@@ -13,15 +13,15 @@ def main():
     base_dir = Path(__file__).parent
 
     # Road paths
-    input_roads_path = base_dir / 'data' / 'raw' / 'Roads_InfoAboutEachLRP.csv'
-    output_clean_roads_path = base_dir / 'data' / 'processed' / '_roads.csv'
-    output_outliers_path = base_dir / 'data' / 'processed' / 'outliers_report.csv'
+    input_roads_path = base_dir / 'data_example' / 'raw' / 'Roads_InfoAboutEachLRP.csv'
+    output_clean_roads_path = base_dir / 'data_example' / 'processed' / '_roads.csv'
+    output_outliers_path = base_dir / 'data_example' / 'processed' / 'outliers_report.csv'
 
     # Bridge paths (Added these)
-    input_bridges_path = base_dir / 'data' / 'raw' / 'BMMS_overview.xlsx'
-    output_clean_bridges_path = base_dir / 'data' / 'processed' / 'BMMS_overview.xlsx'
+    input_bridges_path = base_dir / 'data_example' / 'raw' / 'BMMS_overview.xlsx'
+    output_clean_bridges_path = base_dir / 'data_example' / 'processed' / 'BMMS_overview.xlsx'
 
-    print(f"Loading road data from: {input_roads_path}")
+    print(f"Loading road data_example from: {input_roads_path}")
     df = pd.read_csv(input_roads_path, low_memory=False)
 
     # LOG & REMOVE DUPLICATES ROADS
@@ -56,12 +56,12 @@ def main():
 
     # EXPORT ROADS
     df_clean.to_csv(output_clean_roads_path, index=False)
-    print(f"Success! Cleaned road data saved to: {output_clean_roads_path}")
+    print(f"Success! Cleaned road data_example saved to: {output_clean_roads_path}")
 
     ### Bridges start here ###
 
     # LOAD BRIDGES
-    print(f"Loading bridge data from: {input_bridges_path}")
+    print(f"Loading bridge data_example from: {input_bridges_path}")
     try:
         # Check file extension to use correct loader
         if input_bridges_path.suffix == '.csv':
@@ -90,7 +90,7 @@ def main():
     # EXPORT BRIDGES
     # Must be Excel with specific sheet name for Java
     df_bridges_clean.to_excel(output_clean_bridges_path, index=False, sheet_name="BMMS_overview")
-    print(f"Success! Cleaned bridge data saved to: {output_clean_bridges_path}")
+    print(f"Success! Cleaned bridge data_example saved to: {output_clean_bridges_path}")
 
 
 if __name__ == "__main__":
