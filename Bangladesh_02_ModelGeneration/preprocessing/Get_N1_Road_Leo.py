@@ -30,6 +30,8 @@ def calculate_segment_lengths(df):
     # .diff() leaves the first row as NaN, so we fill it with zero
     df['length'] = df['chainage'].diff().fillna(0)
 
+    #putting it in meters
+    df['length'] = df['length'] * 1000
     # Round to three decimal places
     df['length'] = df['length'].round(3)
 
