@@ -74,5 +74,5 @@ server = ModularServer(BangladeshModel,
                        {"seed": 1234567})
 
 # The default port
-server.port = 8521
+server.port = 8525
 server.launch()

@@ -56,14 +56,42 @@ class Bridge(Infra):
 
         self.condition = condition
 
-        # TODO
-        self.delay_time = self.random.randrange(0, 10)
+        # Blocked out this part of the code
+        # # TODO
+        #self.delay_time = self.random.randrange(0, 10)
         # print(self.delay_time)
 
+    #Added this method
     # TODO
-    def get_delay_time(self):
-        return self.delay_time
-
+    def get_delay_time(self, probabilities=None):
+        """
+        Calculates the delay time for a truck based on bridge length,
+        BUT only if the bridge breaks down according to its condition probability.
+        """
+        # Default scenario 0 (Business as usual - no breakdowns)
+        if probabilities is None:
+            probabilities = {'A': 0.0, 'B': 0.0, 'C': 0.0, 'D': 0.0}
+            
+        # Get the breakdown probability for this specific bridge's condition
+        # (Default to 0 if the condition is missing or unknown)
+        breakdown_chance = probabilities.get(self.condition, 0.0)
+        
+        # Roll a random number between 0.0 and 1.0. 
+        # If it's less than our breakdown chance, the bridge is broken!
+        if self.random.random() < (breakdown_chance / 100.0): # Dividing by 100 if you input percentages like 5, 10, 20
+            
+            # The bridge is broken. Apply the delay logic we wrote earlier:
+            if self.length > 200:
+                return int(self.random.triangular(60, 120, 240))
+            elif self.length >= 50:
+                return self.random.randint(45, 90)
+            elif self.length >= 10:
+                return self.random.randint(15, 60)
+            else:
+                return self.random.randint(10, 20)
+                
+        # If the random number is higher, the bridge is fine. No delay.
+        return 0
 
 # ---------------------------------------------------------------
 class Link(Infra):
@@ -87,7 +115,7 @@ class Sink(Infra):
     def remove(self, vehicle):
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
-        print(str(self) + ' REMOVE ' + str(vehicle))
+        #print(str(self) + ' REMOVE ' + str(vehicle))
 
 
 # ---------------------------------------------------------------
@@ -134,9 +162,10 @@ class Source(Infra):
                 Source.truck_counter += 1
                 self.vehicle_count += 1
                 self.vehicle_generated_flag = True
-                print(str(self) + " GENERATE " + str(agent))
+                #print(str(self) + " GENERATE " + str(agent))
         except Exception as e:
             print("Oops!", e.__class__, "occurred.")
+            pass
 
 
 # ---------------------------------------------------------------
@@ -192,7 +221,8 @@ class Vehicle(Agent):
     """
 
     # 50 km/h translated into meter per min
-    speed = 50 * 1000 / 60
+    # Changed to 48 km/h considering the assignment specifics
+    speed = 48 * 1000 / 60
     # One tick represents 1 minute
     step_time = 1
 
@@ -217,11 +247,12 @@ class Vehicle(Agent):
         self.removed_at_step = None
 
     def __str__(self):
-        return "Vehicle" + str(self.unique_id) + \
-               " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
-               " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
-               str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
-
+        return f"Vehicle{self.unique_id}"
+        #return "Vehicle" + str(self.unique_id) + \
+        #       " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
+        #       " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
+        #       str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
+        
     def set_path(self):
         """
         Set the origin destination path of the vehicle
@@ -244,7 +275,7 @@ class Vehicle(Agent):
         """
         To print the vehicle trajectory at each step
         """
-        print(self)
+        #print(self)
 
     def drive(self):
 
@@ -269,14 +300,28 @@ class Vehicle(Agent):
         next_id = self.path_ids[self.location_index]
         next_infra = self.model.schedule._agents[next_id]  # Access to protected member _agents
 
+        #Changed this part to add the delay logic for bridges and the removal logic for sinks
         if isinstance(next_infra, Sink):
             # arrive at the sink
             self.arrive_at_next(next_infra, 0)
             self.removed_at_step = self.model.schedule.steps
+            
+            # Calculate total travel time (in minutes/ticks)
+            travel_time = self.removed_at_step - self.generated_at_step
+            self.model.travel_times.append(travel_time) # Save it to the model's list
+            
             self.location.remove(self)
             return
+        
+        #CHANGED here see comments above
         elif isinstance(next_infra, Bridge):
-            self.waiting_time = next_infra.get_delay_time()
+            # Safely grab the scenario probabilities from the main model
+            # If they don't exist yet, it defaults to None
+            scenario_probs = getattr(self.model, 'bridge_probabilities', None)
+            
+            # Pass those probabilities into the bridge's delay calculator
+            self.waiting_time = next_infra.get_delay_time(probabilities=scenario_probs)
+            
             if self.waiting_time > 0:
                 # arrive at the bridge and wait
                 self.arrive_at_next(next_infra, 0)

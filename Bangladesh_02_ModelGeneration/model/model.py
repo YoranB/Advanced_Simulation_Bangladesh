@@ -54,15 +54,27 @@ class BangladeshModel(Model):
     """
 
     step_time = 1
+    #Changed here: added bridge_probabilities to the model's attributes
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, bridge_probabilities=None):
+        # We MUST pass the seed to the super class for random numbers to be consistent
+        super().__init__(seed=seed) 
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
-
+        
         self.schedule = BaseScheduler(self)
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
         self.space = None
         self.sources = []
         self.sinks = []
+        
+        # Store the probabilities for the current scenario (defaults to Scenario 0)
+        if bridge_probabilities is None:
+            self.bridge_probabilities = {'A': 0.0, 'B': 0.0, 'C': 0.0, 'D': 0.0}
+        else:
+            self.bridge_probabilities = bridge_probabilities
+            
+        # A list to store the travel times of all trucks that successfully reach the sink
+        self.travel_times = []
 
         self.generate_model()
 
@@ -86,12 +98,17 @@ class BangladeshModel(Model):
         df_objects_all = []
         for road in roads:
 
-            # be careful with the sorting
-            # better remove sorting by id
             # Select all the objects on a particular road
             df_objects_on_road = df[df['road'] == road].sort_values(by=['id'])
-
+            
+            # Changed here to auto-generate sources and sinks based on the first and last components on the road
             if not df_objects_on_road.empty:
+                # Set the first component on the road to be the Source (Chittagong)
+                df_objects_on_road.loc[df_objects_on_road.index[0], 'model_type'] = 'source'
+                # Set the last component to be the Sink (Dhaka)
+                df_objects_on_road.loc[df_objects_on_road.index[-1], 'model_type'] = 'sink'
+             
+
                 df_objects_all.append(df_objects_on_road)
 
                 # the object IDs on a given road
@@ -135,8 +152,11 @@ class BangladeshModel(Model):
                     agent = SourceSink(row['id'], self, row['length'], row['name'], row['road'])
                     self.sources.append(agent.unique_id)
                     self.sinks.append(agent.unique_id)
+                #Changed here to make sure that the bridge agents are initialized with the condition column from the CSV, which is needed for the probability logic to work correctly
                 elif model_type == 'bridge':
-                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'])
+                    # Make sure to pass the condition so our probability logic works
+                    # (Assuming CSV column is named 'condition')
+                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], condition=row['condition'])
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], row['name'], row['road'])
 

@@ -2,9 +2,17 @@ import pandas as pd
 
 
 def load_data(filepath):
-    return pd.read_csv(filepath, low_memory=False)
-
-
+    """Loads data depending on if it's a CSV or an Excel file."""
+    # Convert filepath to string just to be safe
+    filepath_str = str(filepath).lower()
+    
+    if filepath_str.endswith('.xlsx'):
+        # Use read_excel for the BMMS file
+        return pd.read_excel(filepath)
+    else:
+        # Use read_csv for the roads file
+        return pd.read_csv(filepath, low_memory=False)
+    
 def filter_by_road(df, road_name):
     """Filters the dataset to only include rows for a specific road."""
     return df[df['road'] == road_name].copy()
@@ -27,6 +35,55 @@ def calculate_segment_lengths(df):
 
     return df
 
+def merge_bridge_data(df_roads, bmms_filepath):
+    """Merges actual bridge conditions and exact lengths from the BMMS dataset."""
+    df_bmms = load_data(bmms_filepath)
+    
+    # Filter to N1 only
+    df_bmms = df_bmms[df_bmms['road'] == 'N1'].copy()
+    
+    # Handle L and R bridges at the same location
+    df_bmms = df_bmms.sort_values(by='condition', ascending=False)
+    df_bmms = df_bmms.drop_duplicates(subset=['LRPName'], keep='first')
+    
+    # Merge with the roads dataset
+    df_merged = pd.merge(df_roads, 
+                         df_bmms[['LRPName', 'condition', 'length']], 
+                         left_on='lrp', 
+                         right_on='LRPName', 
+                         how='left', 
+                         suffixes=('', '_bmms'))
+                         
+    # For bridges, overwrite the length
+    df_merged['length'] = df_merged['length_bmms'].fillna(df_merged['length'])
+    
+    # Fill non-bridge conditions with 'Unknown'
+    df_merged['condition'] = df_merged['condition'].fillna('Unknown')
+    
+    # ... (existing code above)
+    
+    # Fill non-bridge conditions with 'Unknown'
+    df_merged['condition'] = df_merged['condition'].fillna('Unknown')
+    
+    # --- ADD THESE LINES ---
+    # 1. Count total bridges in the N1 road dataset
+    total_bridges = len(df_merged[df_merged['model_type'] == 'bridge'])
+    
+    # 2. Count how many of those bridges ended up as 'Unknown'
+    unknown_count = len(df_merged[(df_merged['model_type'] == 'bridge') & (df_merged['condition'] == 'Unknown')])
+    
+    # 3. Calculate the percentage for extra insight
+    unknown_pct = (unknown_count / total_bridges) * 100 if total_bridges > 0 else 0
+    
+    print(f"Bridge Data Match Results:")
+    print(f" - Total bridges found on N1: {total_bridges}")
+    print(f" - Bridges with 'Unknown' condition: {unknown_count} ({unknown_pct:.1f}%)")
+    # -----------------------
+    
+    # Clean up the extra columns
+    df_merged = df_merged.drop(columns=['LRPName', 'length_bmms'])
+    
+    return df_merged
 
 def drop_unnecessary_columns(df):
     """Removes columns that are no longer needed."""
@@ -82,10 +139,9 @@ def assign_model_types_and_names(df):
 
 def format_final_dataframe(df):
     """Reorders the columns to exactly match the MESA expected format."""
-    # MESA required format: road, id, model_type, name, lat, lon, length
-    expected_order = ['road', 'id', 'model_type', 'name', 'lat', 'lon', 'length']
+    # Added 'condition' to the end of the list!
+    expected_order = ['road', 'id', 'model_type', 'name', 'lat', 'lon', 'length', 'condition']
     
-    # Reorder and filter down to just these required columns
     return df[expected_order]
 
 
@@ -98,12 +154,12 @@ def save_data(df, filepath):
 
 
 def main():
-    # File paths relative to the preprocessing directory
     input_filepath = "../data_cleaned_by_lecturer/_roads3.csv"
+    
+    bmms_filepath = "../data_cleaned_by_lecturer/BMMS_overview.xlsx" 
+    
     output_filepath = "../data_processed/N1_roads.csv"
-
-    # --- Preprocessing Pipeline ---
-
+    
     # 1. Load data
     df = load_data(input_filepath)
 
@@ -111,16 +167,18 @@ def main():
     df = filter_by_road(df, road_name='N1')
 
     # 3. Calculate segment lengths from chainage 
-    # (Important: This also sorts the dataframe geographically, which is required before setting source/sink)
     df = calculate_segment_lengths(df)
     
-    # 4. Apply Model Types (Source, Sink, Bridge, Link) and Names
+    # 4. Apply Model Types and Names
     df = assign_model_types_and_names(df)
+    
+    # --- NEW STEP: Merge Bridge Data ---
+    df = merge_bridge_data(df, bmms_filepath)
 
     # 5. Add unique IDs
     df = add_unique_id(df)
 
-    # 6. Drop unnecessary columns (removes the old 'type' column)
+    # 6. Drop unnecessary columns 
     df = drop_unnecessary_columns(df)
     
     # 7. Reorder columns perfectly for MESA
