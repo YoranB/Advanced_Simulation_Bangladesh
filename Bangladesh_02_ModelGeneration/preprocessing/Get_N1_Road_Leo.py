@@ -58,26 +58,21 @@ def merge_bridge_data(df_roads, bmms_filepath):
     df_merged['length'] = df_merged['length_bmms'].fillna(df_merged['length'])
     
     # Fill non-bridge conditions with 'Unknown'
-    df_merged['condition'] = df_merged['condition'].fillna('Unknown')
-    
-    # ... (existing code above)
-    
-    # Fill non-bridge conditions with 'Unknown'
-    df_merged['condition'] = df_merged['condition'].fillna('Unknown')
-    
+    df_merged['condition'] = df_merged['condition'].fillna('A')
+
     # --- ADD THESE LINES ---
     # 1. Count total bridges in the N1 road dataset
-    total_bridges = len(df_merged[df_merged['model_type'] == 'bridge'])
+    #total_bridges = len(df_merged[df_merged['model_type'] == 'bridge'])
     
     # 2. Count how many of those bridges ended up as 'Unknown'
-    unknown_count = len(df_merged[(df_merged['model_type'] == 'bridge') & (df_merged['condition'] == 'Unknown')])
+   # unknown_count = len(df_merged[(df_merged['model_type'] == 'bridge') & (df_merged['condition'] == 'Unknown')])
     
     # 3. Calculate the percentage for extra insight
-    unknown_pct = (unknown_count / total_bridges) * 100 if total_bridges > 0 else 0
+    #unknown_pct = (unknown_count / total_bridges) * 100 if total_bridges > 0 else 0
     
-    print(f"Bridge Data Match Results:")
-    print(f" - Total bridges found on N1: {total_bridges}")
-    print(f" - Bridges with 'Unknown' condition: {unknown_count} ({unknown_pct:.1f}%)")
+    #print(f"Bridge Data Match Results:")
+   # print(f" - Total bridges found on N1: {total_bridges}")
+   # print(f" - Bridges with 'Unknown' condition: {unknown_count} ({unknown_pct:.1f}%)")
     # -----------------------
     
     # Clean up the extra columns
