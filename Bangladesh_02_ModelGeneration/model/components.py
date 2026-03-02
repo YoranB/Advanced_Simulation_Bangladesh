@@ -59,30 +59,33 @@ class Bridge(Infra):
         # Blocked out this part of the code
         # # TODO
         #self.delay_time = self.random.randrange(0, 10)
-        # print(self.delay_time)
+        # print(self.delay_time) 
+        #this is supposed to be at bridge level so when making a bridge it has to be broken/not, not everytime the function delay time gets called 
+        # if it can not find bridge_prob, then use A:, B: c: etc
+        probs = getattr(self.model, 'bridge_probabilities', {'A': 0, 'B': 0, 'C': 0, 'D': 0})
+        breakdown_chance = probs.get(self.condition, 0.0)
+                
+        # Roll a random number between 0.0 and 1.0. 
+        # If it's less than our breakdown chance, the bridge is broken!
+        if self.random.random() < (breakdown_chance / 100.0): # Dividing by 100 if you input percentages like 5, 10, 20
+            self.is_broken = True
+        else:
+            self.is_broken = False
+    #Added this method 
+    # TODO  
 
-    #Added this method
-    # TODO
-    def get_delay_time(self, probabilities=None):
+
+    def get_delay_time(self):
         """
         Calculates the delay time for a truck based on bridge length,
         BUT only if the bridge breaks down according to its condition probability.
         """
-        # Default scenario 0 (Business as usual - no breakdowns)
-        if probabilities is None:
-            probabilities = {'A': 0.0, 'B': 0.0, 'C': 0.0, 'D': 0.0}
-            
-        # Get the breakdown probability for this specific bridge's condition
-        # (Default to 0 if the condition is missing or unknown)
-        breakdown_chance = probabilities.get(self.condition, 0.0)
-        
-        # Roll a random number between 0.0 and 1.0. 
-        # If it's less than our breakdown chance, the bridge is broken!
-        if self.random.random() < (breakdown_chance / 100.0): # Dividing by 100 if you input percentages like 5, 10, 20
-            
+          
+        if self.is_broken:
+            #TODO? add self length in meters?
             # The bridge is broken. Apply the delay logic we wrote earlier:
             if self.length > 200:
-                return int(self.random.triangular(60, 120, 240))
+                return int(self.random.triangular(60, 240, 120)) #this uses max as second argument so i changed it
             elif self.length >= 50:
                 return self.random.randint(45, 90)
             elif self.length >= 10:
@@ -317,10 +320,9 @@ class Vehicle(Agent):
         elif isinstance(next_infra, Bridge):
             # Safely grab the scenario probabilities from the main model
             # If they don't exist yet, it defaults to None
-            scenario_probs = getattr(self.model, 'bridge_probabilities', None)
             
             # Pass those probabilities into the bridge's delay calculator
-            self.waiting_time = next_infra.get_delay_time(probabilities=scenario_probs)
+            self.waiting_time = next_infra.get_delay_time()
             
             if self.waiting_time > 0:
                 # arrive at the bridge and wait
