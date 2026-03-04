@@ -51,12 +51,30 @@ df = pd.DataFrame(bridge_data)
 # Because every scenario is run exactly 10 times, they are naturally weighted equally!
 summary = df.groupby(['Bridge_ID', 'Bridge_Name', 'Length', 'Condition'])['Total_Delay_Caused_mins'].sum().reset_index()
 
-# Find the 5 worst bottlenecks
-top_5_bridges = summary.sort_values(by='Total_Delay_Caused_mins', ascending=False)
+# ==========================================
+# --- THE NEW PANDAS TRICK ---
+# 1. Load the N1 file that you perfectly prepared in the previous step
+roads_df = pd.read_csv('../data_processed/N1_roads.csv')
 
-print("\n===========================================")
-print("🏆 TOP 5 BRIDGES FOR GOVERNMENT INVESTMENT 🏆")
-print("===========================================")
+# 2. Merge the 'real_name' and 'lrp' into your summary (matching 'Bridge_Name' with 'name')
+summary = pd.merge(summary, 
+                   roads_df[['name', 'real_name', 'lrp']], 
+                   left_on='Bridge_Name', 
+                   right_on='name', 
+                   how='left')
+
+# 3. Clean up the columns so real_name is nicely in the middle
+summary = summary.drop(columns=['name']) # Drop the duplicate name column
+column_order = ['Bridge_ID', 'Bridge_Name', 'lrp', 'real_name', 'Length', 'Condition', 'Total_Delay_Caused_mins']
+summary = summary[column_order]
+# ==========================================
+
+# Find the 5 worst bottlenecks (Now with .head(5) to actually get the top 5!)
+top_5_bridges = summary.sort_values(by='Total_Delay_Caused_mins', ascending=False).head(5)
+
+print("\n=========================================================================")
+print("🏆 TOP 5 BRIDGES FOR GOVERNMENT INVESTMENT (BASED ON TOTAL DELAY MINS) 🏆")
+print("=========================================================================")
 print(top_5_bridges.to_string(index=False))
 
 # Save the results
