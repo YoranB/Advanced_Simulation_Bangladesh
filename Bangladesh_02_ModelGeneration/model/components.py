@@ -79,7 +79,7 @@ class Bridge(Infra):
     def get_delay_time(self):
         """
         Calculates the delay time for a truck based on bridge length,
-        BUT only if the bridge breaks down according to its condition probability.
+        only if the bridge breaks down according to its condition probability.
         """
           
         if self.is_broken:
