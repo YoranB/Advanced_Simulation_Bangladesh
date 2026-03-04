@@ -25,7 +25,7 @@ def calculate_segment_lengths(df):
     return df
 
 def merge_bridge_data(df_roads, bmms_filepath, road_name):
-    """Merges actual bridge conditions from BMMS. ONLY matched nodes become bridges!"""
+    """Merges actual bridge conditions AND official names from BMMS."""
     df_bmms = load_data(bmms_filepath)
     
     # Filter to current road using the provided variable
@@ -39,55 +39,53 @@ def merge_bridge_data(df_roads, bmms_filepath, road_name):
     df_bmms = df_bmms.sort_values(by='condition', ascending=False)
     df_bmms = df_bmms.drop_duplicates(subset=['LRPName'], keep='first')
     
-    # 3. MERGE
+    # 3. MERGE: Using suffixes to distinguish between the 'name' in road file and 'name' in BMMS
     df_merged = pd.merge(df_roads, 
-                         df_bmms[['LRPName', 'condition', 'length']], 
+                         df_bmms[['LRPName', 'condition', 'length', 'name']], 
                          left_on='lrp', 
                          right_on='LRPName', 
                          how='left', 
                          suffixes=('', '_bmms'))
                          
-    # 4.Only BMMS determines if it is a bridge
+    # 4. Only BMMS determines if it is a bridge
     # make everything standard link (normal road)
     df_merged['model_type'] = 'link'
     
-    # If merge succes --> then it becomes type bridge 
+    # If merge success --> then it becomes type bridge 
     matched_bridges = df_merged['condition'].notna()
     df_merged.loc[matched_bridges, 'model_type'] = 'bridge'
     
-    # 5. Lenght: Overwrite the lenght with BMMS length, if BMMS lenght empty use GPS length
+    # 5. Length: Overwrite the length with BMMS length, if BMMS length empty use GPS length
     df_merged['length'] = df_merged['length_bmms'].fillna(df_merged['length'])
     
-    # 6. Condition: Fill in missing conditions with 'A'
+    # 6. Real Name: Prioritize the official name from BMMS. If it's a link (not in BMMS), keep the road name.
+    df_merged['real_name'] = df_merged['name_bmms'].fillna(df_merged['name'])
+    
+    # 7. Condition: Fill in missing conditions with 'A'
     df_merged['condition'] = df_merged['condition'].fillna('A')
 
-    # remove help columns 
-    df_merged = df_merged.drop(columns=['LRPName', 'length_bmms'])
+    # Remove helper columns and the temporary BMMS name column
+    df_merged = df_merged.drop(columns=['LRPName', 'length_bmms', 'name_bmms'])
     
     return df_merged
 
 def assign_model_types_and_names(df):
-    """Defines source/sink and generates sequential names, but keeps original name for the bonus."""
-    # Keep original name (we need it for the bonus later)
-    if 'name' in df.columns:
-        df['real_name'] = df['name']
-    else:
-        df['real_name'] = 'Unknown'
-
+    """Defines source/sink and generates sequential names (e.g., bridge 1, link 2)."""
+    
     # Set the Source (First row) and Sink (Last row)
     if len(df) > 0:
         df.iloc[0, df.columns.get_loc('model_type')] = 'source'
         df.iloc[-1, df.columns.get_loc('model_type')] = 'sink'
 
     # Generate sequential names like "link 1", "bridge 1", "link 2"
+    # This 'name' column is for MESA, while 'real_name' holds the official bridge name
     counts = df.groupby('model_type').cumcount() + 1
     df['name'] = df['model_type'] + ' ' + counts.astype(str)
     
     return df
 
 def drop_unnecessary_columns(df):
-    """Removes columns that are no longer needed (LRP is excluded so it is saved!)."""
-    # Keep LRP name we need it for the bonsu
+    """Removes columns that are no longer needed."""
     columns_to_drop = ['chainage', 'gap', 'type']
     existing_cols_to_drop = [col for col in columns_to_drop if col in df.columns]
     return df.drop(columns=existing_cols_to_drop)
@@ -101,7 +99,7 @@ def format_final_dataframe(df):
     """Reorders the columns to exactly match the MESA expected format."""
     expected_order = ['road', 'id', 'model_type', 'name', 'lat', 'lon', 'length', 'condition', 'lrp', 'real_name']
     
-    # Veiligheidscheck: Als een kolom toevallig mist, vul hem dan in met lege tekst
+    # Safety check: fill missing columns with empty string
     for col in expected_order:
         if col not in df.columns:
             df[col] = ''
@@ -130,10 +128,10 @@ def main():
     # 3. Calculate segment lengths from chainage 
     df = calculate_segment_lengths(df)
     
-    # 4. Merge Bridge Data (Geef target_road door als variabele)
+    # 4. Merge Bridge Data (This now captures the official 'name' from BMMS)
     df = merge_bridge_data(df, bmms_filepath, road_name=target_road)
 
-    # 5. Apply Names and Source/Sink
+    # 5. Apply MESA Names and Source/Sink
     df = assign_model_types_and_names(df)
     
     # 6. Add unique IDs
@@ -145,18 +143,16 @@ def main():
     # 8. Reorder columns perfectly for MESA
     df = format_final_dataframe(df)
 
-
-# --- EXTRA PRINT STATEMENTS VOOR INZICHT ---
+    # --- EXTRA PRINT STATEMENTS VOOR INZICHT ---
     print("\n--- FINAL DATASET SAMENVATTING ---")
-    print(f"Totaal amount of objects on route (Nodes): {len(df)}")
+    print(f"Total amount of objects on route (Nodes): {len(df)}")
     
     bridges = df[df['model_type'] == 'bridge']
-    links = df[df['model_type'] == 'link']
     
-    print(f" -amount of real bridges in model: {len(bridges)}")
+    print(f" - Amount of real bridges in model: {len(bridges)}")
    
     if len(bridges) > 0:
-        print("\ndivision van Brug-Condities:")
+        print("\nDivision of Bridge Conditions:")
         print(bridges['condition'].value_counts().to_string())
     # ------------------------------------------
 
