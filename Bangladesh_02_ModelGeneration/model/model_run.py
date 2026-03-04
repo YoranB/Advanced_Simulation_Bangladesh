@@ -14,9 +14,9 @@ run_length = 5 * 24 * 60
 # 10 random seeds for 10 replications
 seeds = [123, 456, 789, 101, 112, 131, 415, 161, 718, 192]
 
-# Define the 8 scenarios from the assignment table (Percentages for Cat A, B, C, D)
+# Define the 8 scenarios
 scenarios = {
-    0: {'A': 0, 'B': 0, 'C': 0, 'D': 0},   # Business as usual
+    0: {'A': 0, 'B': 0, 'C': 0, 'D': 0},
     1: {'A': 0, 'B': 0, 'C': 0, 'D': 5},
     2: {'A': 0, 'B': 0, 'C': 0, 'D': 10},
     3: {'A': 0, 'B': 0, 'C': 5, 'D': 10},
@@ -24,7 +24,7 @@ scenarios = {
     5: {'A': 0, 'B': 5, 'C': 10, 'D': 20},
     6: {'A': 0, 'B': 10, 'C': 20, 'D': 40},
     7: {'A': 5, 'B': 10, 'C': 20, 'D': 40},
-    8: {'A': 20, 'B': 10, 'C': 80, 'D': 40}
+    8: {'A': 10, 'B': 20, 'C': 40, 'D': 80}
 }
 
 print("Starting experiments...")

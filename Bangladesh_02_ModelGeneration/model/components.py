@@ -78,11 +78,10 @@ class Bridge(Infra):
     def get_delay_time(self):
         """
         Calculates the delay time for a truck based on bridge length,
-        BUT only if the bridge breaks down according to its condition probability.
+        only if the bridge breaks down according to its condition probability.
         """
           
         if self.is_broken:
-            #TODO? add self length in meters?
             # The bridge is broken. Apply the delay logic we wrote earlier:
             if self.length > 200:
                 return int(self.random.triangular(60, 240, 120)) #this uses max as second argument so i changed it
