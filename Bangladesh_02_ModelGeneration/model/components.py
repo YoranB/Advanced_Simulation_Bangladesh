@@ -55,7 +55,8 @@ class Bridge(Infra):
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
-
+        # New for BONUS: Track total delay caused by this bridge
+        self.total_delay_time = 0
         # Blocked out this part of the code
         # # TODO
         #self.delay_time = self.random.randrange(0, 10)
@@ -82,17 +83,22 @@ class Bridge(Infra):
         """
           
         if self.is_broken:
-            #TODO? add self length in meters?
-            # The bridge is broken. Apply the delay logic we wrote earlier:
+            # Assign the value to 'delay' instead of returning it immediately
             if self.length > 200:
-                return int(self.random.triangular(60, 240, 120)) #this uses max as second argument so i changed it
+                delay = int(self.random.triangular(60, 240, 120)) 
             elif self.length >= 50:
-                return self.random.randint(45, 90)
+                delay = self.random.randint(45, 90)
             elif self.length >= 10:
-                return self.random.randint(15, 60)
+                delay = self.random.randint(15, 60)
             else:
-                return self.random.randint(10, 20)
-                
+                delay = self.random.randint(10, 20)
+            
+            # NEW for BONUS: Add this truck's delay to the bridge's stopwatch
+            self.total_delay_time += delay  
+            
+            # Now we can return it!
+            return delay
+        
         # If the random number is higher, the bridge is fine. No delay.
         return 0
 
