@@ -69,35 +69,33 @@ class BangladeshModel(Model):
 
         self.generate_model()
 
+class BangladeshModel(Model):
+    step_time = 1
+    file_name = '../data/demo-4.csv' # Pas aan naar jouw juiste pad indien nodig
+
+    def __init__(self, seed=None):
+        super().__init__(seed=seed)
+        self.schedule = BaseScheduler(self)
+        self.running = True
+        self.path_ids_dict = defaultdict(lambda: pd.Series())
+        self.space = None
+        self.sources = []
+        self.sinks = [] 
+        self.G = nx.Graph() 
+
+        self.generate_model()
+
     def generate_model(self):
-        """
-        generate the simulation model according to the csv file component information
-
-        Warning: the labels are the same as the csv column labels
-        """
-
         df = pd.read_csv(self.file_name)
-
-        # a list of names of roads to be generated
-        #  You can also read in the road column to generate this list automatically 
-        #we changed this, so take all roads
         roads = df['road'].unique().tolist()
 
         df_objects_all = []
         for road in roads:
-            # Select all the objects on a particular road in the original order as in the cvs
             df_objects_on_road = df[df['road'] == road]
-
             if not df_objects_on_road.empty:
                 df_objects_all.append(df_objects_on_road)
-
-                """
-                Set the path 
-                1. get the serie of object IDs on a given road in the cvs in the original order
-                2. add the (straight) path to the path_ids_dict
-                3. put the path in reversed order and reindex
-                4. add the path to the path_ids_dict so that the vehicles can drive backwards too
-                """
+                
+                # Oude pad-logica (nodig voor get_straight_route)
                 path_ids = df_objects_on_road['id']
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
@@ -107,34 +105,24 @@ class BangladeshModel(Model):
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
 
-        # put back to df with selected roads so that min and max and be easily calculated
-        df = pd.concat(df_objects_all)
+        df_combined = pd.concat(df_objects_all)
         y_min, y_max, x_min, x_max = set_lat_lon_bound(
-            df['lat'].min(),
-            df['lat'].max(),
-            df['lon'].min(),
-            df['lon'].max(),
-            0.05
+            df_combined['lat'].min(), df_combined['lat'].max(),
+            df_combined['lon'].min(), df_combined['lon'].max(), 0.05
         )
-
-        # ContinuousSpace from the Mesa package;
-        # not to be confused with the SimpleContinuousModule visualization
         self.space = ContinuousSpace(x_max, y_max, True, x_min, y_min)
 
-        for df in df_objects_all:
-            prev_agent = None # to keep track of the previous agent on the same road, so we can add edges in the graph 
-            for _, row in df.iterrows():  # index, row in ...
+        # --- STAP 1: BOUW DE WEGEN & GPS-LIJM ---
+        all_nodes_by_pos = {}
 
-                # create agents according to model_type
+        for df_road in df_objects_all:
+            prev_agent = None 
+            for _, row in df_road.iterrows():
                 model_type = row['model_type'].strip()
                 agent = None
+                name = str(row['name']).strip() if pd.notna(row['name']) else ""
 
-                name = row['name']
-                if pd.isna(name):
-                    name = ""
-                else:
-                    name = name.strip()
-
+                # Maak de juiste agent
                 if model_type == 'source':
                     agent = Source(row['id'], self, row['length'], name, row['road'])
                     self.sources.append(agent.unique_id)
@@ -152,32 +140,68 @@ class BangladeshModel(Model):
                 elif model_type == 'intersection':
                     if not row['id'] in self.schedule._agents:
                         agent = Intersection(row['id'], self, row['length'], name, row['road'])
-                
-            
+                    else:
+                        agent = self.schedule._agents[row['id']]
 
                 if agent:
-                    self.schedule.add(agent)
-                    y = row['lat']
-                    x = row['lon']
-                    self.space.place_agent(agent, (x, y))
-                    agent.pos = (x, y) 
+                    if agent.unique_id not in self.schedule._agents:
+                        self.schedule.add(agent)
+                        y, x = row['lat'], row['lon']
+                        self.space.place_agent(agent, (x, y))
+                        agent.pos = (x, y) 
 
+                    # Voeg node toe aan de Graph
                     self.G.add_node(agent.unique_id, agent_object=agent) 
 
+                    # Universele GPS-Lijm (nu voor ELKE agent op 4 decimalen)
+                    pos_key = (round(row['lat'], 4), round(row['lon'], 4))
+                    if pos_key in all_nodes_by_pos:
+                        existing_id = all_nodes_by_pos[pos_key]
+                        if existing_id != agent.unique_id:
+                            self.G.add_edge(agent.unique_id, existing_id, weight=0)
+                    else:
+                        all_nodes_by_pos[pos_key] = agent.unique_id
 
-                    if prev_agent is not None: #check if there is previous agent on same road (thats why we reset for each road otherwise wierd)
-                        # connect previous agent with this agent
-                        # De 'weight' is de lengte van de huidige agent (belangrijk voor routeplanning!)
+                    # Verbinden binnen de eigen weg
+                    if prev_agent is not None:
                         self.G.add_edge(prev_agent.unique_id, agent.unique_id, weight=agent.length)
                     
-                    # NIEUW: Save agent as previous agent for the next iteration
                     prev_agent = agent 
-        print(f"Model gegenereerd met {self.G.number_of_nodes()} nodes en {self.G.number_of_edges()} edges.")
+
+        # --- STAP 2: DE ROBUUSTE EILAND-CONNECTOR ---
+        import math
+        islands = list(nx.connected_components(self.G))
         
-        # Laten we checken of de eerste agent van de eerste weg verbonden is
-        first_agent_id = df_objects_all[0]['id'].iloc[0]
-        neighbors = list(self.G.neighbors(first_agent_id))
-        print(f"Agent {first_agent_id} is verbonden met: {neighbors}")
+        if len(islands) > 1:
+            print(f"DEBUG: {len(islands)} eilanden gevonden. Bezig met koppelen...")
+            islands.sort(key=len, reverse=True)
+            main_island = set(islands[0])
+
+            for small_island in islands[1:]:
+                best_dist = float('inf')
+                connection = None
+                
+                # Check ALLE nodes van het kleine eilandje tegen de hoofdweg
+                # Dit garandeert dat we het raakpunt vinden!
+                for small_node_id in small_island:
+                    agent_s = self.G.nodes[small_node_id]['agent_object']
+                    
+                    for main_node_id in main_island:
+                        agent_m = self.G.nodes[main_node_id]['agent_object']
+                        dist = math.hypot(agent_s.pos[0] - agent_m.pos[0], agent_s.pos[1] - agent_m.pos[1])
+                        
+                        if dist < best_dist:
+                            best_dist = dist
+                            connection = (small_node_id, main_node_id)
+                
+                if connection:
+                    self.G.add_edge(connection[0], connection[1], weight=best_dist * 111) 
+                    main_island.update(small_island) # Nu hoort dit eiland bij het hoofdnetwerk
+
+        print(f"\n=== NETWORKX STATUS REPORT ===")
+        print(f"Nodes: {self.G.number_of_nodes()} | Edges: {self.G.number_of_edges()}")
+        print(f"Eilanden: {len(list(nx.connected_components(self.G)))}")
+        print(f"==============================\n")
         
     def get_random_route(self, source):
         """
