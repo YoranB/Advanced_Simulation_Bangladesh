@@ -55,9 +55,9 @@ def agent_portrayal(agent):
         portrayal["r"] = max(agent.vehicle_count * 4, 2)
 
     # define text labels
-    if isinstance(agent, Infra) and agent.name != "":
-        portrayal["Text"] = agent.name
-        portrayal["Text_color"] = "DarkSlateGray"
+    #if isinstance(agent, Infra) and agent.name != "":
+       # portrayal["Text"] = agent.name
+       # portrayal["Text_color"] = "DarkSlateGray"
 
     return portrayal
 

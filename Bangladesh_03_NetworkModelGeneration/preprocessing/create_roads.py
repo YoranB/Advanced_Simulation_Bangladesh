@@ -95,8 +95,8 @@ def assign_sourcesinks(df):
 
 def add_intersections(df):
     """Finds points where roads cross by looking for very close coordinates."""
-    df['lat_round'] = df['lat'].round(2)
-    df['lon_round'] = df['lon'].round(2)
+    df['lat_round'] = df['lat'].round(3)
+    df['lon_round'] = df['lon'].round(3)
     
     overlap_coords = df.groupby(['lat_round', 'lon_round'])['road'].nunique()
     intersections = overlap_coords[overlap_coords > 1].index
