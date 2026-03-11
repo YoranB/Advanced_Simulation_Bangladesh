@@ -9,23 +9,26 @@ def load_data(filepath):
         return pd.read_csv(filepath, low_memory=False)
 
 def filter_target_roads(df):
-    """Filters for N1, N2, and N-roads longer than 25km."""
-    # Keep only roads starting with 'N'
-    df = df[df['road'].str.startswith('N', na=False)].copy()
-    
-    # Ensure chainage is numeric
+    """Filters for N1, N2, and their specific branches > 25km."""
+    # Ensure chainage is numeric to calculate lengths
     df['chainage'] = pd.to_numeric(df['chainage'], errors='coerce')
     
     # Calculate total length of each road (max chainage - min chainage)
     road_lengths = df.groupby('road')['chainage'].max() - df.groupby('road')['chainage'].min()
     
-    # Keep N1, N2, OR roads longer than 25km
-    valid_roads = road_lengths[
-        (road_lengths.index.isin(['N1', 'N2'])) | 
-        (road_lengths > 25)
-    ].index
-    
-    print(f"Roads included in model: {list(valid_roads)}")
+    valid_roads = []
+    for road, length in road_lengths.items():
+        road_str = str(road)
+        
+        # Condition 1: Keep N1 and N2 explicitly
+        if road_str in ['N1', 'N2']:
+            valid_roads.append(road_str)
+            
+        # Condition 2: Keep branches of N1 or N2 that are longer than 25km
+        elif (road_str.startswith('N1') or road_str.startswith('N2')) and length > 25:
+            valid_roads.append(road_str)
+            
+    print(f"Roads included in model: {valid_roads}")
     return df[df['road'].isin(valid_roads)].copy()
 
 def calculate_segment_lengths(df):
@@ -108,9 +111,18 @@ def add_intersections(df):
     return df
 
 def assign_model_types_and_names(df):
-    """Generates sequential names (e.g., bridge 1, link 2)."""
+    """Generates names but removes them for standard links to keep visualization clean."""
+    # Generate sequential names for everything first
     counts = df.groupby('model_type').cumcount() + 1
     df['name'] = df['model_type'] + ' ' + counts.astype(str)
+    
+    # Wipe the 'name' column blank for standard links so they don't print on the map
+    df.loc[df['model_type'] == 'link', 'name'] = ''
+    
+    # Do the same for 'real_name' just to be safe
+    if 'real_name' in df.columns:
+        df.loc[df['model_type'] == 'link', 'real_name'] = ''
+        
     return df
 
 def drop_unnecessary_columns(df):
