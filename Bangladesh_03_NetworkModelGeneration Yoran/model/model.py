@@ -4,7 +4,7 @@ from mesa.space import ContinuousSpace
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
-
+import networkx as nx
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -66,6 +66,8 @@ class BangladeshModel(Model):
         self.sources = []
         self.sinks = []
 
+        self.G = nx.Graph()
+
         self.generate_model()
 
     def generate_model(self):
@@ -90,21 +92,30 @@ class BangladeshModel(Model):
             if not df_objects_on_road.empty:
                 df_objects_all.append(df_objects_on_road)
 
-                """
-                Set the path 
-                1. get the serie of object IDs on a given road in the cvs in the original order
-                2. add the (straight) path to the path_ids_dict
-                3. put the path in reversed order and reindex
-                4. add the path to the path_ids_dict so that the vehicles can drive backwards too
-                """
-                path_ids = df_objects_on_road['id']
-                path_ids.reset_index(inplace=True, drop=True)
-                self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
-                self.path_ids_dict[path_ids[0], None] = path_ids
-                path_ids = path_ids[::-1]
-                path_ids.reset_index(inplace=True, drop=True)
-                self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
-                self.path_ids_dict[path_ids[0], None] = path_ids
+                # --- NETWORKX: Build the road ---
+                # Get the sequence of IDs on this road as a list
+                path_ids = df_objects_on_road['id'].tolist()
+
+                # Link each node to the next one to form a continuous road
+                for i in range(len(path_ids) - 1):
+                    # We add an edge between component i and component i+1
+                    self.G.add_edge(path_ids[i], path_ids[i + 1])
+
+                # """
+                # Set the path
+                # 1. get the serie of object IDs on a given road in the cvs in the original order
+                # 2. add the (straight) path to the path_ids_dict
+                # 3. put the path in reversed order and reindex
+                # 4. add the path to the path_ids_dict so that the vehicles can drive backwards too
+                # """
+                # path_ids = df_objects_on_road['id']
+                # path_ids.reset_index(inplace=True, drop=True)
+                # self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
+                # self.path_ids_dict[path_ids[0], None] = path_ids
+                # path_ids = path_ids[::-1]
+                # path_ids.reset_index(inplace=True, drop=True)
+                # self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
+                # self.path_ids_dict[path_ids[0], None] = path_ids
 
         # put back to df with selected roads so that min and max and be easily calculated
         df = pd.concat(df_objects_all)
@@ -115,6 +126,52 @@ class BangladeshModel(Model):
             df['lon'].max(),
             0.05
         )
+
+        # --- NETWORKX: Connect the intersections ---
+        # --- NETWORKX: The Ultimate Island Connector ---
+        import math
+
+        # 1. Ask NetworkX to find all the disconnected pieces of the map
+        islands = list(nx.connected_components(self.G))
+
+        if len(islands) > 1:
+            print(f"\n--- DEBUG: Graph is broken into {len(islands)} separate islands. Stitching them together! ---")
+
+            # Sort them by size. The biggest one is our main N1/N2 highway.
+            islands.sort(key=len, reverse=True)
+            main_island = set(islands[0])
+
+            # 2. For every smaller disconnected side road...
+            for small_island in islands[1:]:
+                island_nodes = list(small_island)
+
+                # Let's take one end of the disconnected road (the first node)
+                floating_node = island_nodes[0]
+                row1 = df[df['id'] == floating_node].iloc[0]
+                lat1, lon1 = row1['lat'], row1['lon']
+                road_name = row1['road']
+
+                best_dist = float('inf')
+                best_main_node = None
+
+                # 3. Find the absolute closest node on the main highway
+                for main_node in main_island:
+                    row2 = df[df['id'] == main_node].iloc[0]
+                    # Calculate distance
+                    dist = math.hypot(lat1 - row2['lat'], lon1 - row2['lon'])
+
+                    if dist < best_dist:
+                        best_dist = dist
+                        best_main_node = main_node
+
+                # 4. Glue them together!
+                self.G.add_edge(floating_node, best_main_node)
+                # Add the new node to the main island so subsequent roads can connect to it too
+                main_island.add(floating_node)
+
+                print(f"SUCCESS: Glued {road_name} (Node {floating_node}) to main network (Node {best_main_node})")
+        else:
+            print("\n--- DEBUG: Network is already perfectly connected! ---")
 
         # ContinuousSpace from the Mesa package;
         # not to be confused with the SimpleContinuousModule visualization
@@ -159,25 +216,39 @@ class BangladeshModel(Model):
                     agent.pos = (x, y)
 
     def get_random_route(self, source):
-        """
-        pick up a random route given an origin
-        """
-        while True:
-            # different source and sink
-            sink = self.random.choice(self.sinks)
-            if sink is not source:
-                break
-        return self.path_ids_dict[source, sink]
+        # 1. Ask NetworkX to find sinks that are ACTUALLY connected!
+        reachable_sinks = []
+        for sink in self.sinks:
+            if sink != source and nx.has_path(self.G, source, sink):
+                reachable_sinks.append(sink)
 
-    # TODO
+        # 2. If the node is completely isolated, stay parked.
+        if not reachable_sinks:
+            print(f"Node {source} is isolated. Truck will stay parked.")
+            # We return a massive list so the truck never runs out of "steps" and crashes
+            return [source] * 100000
+
+            # 3. Pick a random sink ONLY from the reachable ones
+        sink = self.random.choice(reachable_sinks)
+
+        # 4. Check the cache
+        if (source, sink) in self.path_ids_dict:
+            return self.path_ids_dict[(source, sink)]
+
+        # 5. Calculate the path and cache it
+        path = nx.shortest_path(self.G, source=source, target=sink)
+        self.path_ids_dict[(source, sink)] = path
+        return path
+
     def get_route(self, source):
-        return self.get_straight_route(source)
+        return self.get_random_route(source)
 
-    def get_straight_route(self, source):
-        """
-        pick up a straight route given an origin
-        """
-        return self.path_ids_dict[source, None]
+# CAN BE DELETED
+    # def get_straight_route(self, source):
+    #     """
+    #     pick up a straight route given an origin
+    #     """
+    #     return self.path_ids_dict[source, None]
 
     def step(self):
         """

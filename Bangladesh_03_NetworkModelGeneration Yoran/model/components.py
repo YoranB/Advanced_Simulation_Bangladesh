@@ -34,7 +34,6 @@ class Infra(Agent):
         return type(self).__name__ + str(self.unique_id)
 
 
-# ---------------------------------------------------------------
 class Bridge(Infra):
     """
     Creates delay time
@@ -55,14 +54,52 @@ class Bridge(Infra):
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
-
-        # TODO
-        self.delay_time = self.random.randrange(0, 10)
+        # New for BONUS: Track total delay caused by this bridge
+        self.total_delay_time = 0
+        # Blocked out this part of the code
+        # # TODO
+        # self.delay_time = self.random.randrange(0, 10)
         # print(self.delay_time)
+        # this is supposed to be at bridge level so when making a bridge it has to be broken/not, not everytime the function delay time gets called
+        # if it can not find bridge_prob, then use A:, B: c: etc
+        probs = getattr(self.model, 'bridge_probabilities', {'A': 0, 'B': 0, 'C': 0, 'D': 0})
+        breakdown_chance = probs.get(self.condition, 0.0)
 
+        # Roll a random number between 0.0 and 1.0.
+        # If it's less than our breakdown chance, the bridge is broken!
+        if self.random.random() < (breakdown_chance / 100.0):  # Dividing by 100 if you input percentages like 5, 10, 20
+            self.is_broken = True
+        else:
+            self.is_broken = False
+
+    # Added this method
     # TODO
+
     def get_delay_time(self):
-        return self.delay_time
+        """
+        Calculates the delay time for a truck based on bridge length,
+        only if the bridge breaks down according to its condition probability.
+        """
+
+        if self.is_broken:
+            # Assign the value to 'delay' instead of returning it immediately
+            if self.length > 200:
+                delay = int(self.random.triangular(60, 240, 120))
+            elif self.length >= 50:
+                delay = self.random.randint(45, 90)
+            elif self.length >= 10:
+                delay = self.random.randint(15, 60)
+            else:
+                delay = self.random.randint(10, 20)
+
+            # NEW for BONUS: Add this truck's delay to the bridge's stopwatch
+            self.total_delay_time += delay
+
+            # Now we can return it!
+            return delay
+
+        # If the random number is higher, the bridge is fine. No delay.
+        return 0
 
 
 # ---------------------------------------------------------------
@@ -223,9 +260,9 @@ class Vehicle(Agent):
 
     def __str__(self):
         return "Vehicle" + str(self.unique_id) + \
-               " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
-               " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
-               str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
+            " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
+            " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
+            str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
 
     def set_path(self):
         """
