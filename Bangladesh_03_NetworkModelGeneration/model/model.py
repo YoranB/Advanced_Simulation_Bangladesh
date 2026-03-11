@@ -4,7 +4,7 @@ from mesa.space import ContinuousSpace
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
-
+import networkx as nx
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -64,7 +64,8 @@ class BangladeshModel(Model):
         self.path_ids_dict = defaultdict(lambda: pd.Series())
         self.space = None
         self.sources = []
-        self.sinks = []
+        self.sinks = [] 
+        self.G = nx.Graph() # the network graph, so we can do path modeling
 
         self.generate_model()
 
@@ -78,7 +79,7 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
 
         # a list of names of roads to be generated
-        # TODO You can also read in the road column to generate this list automatically 
+        #  You can also read in the road column to generate this list automatically 
         #we changed this, so take all roads
         roads = df['road'].unique().tolist()
 
@@ -121,6 +122,7 @@ class BangladeshModel(Model):
         self.space = ContinuousSpace(x_max, y_max, True, x_min, y_min)
 
         for df in df_objects_all:
+            prev_agent = None # to keep track of the previous agent on the same road, so we can add edges in the graph 
             for _, row in df.iterrows():  # index, row in ...
 
                 # create agents according to model_type
@@ -150,14 +152,33 @@ class BangladeshModel(Model):
                 elif model_type == 'intersection':
                     if not row['id'] in self.schedule._agents:
                         agent = Intersection(row['id'], self, row['length'], name, row['road'])
+                
+            
 
                 if agent:
                     self.schedule.add(agent)
                     y = row['lat']
                     x = row['lon']
                     self.space.place_agent(agent, (x, y))
-                    agent.pos = (x, y)
+                    agent.pos = (x, y) 
 
+                    self.G.add_node(agent.unique_id, agent_object=agent) 
+
+
+                    if prev_agent is not None: #check if there is previous agent on same road (thats why we reset for each road otherwise wierd)
+                        # connect previous agent with this agent
+                        # De 'weight' is de lengte van de huidige agent (belangrijk voor routeplanning!)
+                        self.G.add_edge(prev_agent.unique_id, agent.unique_id, weight=agent.length)
+                    
+                    # NIEUW: Save agent as previous agent for the next iteration
+                    prev_agent = agent 
+        print(f"Model gegenereerd met {self.G.number_of_nodes()} nodes en {self.G.number_of_edges()} edges.")
+        
+        # Laten we checken of de eerste agent van de eerste weg verbonden is
+        first_agent_id = df_objects_all[0]['id'].iloc[0]
+        neighbors = list(self.G.neighbors(first_agent_id))
+        print(f"Agent {first_agent_id} is verbonden met: {neighbors}")
+        
     def get_random_route(self, source):
         """
         pick up a random route given an origin
@@ -186,3 +207,11 @@ class BangladeshModel(Model):
         self.schedule.step()
 
 # EOF -----------------------------------------------------------
+if __name__ == "__main__":
+    # 1. Maak een instantie van het model aan
+    # We geven even een dummy bestand mee (zorg dat de naam klopt met jouw CSV)
+    test_model = BangladeshModel()
+    
+    # Zodra dit model wordt aangemaakt, roept de __init__ automatisch 
+    # generate_model() aan, en dán pas zie je jouw prints!
+    print("\nTest run succesvol afgerond!")
