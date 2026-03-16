@@ -132,9 +132,24 @@ def drop_unnecessary_columns(df):
     return df.drop(columns=existing_cols_to_drop)
 
 def add_unique_id(df, start_id=1000000):
-    """Adds a sequential unique ID to the dataset."""
+    """
+    Adds a sequential unique ID, but ensures that roads overlapping 
+    at the exact same coordinates get the SAME ID.
+    """
+    # 1. Give everyone a temporary unique ID based on their current order (just to have something to work with)
     df['id'] = range(start_id, start_id + len(df))
+    
+    # 2. Round the coordinates to find overlapping points (4 decimal places)
+    df['lat_round'] = df['lat'].round(4)
+    df['lon_round'] = df['lon'].round(4)
+    
+    # 3. Het Magische Trucje: groupon location and assign the same ID to all rows in the same group (the first ID in that group)
+    df['id'] = df.groupby(['lat_round', 'lon_round'])['id'].transform('first')
+    
+    # 4. Cleanup: drop the helper columns
+    df = df.drop(columns=['lat_round', 'lon_round'])
     return df
+
 
 def format_final_dataframe(df):
     """Reorders the columns to exactly match the MESA expected format."""

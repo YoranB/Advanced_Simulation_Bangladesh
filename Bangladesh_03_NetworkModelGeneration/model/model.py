@@ -69,22 +69,6 @@ class BangladeshModel(Model):
 
         self.generate_model()
 
-class BangladeshModel(Model):
-    step_time = 1
-    file_name = '../data/demo-4.csv' # Pas aan naar jouw juiste pad indien nodig
-
-    def __init__(self, seed=None):
-        super().__init__(seed=seed)
-        self.schedule = BaseScheduler(self)
-        self.running = True
-        self.path_ids_dict = defaultdict(lambda: pd.Series())
-        self.space = None
-        self.sources = []
-        self.sinks = [] 
-        self.G = nx.Graph() 
-
-        self.generate_model()
-
     def generate_model(self):
         df = pd.read_csv(self.file_name)
         roads = df['road'].unique().tolist()
@@ -111,62 +95,56 @@ class BangladeshModel(Model):
             df_combined['lon'].min(), df_combined['lon'].max(), 0.05
         )
         self.space = ContinuousSpace(x_max, y_max, True, x_min, y_min)
-
-        # --- STAP 1: BOUW DE WEGEN & GPS-LIJM ---
-        all_nodes_by_pos = {}
-
+        
+# --- STAP 1: BOUW DE WEGEN (De Schone Manier) ---
         for df_road in df_objects_all:
             prev_agent = None 
             for _, row in df_road.iterrows():
-                model_type = row['model_type'].strip()
-                agent = None
-                name = str(row['name']).strip() if pd.notna(row['name']) else ""
+                
+                # 1. Forceer een schoon, normaal getal voor het ID
+                agent_id = int(row['id']) 
+                
+                # 2. Check of we deze punaise al op het bord hebben geprikt via NetworkX!
+                if self.G.has_node(agent_id):
+                    # Hij bestaat al! Pak de bestaande agent uit het netwerk
+                    agent = self.G.nodes[agent_id]['agent_object']
+                else:
+                    # Hij bestaat nog niet. Maak een verse agent aan!
+                    model_type = row['model_type'].strip()
+                    name = str(row['name']).strip() if pd.notna(row['name']) else ""
 
-                # Maak de juiste agent
-                if model_type == 'source':
-                    agent = Source(row['id'], self, row['length'], name, row['road'])
-                    self.sources.append(agent.unique_id)
-                elif model_type == 'sink':
-                    agent = Sink(row['id'], self, row['length'], name, row['road'])
-                    self.sinks.append(agent.unique_id)
-                elif model_type == 'sourcesink':
-                    agent = SourceSink(row['id'], self, row['length'], name, row['road'])
-                    self.sources.append(agent.unique_id)
-                    self.sinks.append(agent.unique_id)
-                elif model_type == 'bridge':
-                    agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'])
-                elif model_type == 'link':
-                    agent = Link(row['id'], self, row['length'], name, row['road'])
-                elif model_type == 'intersection':
-                    if not row['id'] in self.schedule._agents:
-                        agent = Intersection(row['id'], self, row['length'], name, row['road'])
-                    else:
-                        agent = self.schedule._agents[row['id']]
+                    if model_type == 'source':
+                        agent = Source(agent_id, self, row['length'], name, row['road'])
+                        self.sources.append(agent.unique_id)
+                    elif model_type == 'sink':
+                        agent = Sink(agent_id, self, row['length'], name, row['road'])
+                        self.sinks.append(agent.unique_id)
+                    elif model_type == 'sourcesink':
+                        agent = SourceSink(agent_id, self, row['length'], name, row['road'])
+                        self.sources.append(agent.unique_id)
+                        self.sinks.append(agent.unique_id)
+                    elif model_type == 'bridge':
+                        agent = Bridge(agent_id, self, row['length'], name, row['road'], row['condition'])
+                    elif model_type == 'link':
+                        agent = Link(agent_id, self, row['length'], name, row['road'])
+                    elif model_type == 'intersection':
+                        agent = Intersection(agent_id, self, row['length'], name, row['road'])
 
-                if agent:
-                    if agent.unique_id not in self.schedule._agents:
-                        self.schedule.add(agent)
-                        y, x = row['lat'], row['lon']
-                        self.space.place_agent(agent, (x, y))
-                        agent.pos = (x, y) 
+                    # Omdat we ZEKER weten dat dit een nieuwe agent is, 
+                    # voegen we hem nu veilig toe aan de simulatie:
+                    self.schedule.add(agent)
+                    y, x = row['lat'], row['lon']
+                    self.space.place_agent(agent, (x, y))
+                    agent.pos = (x, y) 
 
-                    # Voeg node toe aan de Graph
+                    # Voeg de node toe aan het NetworkX netwerk
                     self.G.add_node(agent.unique_id, agent_object=agent) 
 
-                    # Universele GPS-Lijm (nu voor ELKE agent op 4 decimalen)
-                    pos_key = (round(row['lat'], 4), round(row['lon'], 4))
-                    if pos_key in all_nodes_by_pos:
-                        existing_id = all_nodes_by_pos[pos_key]
-                        if existing_id != agent.unique_id:
-                            self.G.add_edge(agent.unique_id, existing_id, weight=0)
-                    else:
-                        all_nodes_by_pos[pos_key] = agent.unique_id
-
-                    # Verbinden binnen de eigen weg
-                    if prev_agent is not None:
-                        self.G.add_edge(prev_agent.unique_id, agent.unique_id, weight=agent.length)
-                    
-                    prev_agent = agent 
+                # 3. Trek ALTIJD het lijntje naar de vorige agent op deze weg
+                if prev_agent is not None:
+                    self.G.add_edge(prev_agent.unique_id, agent.unique_id, weight=row['length'])
+                
+                prev_agent = agent
 
         # --- STAP 2: DE ROBUUSTE EILAND-CONNECTOR ---
         import math
@@ -203,26 +181,38 @@ class BangladeshModel(Model):
         print(f"Eilanden: {len(list(nx.connected_components(self.G)))}")
         print(f"==============================\n")
         
-    def get_random_route(self, source):
-        """
-        pick up a random route given an origin
-        """
-        while True:
-            # different source and sink
-            sink = self.random.choice(self.sinks)
-            if sink is not source:
-                break
-        return self.path_ids_dict[source, sink]
-
-    # TODO
     def get_route(self, source):
-        return self.get_straight_route(source)
+        """
+        Calculates a random route using NetworkX and Dijkstra's algorithm.
+        This replaces the old TODO and straight_route logic.
+        """
+        # 1. Vind haalbare bestemmingen (Sinks)
+        reachable_sinks = []
+        for sink in self.sinks:
+            if sink != source and nx.has_path(self.G, source, sink):
+                reachable_sinks.append(sink)
 
-    def get_straight_route(self, source):
-        """
-        pick up a straight route given an origin
-        """
-        return self.path_ids_dict[source, None]
+        # 2. Beveiliging: als de Source nergens aan vast zit, blijf dan stilstaan
+        if not reachable_sinks:
+            print(f"Waarschuwing: Node {source} is isolated. Truck will stay parked.")
+            return [source]
+
+        # 3. Kies een willekeurige bereikbare bestemming
+        sink = self.random.choice(reachable_sinks)
+
+        # 4. Check de cache (Snelheid!)
+        # Let op: we gebruiken f-strings als key, zodat we niet per ongeluk 
+        # botsen met de oude Pandas logica van de docent!
+        cache_key = f"route_{source}_{sink}"
+        if cache_key in self.path_ids_dict:
+            return self.path_ids_dict[cache_key]
+
+        # 5. Bereken de route in meters (weight='weight')
+        path = nx.shortest_path(self.G, source=source, target=sink, weight='weight')
+        
+        # Sla de schone Python-lijst op in de cache
+        self.path_ids_dict[cache_key] = path
+        return path
 
     def step(self):
         """

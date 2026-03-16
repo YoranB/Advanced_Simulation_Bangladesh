@@ -99,9 +99,9 @@ class Bridge(Infra):
             
             # Now we can return it!
             return delay
-        
+        else: 
         # If the random number is higher, the bridge is fine. No delay.
-        return 0
+            return 0
 # ---------------------------------------------------------------
 class Link(Infra):
     pass
