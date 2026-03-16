@@ -8,7 +8,7 @@ if not os.path.exists('../experiment'):
     os.makedirs('../experiment')
 
 # 2. Instellingen volgens Assignment 3
-run_length = 5 * 24 * 60  # 5 dagen = 7200 ticks
+run_length =  100  #5 * 24 * 60  # 5 dagen = 7200 ticks
 seeds = [123, 456, 789, 101, 112] # 5 replicaties
 
 # Scenario's exact uit de Assignment 3 PDF
@@ -21,7 +21,7 @@ scenarios = {
 }
 
 print("=== START EXPERIMENTEN ASSIGNMENT 3 ===")
-print(f"Data bron: demo-4.csv | Reistijd: {run_length} minuten")
+#print(f"Data bron: demo-4.csv | Reistijd: {run_length} minuten")
 
 for scenario_id, probs in scenarios.items():
     print(f"\n--- Bezig met Scenario {scenario_id} ---")
@@ -49,12 +49,12 @@ for scenario_id, probs in scenarios.items():
             'Trucks_Arrived': len(sim_model.travel_times)
         })
         
-        print(f"  > Rep {rep+1} (Seed {current_seed}) klaar. Gemiddelde reistijd: {avg_time:.2f}")
+       # print(f"  > Rep {rep+1} (Seed {current_seed}) klaar. Gemiddelde reistijd: {avg_time:.2f}")
 
     # 3. Opslaan in de experiment map (gelegen in de hoofdmap boven 'model')
     df_output = pd.DataFrame(scenario_results)
     file_path = f'../experiment/scenario{scenario_id}.csv'
     df_output.to_csv(file_path, index=False)
-    print(f"Resultaten opgeslagen in: {file_path}")
+    #print(f"Resultaten opgeslagen in: {file_path}")
 
 print("\n=== ALLE EXPERIMENTEN VOOR ASSIGNMENT 3 VOLTOOID ===")

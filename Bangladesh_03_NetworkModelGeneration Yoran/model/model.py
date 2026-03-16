@@ -222,27 +222,25 @@ class BangladeshModel(Model):
             if sink != source and nx.has_path(self.G, source, sink):
                 reachable_sinks.append(sink)
 
-        # 2. If the node is completely isolated, stay parked.
-        if not reachable_sinks:
-            print(f"Node {source} is isolated. Truck will stay parked.")
-            # We return a massive list so the truck never runs out of "steps" and crashes
-            return [source] * 100000
 
-            # 3. Pick a random sink ONLY from the reachable ones
+        # 3. Pick a random sink ONLY from the reachable ones
         sink = self.random.choice(reachable_sinks)
 
-        # 4. Check the cache
+        # 4. Check the cache (Super slim voor snelheid!)
         if (source, sink) in self.path_ids_dict:
             return self.path_ids_dict[(source, sink)]
 
         # 5. Calculate the path and cache it
-        path = nx.shortest_path(self.G, source=source, target=sink)
+        # CRUCIAAL: Voeg weight='weight' toe! Dan rekent hij in meters i.p.v. stappen.
+        path = nx.shortest_path(self.G, source=source, target=sink, weight='weight')
+        
+        # Sla op in de cache voor de volgende truck
         self.path_ids_dict[(source, sink)] = path
         return path
 
     def get_route(self, source):
+        # Dit is de functie die de vrachtwagen daadwerkelijk aanroept
         return self.get_random_route(source)
-
 # CAN BE DELETED
     # def get_straight_route(self, source):
     #     """

@@ -4,7 +4,8 @@ from mesa.space import ContinuousSpace
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
-import networkx as nx
+import networkx as nx 
+import matplotlib.pyplot as plt
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -117,7 +118,10 @@ class BangladeshModel(Model):
                 path_ids = path_ids[::-1]
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
-                self.path_ids_dict[path_ids[0], None] = path_ids
+                self.path_ids_dict[path_ids[0], None] = path_ids 
+
+
+
         
         # put back to df with selected roads so that min and max and be easily calculated
         df_combined = pd.concat(df_objects_all)
@@ -133,82 +137,85 @@ class BangladeshModel(Model):
         
 #:This was changed: building the roads and the network in one go, instead of building the roads first and then trying to connect them with a separate loop. This way we can use NetworkX to check if a node already exists before creating it, which is crucial for correctly handling intersections and avoiding duplicates.
         for df_road in df_objects_all:
-            prev_agent = None  # We keep track of what the previour agent was on this road so we can put a line in the netwerk
+            prev_agent = None  
             for _, row in df_road.iterrows():
-                
-                # 1. Forse clean agend ID
                 agent_id = int(row['id']) 
                 
-                # 2. check if we already put it on network
+                # Check of agent al bestaat (cruciaal voor kruispunten!)
                 if self.G.has_node(agent_id):
-                    # If already exists we just get the agent object from the node and move on (we only want to create one agent per unique ID, even if it appears on multiple roads due to intersections)
                     agent = self.G.nodes[agent_id]['agent_object']
                 else:
-                    # It does not exist yet so create agents according to model_type like teacher did
                     model_type = row['model_type'].strip()
                     name = str(row['name']).strip() if pd.notna(row['name']) else ""
 
-                    if model_type == 'source':
+                    # Maak de juiste agent aan
+                    if model_type == 'sourcesink':
+                        agent = SourceSink(agent_id, self, row['length'], name, row['road'])
+                        self.sources.append(agent.unique_id)
+                        self.sinks.append(agent.unique_id)
+                    elif model_type == 'source':
                         agent = Source(agent_id, self, row['length'], name, row['road'])
                         self.sources.append(agent.unique_id)
                     elif model_type == 'sink':
                         agent = Sink(agent_id, self, row['length'], name, row['road'])
                         self.sinks.append(agent.unique_id)
-                    elif model_type == 'sourcesink':
-                        agent = SourceSink(agent_id, self, row['length'], name, row['road'])
-                        self.sources.append(agent.unique_id)
-                        self.sinks.append(agent.unique_id)
                     elif model_type == 'bridge':
-                        agent = Bridge(agent_id, self, row['length'], name, row['road'], condition =row['condition']) 
-                    elif model_type == 'link':
-                        agent = Link(agent_id, self, row['length'], name, row['road'])
+                        agent = Bridge(agent_id, self, row['length'], name, row['road'], condition=row['condition']) 
                     elif model_type == 'intersection':
                         agent = Intersection(agent_id, self, row['length'], name, row['road'])
+                    else: # link
+                        agent = Link(agent_id, self, row['length'], name, row['road'])
 
-                    # Omdat we ZEKER weten dat dit een nieuwe agent is, 
-                    # voegen we hem nu veilig toe aan de simulatie:
-                    y = row['lat']
-                    x = row['lon']
-                    self.space.place_agent(agent, (x, y))
-                    agent.pos = (x, y) 
+                    # Voeg toe aan Mesa
+                    self.schedule.add(agent)
+                    self.space.place_agent(agent, (row['lon'], row['lat']))
+                    agent.pos = (row['lon'], row['lat']) 
 
-                    # add node to the NetworkX netwerk
-                    self.G.add_node(agent.unique_id, agent_object=agent) 
+                    # Voeg node toe aan NetworkX
+                    self.G.add_node(agent.unique_id, agent_object=agent, pos=(row['lon'], row['lat'])) 
 
-                # always add an edge to the previous agent on the same road, if it exists (So also at intersection ))
-                if prev_agent is not None: # We check this after the potential creation of the agent, because we want to connect the intersection node to the road nodes, even if the intersection node was created in a previous loop iteration
+                # Maak de verbinding (edge) met het vorige punt op de weg
+                if prev_agent is not None:
+                    # Gebruik de lengte van de huidige row als gewicht voor Dijkstra
                     self.G.add_edge(prev_agent.unique_id, agent.unique_id, weight=row['length'])
                 
                 prev_agent = agent
 
-        #island connector #WHY DO WE DO THIS /NEED THIS???
-        import math
-        islands = list(nx.connected_components(self.G)) # We check how many islands we have in the netwerk, and if there are more than 1, we connect them by adding edges between the closest nodes of the different islands. This is a simple heuristic to ensure that all nodes are reachable, but it can be improved by considering the actual geography and road layout.
+        # --- NETWORK CHECK & VISUALISATIE (NA de loops!) ---
+        self.check_network_connectivity()
+
+    def check_network_connectivity(self):
+        # --- NETWORK DIAGNOSTICS ---
+        islands = list(nx.connected_components(self.G))
+        print(f"Netwerk analyse: {len(islands)} eiland(en) gevonden.")
+
+        # Kleuren voor de eilanden (Eiland 1 = Blauw, Eiland 2 = Rood)
+        colors = ['skyblue', 'red', 'green', 'orange', 'purple']
+        node_color_map = {}
+        for i, island in enumerate(islands):
+            color = colors[i % len(colors)]
+            for node in island:
+                node_color_map[node] = color
+
+        # Haal posities en kleuren op
+        pos = nx.get_node_attributes(self.G, 'pos')
+        node_colors = [node_color_map[n] for n in self.G.nodes()]
+
+        plt.figure(figsize=(12, 8))
         
-        if len(islands) > 1: # Only do this if we actually have multiple islands, otherwise we might mess up the network unnecessarily
-            islands.sort(key=len, reverse=True)
-            main_island = set(islands[0])  # We take the largest island as the main one, and connect all smaller islands to it. This is a simple heuristic, but it works well in practice because usually the largest island contains the main road network and the smaller islands are just disconnected nodes or small clusters of nodes.
+        # 1. Teken de verbindingen (edges) heel licht
+        nx.draw_networkx_edges(self.G, pos, alpha=0.3, edge_color='gray')
+        
+        # 2. Teken de nodes zonder labels en heel klein
+        nx.draw_networkx_nodes(self.G, pos, 
+                               node_size=10, 
+                               node_color=node_colors,
+                               alpha=0.8)
 
-            for small_island in islands[1:]:# We loop over the smaller islands, and for each of them we find the closest pair of nodes between the small island and the main island, and we add an edge between them. This way we ensure that all nodes are reachable from each other, even if they were originally disconnected due to missing data or errors in the input.
-                best_dist = float('inf')# We initialize the best distance to infinity, so any real distance will be smaller. We will update this variable whenever we find a closer pair of nodes between the small island and the main island.
-                connection = None
-                
-                # Check ALL nodes in the small island against ALL nodes in the main island, and find the closest pair. This is a brute-force approach, but it works well for small islands and ensures that we find the best possible connection. We calculate the distance using the Euclidean formula, and we multiply by 111 to convert from degrees to kilometers (assuming a rough average latitude of Bangladesh). This way we can add a realistic weight to the edge that reflects the actual distance between the nodes.
-                for small_node_id in small_island:
-                    agent_s = self.G.nodes[small_node_id]['agent_object']
-                    
-                    for main_node_id in main_island:
-                        agent_m = self.G.nodes[main_node_id]['agent_object']
-                        dist = math.hypot(agent_s.pos[0] - agent_m.pos[0], agent_s.pos[1] - agent_m.pos[1])
-                        
-                        if dist < best_dist:
-                            best_dist = dist
-                            connection = (small_node_id, main_node_id)
-                
-                if connection:
-                    self.G.add_edge(connection[0], connection[1], weight=best_dist * 111) 
-                    main_island.update(small_island) # Nu hoort dit eiland bij het hoofdnetwerk
+        plt.title(f"Netwerk Connectiviteit: {len(islands)} eilanden")
+        plt.show()
 
+    
 
     def get_random_route(self, source):
         """
@@ -265,11 +272,11 @@ class BangladeshModel(Model):
         self.schedule.step()
 
 # EOF -----------------------------------------------------------
-#if __name__ == "__main__":
+if __name__ == "__main__":
     # 1. Maak een instantie van het model aan
     # We geven even een dummy bestand mee (zorg dat de naam klopt met jouw CSV)
-   # test_model = BangladeshModel()
+    test_model = BangladeshModel()
     
     # Zodra dit model wordt aangemaakt, roept de __init__ automatisch 
     # generate_model() aan, en dán pas zie je jouw prints!
-   # print("\nTest run succesvol afgerond!")
+    print("\nTest run succesvol afgerond!")
