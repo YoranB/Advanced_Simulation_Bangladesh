@@ -97,9 +97,9 @@ class Bridge(Infra):
 
             # Now we can return it!
             return delay
-
-        # If the random number is higher, the bridge is fine. No delay.
-        return 0
+        else:
+            # If the random number is higher, the bridge is fine. No delay.
+            return 0
 
 
 # ---------------------------------------------------------------
@@ -129,7 +129,12 @@ class Sink(Infra):
     def remove(self, vehicle):
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
-        print(str(self) + ' REMOVE ' + str(vehicle))
+        # Calculate travel time and save it to the model
+        # vehicle.generated_at_step is set when the truck is born
+        # self.model.schedule.steps is the current time
+        travel_time = self.model.schedule.steps - vehicle.generated_at_step
+        self.model.travel_times.append(travel_time)
+        #print(str(self) + ' REMOVE ' + str(vehicle))
 
 
 # ---------------------------------------------------------------
@@ -176,7 +181,7 @@ class Source(Infra):
                 Source.truck_counter += 1
                 self.vehicle_count += 1
                 self.vehicle_generated_flag = True
-                print(str(self) + " GENERATE " + str(agent))
+                #print(str(self) + " GENERATE " + str(agent))
         except Exception as e:
             print("Oops!", e.__class__, "occurred.")
 
@@ -286,7 +291,7 @@ class Vehicle(Agent):
         """
         To print the vehicle trajectory at each step
         """
-        print(self)
+        #print(self)
 
     def drive(self):
 

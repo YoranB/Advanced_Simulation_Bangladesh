@@ -185,35 +185,23 @@ class BangladeshModel(Model):
         self.check_network_connectivity()
 
     def check_network_connectivity(self):
-        # --- NETWORK DIAGNOSTICS ---
+# --- Gedetailleerde Eiland Analyse ---
         islands = list(nx.connected_components(self.G))
-        print(f"Netwerk analyse: {len(islands)} eiland(en) gevonden.")
-
-        # Kleuren voor de eilanden (Eiland 1 = Blauw, Eiland 2 = Rood)
-        colors = ['skyblue', 'red', 'green', 'orange', 'purple']
-        node_color_map = {}
+        print(f"\n--- Analyse van losse eilanden ---")
         for i, island in enumerate(islands):
-            color = colors[i % len(colors)]
-            for node in island:
-                node_color_map[node] = color
-
-        # Haal posities en kleuren op
-        pos = nx.get_node_attributes(self.G, 'pos')
-        node_colors = [node_color_map[n] for n in self.G.nodes()]
-
-        plt.figure(figsize=(12, 8))
-        
-        # 1. Teken de verbindingen (edges) heel licht
-        nx.draw_networkx_edges(self.G, pos, alpha=0.3, edge_color='gray')
-        
-        # 2. Teken de nodes zonder labels en heel klein
-        nx.draw_networkx_nodes(self.G, pos, 
-                               node_size=10, 
-                               node_color=node_colors,
-                               alpha=0.8)
-
-        plt.title(f"Netwerk Connectiviteit: {len(islands)} eilanden")
-        plt.show()
+            roads_in_island = set()
+            for node_id in island:
+                agent = self.G.nodes[node_id]['agent_object']
+                
+                # We proberen de wegnaam te vinden. 
+                # Mocht 'road' niet werken, kijken we of het 'road_name' is
+                road_name = getattr(agent, 'road', None) 
+                if road_name is None:
+                    road_name = getattr(agent, 'road_name', "Onbekende weg")
+                
+                roads_in_island.add(road_name)
+            
+            print(f"Eiland {i+1} ({len(island)} nodes) bevat (o.a.) deze wegen: {list(roads_in_island)[:5]}...")
 
     
 
