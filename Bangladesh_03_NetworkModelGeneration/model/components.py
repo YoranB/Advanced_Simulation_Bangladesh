@@ -307,30 +307,45 @@ class Vehicle(Agent):
         vehicle shall move to the next object with the given distance
         """
 
+    def drive_to_next(self, distance):
+        """
+        vehicle shall move to the next object with the given distance
+        """
+        # New safety: 
+        # Check of we niet over de grens van onze route-lijst heen schieten
+        if self.location_index >= len(self.path_ids) - 1:
+            # Als de lijst op is, halen we de truck uit de simulatie
+            if self.location:
+                self.location.vehicle_count -= 1
+            self.model.schedule.remove(self)
+            return
+
+        # old code as in ass2
         self.location_index += 1
         next_id = self.path_ids[self.location_index]
-        next_infra = self.model.schedule._agents[next_id]  # Access to protected member _agents
+        next_infra = self.model.schedule._agents[next_id]
 
         if isinstance(next_infra, Sink):
-            # arrive at the sink
             self.arrive_at_next(next_infra, 0)
             self.removed_at_step = self.model.schedule.steps
+            
+            # Je hebt gecheckt dat het generated_at_step is, dus dit is top!
+            travel_time = self.removed_at_step - self.generated_at_step
+            self.model.travel_times.append(travel_time)
+            
             self.location.remove(self)
             return
+        
         elif isinstance(next_infra, Bridge):
             self.waiting_time = next_infra.get_delay_time()
             if self.waiting_time > 0:
-                # arrive at the bridge and wait
                 self.arrive_at_next(next_infra, 0)
                 self.state = Vehicle.State.WAIT
                 return
-            # else, continue driving
 
         if next_infra.length > distance:
-            # stay on this object:
             self.arrive_at_next(next_infra, distance)
         else:
-            # drive to next object:
             self.drive_to_next(distance - next_infra.length)
 
     def arrive_at_next(self, next_infra, location_offset):
