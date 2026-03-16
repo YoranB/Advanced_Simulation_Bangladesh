@@ -119,7 +119,36 @@ def format_final_dataframe(df):
     for col in expected_order:
         if col not in df.columns:
             df[col] = ''
-    return df[expected_order]
+    return df[expected_order] 
+
+def hardcode_n106_connection(df):
+    """
+    Hardcode: Pakt het startpunt van de N106 en trekt deze 
+    naar het dichtstbijzijnde punt op de N1 zodat er een 
+    perfect kruispunt ontstaat.
+    """
+    n106_mask = df['road'] == 'N106'
+    if not n106_mask.any():
+        return df
+        
+    n106_start_idx = df[n106_mask].index[0]
+    n106_lat = df.loc[n106_start_idx, 'lat']
+    n106_lon = df.loc[n106_start_idx, 'lon']
+    
+    n1_df = df[df['road'] == 'N1']
+    if n1_df.empty:
+        return df
+        
+    # Bereken afstand en zoek dichtstbijzijnde N1 punt
+    distances = ((n1_df['lat'] - n106_lat)**2 + (n1_df['lon'] - n106_lon)**2)**0.5
+    nearest_n1_idx = distances.idxmin()
+    
+    # Overschrijf de coördinaten van de N106
+    df.loc[n106_start_idx, 'lat'] = df.loc[nearest_n1_idx, 'lat']
+    df.loc[n106_start_idx, 'lon'] = df.loc[nearest_n1_idx, 'lon']
+    
+    print(f"HARDCODE SUCCES: N106 vastgeplakt aan N1")
+    return df
 
 def main():
     input_csv = "../data_cleaned_by_lecturer/_roads3.csv"
@@ -132,6 +161,7 @@ def main():
     df = calculate_segment_lengths(df)
     df = merge_bridge_data(df, bmms_xlsx)
     
+    df = hardcode_n106_connection(df)
     # De nieuwe topologie logica
     df = process_network_topology(df)
     
