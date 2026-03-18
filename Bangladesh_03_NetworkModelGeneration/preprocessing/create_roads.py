@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
-import os
-
-# this code is based on the original create_roads.py from assignment 2, but has been heavily refactored and extended to meet the requirements of Assignment 3. 
-
-
+import os 
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 def load_data(filepath):
     filepath_str = str(filepath).lower()
@@ -24,11 +22,16 @@ def filter_target_roads(df):
             valid_roads.append(road_str)
     return df[df['road'].isin(valid_roads)].copy()
 
+
 def calculate_segment_lengths(df):
+    """
+    Stap 1 lengte-berekening (vereist om de dataframe te vullen voor de merge met bruggen).
+    """
     df = df.sort_values(by=['road', 'chainage'])
     df['length'] = df.groupby('road')['chainage'].diff().fillna(0)
     df['length'] = (df['length'] * 1000).round(3)
     return df
+
 
 def merge_bridge_data(df_roads, bmms_filepath):
     df_bmms = load_data(bmms_filepath)
@@ -47,34 +50,110 @@ def merge_bridge_data(df_roads, bmms_filepath):
     
     df_merged['model_type'] = 'link'
     df_merged.loc[df_merged['condition'].notna(), 'model_type'] = 'bridge'
-    df_merged['length'] = df_merged['length_bmms'].fillna(df_merged['length'])
+    
+    # Hier was de error! Omdat we calculate_segment_lengths nu wel draaien, gaat dit goed:
+    df_merged['length'] = df_merged['length_bmms'].fillna(df_merged['length']) 
     df_merged['real_name'] = df_merged['name_bmms'].fillna(df_merged['name'])
     df_merged['condition'] = df_merged['condition'].fillna('A')
     return df_merged.drop(columns=['LRPName', 'length_bmms', 'name_bmms'])
 
 
-#this part is new: 
+def hardcode_n106_connection(df):
+    n106_mask = df['road'] == 'N106'
+    if not n106_mask.any(): return df
+        
+    n106_start_idx = df[n106_mask].index[0]
+    n106_lat = df.loc[n106_start_idx, 'lat']
+    n106_lon = df.loc[n106_start_idx, 'lon']
+    
+    # Docent feedback: Negeer bruggen!
+    n1_df = df[(df['road'] == 'N1') & (df['model_type'] != 'bridge')]
+    if n1_df.empty: return df
+        
+    distances = ((n1_df['lat'] - n106_lat)**2 + (n1_df['lon'] - n106_lon)**2)**0.5
+    nearest_n1_idx = distances.idxmin()
+    
+    df.loc[n106_start_idx, 'lat'] = df.loc[nearest_n1_idx, 'lat']
+    df.loc[n106_start_idx, 'lon'] = df.loc[nearest_n1_idx, 'lon']
+    return df 
+
+def hardcode_n1_n2_connection(df):
+    """
+    Trekt het startpunt van de N2 naar het dichtstbijzijnde punt op de N1.
+    """
+    n2_mask = df['road'] == 'N2'
+    if not n2_mask.any(): return df
+        
+    # Pak het eerste punt van de N2
+    n2_start_idx = df[n2_mask].index[0]
+    n2_lat = df.loc[n2_start_idx, 'lat']
+    n2_lon = df.loc[n2_start_idx, 'lon']
+    
+    # Zoek alle N1 punten
+    n1_df = df[df['road'] == 'N1']
+    if n1_df.empty: return df
+        
+    # Bereken afstand en zoek de dichtstbijzijnde
+    distances = ((n1_df['lat'] - n2_lat)**2 + (n1_df['lon'] - n2_lon)**2)**0.5
+    nearest_n1_idx = distances.idxmin()
+    
+    # Koppel N2 startpunt aan N1
+    df.loc[n2_start_idx, 'lat'] = df.loc[nearest_n1_idx, 'lat']
+    df.loc[n2_start_idx, 'lon'] = df.loc[nearest_n1_idx, 'lon']
+    print(f"HARDCODE SUCCES: N2 vastgeplakt aan N1")
+    return df
+
+
+def snap_side_roads(df, threshold=0.005): 
+    print("\n--- Verbinden van overige zijwegen (snapping) ---")
+    for road in df['road'].unique():
+        if road in ['N1', 'N2', 'N106']: 
+            continue 
+            
+        road_mask = df['road'] == road
+        road_indices = df[road_mask].index
+        
+        endpoints = [road_indices[0], road_indices[-1]]
+        
+        for ep_idx in endpoints:
+            ep_lat = df.loc[ep_idx, 'lat']
+            ep_lon = df.loc[ep_idx, 'lon']
+            
+            # Docent feedback: Zoek in alle andere wegen, MAAR negeer de bruggen!
+            other_roads_mask = (df['road'] != road) & (df['model_type'] != 'bridge')
+            if not other_roads_mask.any():
+                continue
+                
+            distances = ((df.loc[other_roads_mask, 'lat'] - ep_lat)**2 + 
+                         (df.loc[other_roads_mask, 'lon'] - ep_lon)**2)**0.5
+            
+            min_dist = distances.min()
+            
+            if min_dist < threshold:
+                nearest_idx = distances.idxmin()
+                target_road = df.loc[nearest_idx, 'road']
+                
+                df.loc[ep_idx, 'lat'] = df.loc[nearest_idx, 'lat']
+                df.loc[ep_idx, 'lon'] = df.loc[nearest_idx, 'lon']
+                print(f"  > {road} vastgeplakt aan {target_road} (Afstand: {min_dist:.4f})")
+                
+    return df
+
+
 def process_network_topology(df, start_id=1000000):
-    """
-    Identificeert kruispunten, behoudt brug-prioriteit en zorgt dat 
-    gewone wegsegmenten niet in elkaar fuseren.
-    """
-    # 1. Geef ELKE rij eerst een compleet uniek ID (behoudt weglengtes)
     df['id'] = range(start_id, start_id + len(df))
     
-    # 2. Bepaal overlappen met 3 decimalen (~110m). 
     df['lat_round'] = df['lat'].round(3)
     df['lon_round'] = df['lon'].round(3)
     df['coord_key'] = df['lat_round'].astype(str) + "_" + df['lon_round'].astype(str)
     
-    # 3. Zoek 'keys' (plekken) waar MEERDERE wegen in hetzelfde vakje vallen
     road_counts = df.groupby('coord_key')['road'].nunique()
     inter_keys = road_counts[road_counts > 1].index
     
-    # Markeer als intersection (alleen als het een normale link was)
+    # Markeer als intersection
     df.loc[df['coord_key'].isin(inter_keys) & (df['model_type'] == 'link'), 'model_type'] = 'intersection'
 
-    # 4. SourceSink verschuiven (je bestaande logica)
+    # SOURCESINKS VERSCHUIVEN (Dit doet al precies wat de docent vroeg!)
     processed_roads = []
     for road_name, group in df.groupby('road'):
         group = group.sort_values('chainage').reset_index(drop=True)
@@ -85,6 +164,7 @@ def process_network_topology(df, start_id=1000000):
             while 0 <= curr < len(group):
                 is_bridge = (group.loc[curr, 'model_type'] == 'bridge')
                 is_shared = (group.loc[curr, 'coord_key'] in inter_keys)
+                # Plant SourceSink op het eerste punt dat géén brug en géén kruispunt is
                 if not is_bridge and not is_shared:
                     group.loc[curr, 'model_type'] = 'sourcesink'
                     break
@@ -93,36 +173,59 @@ def process_network_topology(df, start_id=1000000):
     
     df = pd.concat(processed_roads).reset_index(drop=True)
 
-    # 5. ID'S GELIJKTREKKEN (Alleen voor de kruispunten!)
+    # ID'S GELIJKTREKKEN (Bruggen winnen hier de prioriteit!)
     priority_map = {'bridge': 1, 'sourcesink': 2, 'intersection': 3, 'link': 4}
     df['type_prio'] = df['model_type'].map(priority_map)
     
     for key in inter_keys:
         mask = df['coord_key'] == key
-        # Pak de 'belangrijkste' rij op dit kruispunt
         best_row = df[mask].sort_values('type_prio').iloc[0]
         
-        # Forceer alle wegen op dit kruispunt om exact dit ID en Type te gebruiken
         df.loc[mask, 'id'] = best_row['id']
         df.loc[mask, 'model_type'] = best_row['model_type']
-        
-        # Zet ze exact op dezelfde pixel voor een strakke visuele kaart
         df.loc[mask, 'lat'] = best_row['lat']
         df.loc[mask, 'lon'] = best_row['lon']
         
-    # 6. VERWIJDER ZELF-LUSSEN
-    # Als een weg heel veel bochten had op 1 kruispunt, kan hij nu twee keer hetzelfde 
-    # ID achter elkaar hebben. Dat droppen we, zodat de truck soepel doorrijdt.
     df['prev_id'] = df.groupby('road')['id'].shift(1)
     df = df[df['id'] != df['prev_id']].copy()
     
-    # Opschonen
     cols_to_drop = ['lat_round', 'lon_round', 'coord_key', 'type_prio', 'prev_id']
     return df.drop(columns=[c for c in cols_to_drop if c in df.columns])
 
 
+def recalculate_lengths(df):
+    """
+    DOCENT FEEDBACK FIX: Omdat we wegen hebben vastgeplakt (coördinaten veranderd),
+    moeten we de lengte in meters opnieuw berekenen via de Haversine formule.
+    """
+    def haversine(lat1, lon1, lat2, lon2):
+        R = 6371000 # Straal van de aarde in meters
+        phi1, phi2 = np.radians(lat1), np.radians(lat2)
+        dphi = np.radians(lat2 - lat1)
+        dlambda = np.radians(lon2 - lon1)
+        a = np.sin(dphi/2)**2 + np.cos(phi1)*np.cos(phi2)*np.sin(dlambda/2)**2
+        return 2 * R * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+
+    # Sorteer netjes per weg
+    df = df.sort_values(by=['road', 'chainage']).reset_index(drop=True)
+    
+    # Verschuif de lat/lon zodat we de afstand tot het vorige punt kunnen berekenen
+    df['prev_lat'] = df.groupby('road')['lat'].shift(1)
+    df['prev_lon'] = df.groupby('road')['lon'].shift(1)
+    
+    # Bereken nieuwe lengte in meters
+    df['new_length'] = haversine(df['prev_lat'], df['prev_lon'], df['lat'], df['lon'])
+    
+    # Het startpunt van elke weg heeft geen vorig punt, lengte is daar 0
+    df['new_length'] = df['new_length'].fillna(0).round(3)
+    
+    # Update de lengte, MAAR laat de bruglengte intact als het een brug is (want dat is fysiek)
+    df['length'] = np.where(df['model_type'] == 'bridge', df['length'], df['new_length'])
+    
+    return df.drop(columns=['prev_lat', 'prev_lon', 'new_length'])
+
+
 def format_final_dataframe(df):
-    # generate names for the sub parts
     counts = df.groupby('model_type').cumcount() + 1
     df['name'] = df['model_type'] + ' ' + counts.astype(str)
     df.loc[df['model_type'] == 'link', 'name'] = ''
@@ -134,58 +237,107 @@ def format_final_dataframe(df):
     return df[expected_order] 
 
 
-
-#we found out the above code lead to still a disconnected network as the N106 does not have a perfect intersection with the N1, so we hardcode the N106 to be connected to the nearest point on the N1. This is a bit of a hack, but it ensures that the network is fully connected and that the N106 can be used as a source/sink in the model. We do this after merging the BMMS data, but before processing the network topology, so that we can ensure that the N106 is connected to the correct point on the N1 (and not moved later by the topology processing).
-
-def hardcode_n106_connection(df):
-    """
-    Hardcode:Takes the start point of N106 and moves this to the closest point on the N1 
-    So a perfect intersection is created between N106 and N1. This is a bit of a hack, but it ensures that the network is fully connected and that the N106 can be used as a source/sink in the model. We do this after merging the BMMS data, but before processing the network topology, so that we can ensure that the N106 is connected to the correct point on the N1 (and not moved later by the topology processing). We identify the start point of the N106 and move it
-    """
-    n106_mask = df['road'] == 'N106'
-    if not n106_mask.any():
-        return df
-        
-    n106_start_idx = df[n106_mask].index[0]
-    n106_lat = df.loc[n106_start_idx, 'lat']
-    n106_lon = df.loc[n106_start_idx, 'lon']
-    
-    n1_df = df[df['road'] == 'N1']
-    if n1_df.empty:
-        return df
-        
-    # calculate distances to all points on N1 and find the nearest one
-    distances = ((n1_df['lat'] - n106_lat)**2 + (n1_df['lon'] - n106_lon)**2)**0.5
-    nearest_n1_idx = distances.idxmin()
-    
-    # overwrite the lat and lon of the N106 start point to match the nearest point on the N1
-    df.loc[n106_start_idx, 'lat'] = df.loc[nearest_n1_idx, 'lat']
-    df.loc[n106_start_idx, 'lon'] = df.loc[nearest_n1_idx, 'lon']
-    
-    print(f"HARDCODE SUCCES: N106 vastgeplakt aan N1")
-    return df
-
 def main():
-    input_csv = "../data_cleaned_by_lecturer/_roads3.csv"
-    bmms_xlsx = "../data_cleaned_by_lecturer/BMMS_overview.xlsx"
-    output_csv = "../data_processed/A3_network_roads.csv"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    input_csv = os.path.join(script_dir, "..", "data_cleaned_by_lecturer", "_roads3.csv")
+    bmms_xlsx = os.path.join(script_dir, "..", "data_cleaned_by_lecturer", "BMMS_overview.xlsx")
+    output_csv = os.path.join(script_dir, "..", "data_processed", "A3_network_roads.csv")
 
     print("Bezig met verwerken...")
+    if not os.path.exists(input_csv):
+        input_csv = "../data_cleaned_by_lecturer/_roads3.csv"
+        bmms_xlsx = "../data_cleaned_by_lecturer/BMMS_overview.xlsx"
+        output_csv = "../data_processed/A3_network_roads.csv"
+
     df = load_data(input_csv)
     df = filter_target_roads(df)
+    
+    # 0. DE FIX: Bereken eerst de initiële segmentlengtes (zodat pandas niet crasht!)
     df = calculate_segment_lengths(df)
+    
     df = merge_bridge_data(df, bmms_xlsx)
     
-    df = hardcode_n106_connection(df)
-    # new logic to process the network topology, identify intersections, and assign unique IDs based on location, while ensuring that bridges keep their location and sourcesinks are moved if they are on the same location as a bridge or intersection.
+    df = hardcode_n106_connection(df) 
+    df = hardcode_n1_n2_connection(df)
+    df = snap_side_roads(df)
     df = process_network_topology(df)
+    
+    # --- DE NIEUWE LENGTE BEREKENING (Docent feedback) ---
+    df = recalculate_lengths(df)
     
     df = format_final_dataframe(df)
     
-    # We save the complete list ( including all dublle ID's for cross roads)
-    # So mesa can loop over all roads and see interconnections
+    if not os.path.exists(os.path.dirname(output_csv)):
+        os.makedirs(os.path.dirname(output_csv), exist_ok=True)
+        
     df.to_csv(output_csv, index=False)
     print(f"Klaar! Bestand opgeslagen: {output_csv}")
+
+    # =========================================================================
+    # VISUALIZATION
+    # =========================================================================
+    print("\n--- Generating Network Map ---")
+    
+    # Zoek alle wiskundige kruispunten (waar 2 wegen dezelfde coördinaten delen)
+    # Zelfs als het woordje 'bridge' er staat, krijgt het hier een rood kruisje als het snijdt.
+    road_counts_per_id = df.groupby('id')['road'].nunique()
+    echte_kruispunt_ids = road_counts_per_id[road_counts_per_id > 1].index
+    intersections = df[df['id'].isin(echte_kruispunt_ids)].drop_duplicates(subset=['id'])
+    
+    print(f"Totaal échte kruispunten getekend: {len(intersections)}\n")
+
+    fig, ax = plt.subplots(figsize=(10, 10), facecolor='white')
+
+    for road_name, road_data in df.groupby('road'):
+        lons = road_data['lon'].values
+        lats = road_data['lat'].values
+        
+        if road_name == 'N1':
+            ax.plot(lons, lats, color='blue', linewidth=5, zorder=2)
+        elif road_name == 'N2':
+            ax.plot(lons, lats, color='green', linewidth=5, zorder=3)
+        else:
+            ax.plot(lons, lats, color='gray', linewidth=3, zorder=1)
+
+    if not intersections.empty:
+        ax.scatter(intersections['lon'], intersections['lat'], 
+                   color='red', marker='X', s=150, zorder=4, edgecolors='black')
+
+    for road_name, road_data in df.groupby('road'):
+        mid_idx = len(road_data) // 2
+        pt_x = road_data.iloc[mid_idx]['lon']
+        pt_y = road_data.iloc[mid_idx]['lat']
+        
+        weight = 'bold' if road_name in ['N1', 'N2'] else 'normal'
+        color = 'blue' if road_name == 'N1' else 'green' if road_name == 'N2' else 'black'
+        
+        ax.annotate(road_name, (pt_x, pt_y), color=color, fontsize=9, fontweight=weight,
+                    ha='center', va='center',
+                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='gray', boxstyle='round,pad=0.2'),
+                    zorder=5)
+
+    plt.title("N1 & N2 Network met Intersections", fontsize=16, fontweight='bold')
+    plt.xlabel("Longitude", fontsize=12)
+    plt.ylabel("Latitude", fontsize=12)
+
+    custom_legend = [
+        Line2D([0], [0], color='blue', lw=5, label='N1 Highway'),
+        Line2D([0], [0], color='green', lw=5, label='N2 Highway'),
+        Line2D([0], [0], color='gray', lw=3, label='Connected Branches'),
+        Line2D([0], [0], color='white', marker='X', markerfacecolor='red', markeredgecolor='black', markersize=10, label='Kruispunten')
+    ]
+    ax.legend(handles=custom_legend, loc='lower right', fontsize=11, shadow=True)
+    
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.tight_layout()
+
+    try:
+        save_path = os.path.join(os.path.dirname(output_csv), "Assignment_3_Network_Filtered.png")
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    except:
+        pass
+        
+    plt.show()
 
 if __name__ == "__main__":
     main()
