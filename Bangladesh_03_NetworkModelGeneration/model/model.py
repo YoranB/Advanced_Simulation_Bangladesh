@@ -25,7 +25,47 @@ def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     y_min = lat_max + lat_edge
     return y_min, y_max, x_min, x_max
 
+def optimize_network_data(df):
+    """
+    Merges consecutive 'link' segments on the same road into a single link,
+    summing their lengths to drastically reduce the number of agents.
+    """
+    optimized_rows = []
 
+        # We do this per road so we never accidentally merge links from different roads
+    for road in df['road'].unique():
+        road_df = df[df['road'] == road]
+
+        current_link = None
+
+        for _, row in road_df.iterrows():
+            model_type = row['model_type'].strip().lower()
+
+            if model_type == 'link':
+                if current_link is None:
+                        # Start a new combined link
+                    current_link = row.to_dict()
+                else:
+                        # Add the length of this segment to the running total
+                    current_link['length'] += row['length']
+                        # We keep the 'lat' and 'lon' of the very first segment,
+                        # which is fine since visual exactness matters less than logical length.
+            else:
+                    # We hit a bridge, intersection, source, or sink!
+                    # 1. Save the accumulated link if we were building one
+                if current_link is not None:
+                    optimized_rows.append(current_link)
+                    current_link = None
+
+                    # 2. Save this special feature exactly as it is
+                optimized_rows.append(row.to_dict())
+
+            # If the road ends with a link, make sure to save it!
+        if current_link is not None:
+            optimized_rows.append(current_link)
+
+        # Return a clean, heavily reduced DataFrame
+    return pd.DataFrame(optimized_rows)
 # ---------------------------------------------------------------
 class BangladeshModel(Model):
     """
@@ -81,6 +121,9 @@ class BangladeshModel(Model):
 
         self.generate_model()
 
+
+    
+
     def generate_model(self): 
         """
         generate the simulation model according to the csv file component information
@@ -92,7 +135,8 @@ class BangladeshModel(Model):
         # TODO You can also read in the road column to generate this list automatically 
         #we changed this, so take all roads 
 
-        #did this it now takes road unique to list
+        #did this it now takes road unique to list 
+        df = optimize_network_data(df)
         roads = df['road'].unique().tolist()
 
         df_objects_all = []
@@ -185,16 +229,31 @@ class BangladeshModel(Model):
         self.check_network_connectivity()
 
     def check_network_connectivity(self):
-# --- Gedetailleerde Eiland Analyse ---
+        # 1. Tel het aantal specifieke agents in het netwerk
+        intersection_count = 0
+        bridge_count = 0
+        
+        for node_id in self.G.nodes():
+            agent = self.G.nodes[node_id]['agent_object']
+            if isinstance(agent, Intersection):
+                intersection_count += 1
+            elif isinstance(agent, Bridge):
+                bridge_count += 1
+                
+        print(f"\n--- INFRATRUCTUUR OVERZICHT ---")
+        print(f"Totaal aantal kruispunten (Intersections): {intersection_count}")
+        print(f"Totaal aantal bruggen (Bridges): {bridge_count}")
+
+        # 2. De Eiland Analyse
         islands = list(nx.connected_components(self.G))
-        print(f"\n--- Analyse van losse eilanden ---")
+        print(f"\n--- Analyse van losse eilanden ({len(islands)} in totaal) ---")
+        
         for i, island in enumerate(islands):
             roads_in_island = set()
             for node_id in island:
                 agent = self.G.nodes[node_id]['agent_object']
                 
-                # We proberen de wegnaam te vinden. 
-                # Mocht 'road' niet werken, kijken we of het 'road_name' is
+                # We proberen de wegnaam te vinden
                 road_name = getattr(agent, 'road', None) 
                 if road_name is None:
                     road_name = getattr(agent, 'road_name', "Onbekende weg")
@@ -202,8 +261,6 @@ class BangladeshModel(Model):
                 roads_in_island.add(road_name)
             
             print(f"Eiland {i+1} ({len(island)} nodes) bevat (o.a.) deze wegen: {list(roads_in_island)[:5]}...")
-
-    
 
     def get_random_route(self, source):
         """
