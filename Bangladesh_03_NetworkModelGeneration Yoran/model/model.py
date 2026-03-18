@@ -68,6 +68,25 @@ def optimize_network_data(df):
     # Return a clean, heavily reduced DataFrame
     return pd.DataFrame(optimized_rows)
 
+
+def print_dataframe_status(df, stage="BEFORE"):
+    """
+    Analyzes the DataFrame to count the number of nodes (intersections,
+    bridges, etc.) and edges (links) based on the 'model_type'.
+    """
+    # Clean up the string to ensure accurate counting
+    model_types = df['model_type'].astype(str).str.strip().str.lower()
+
+    # Links are edges, everything else is a node
+    edges = (model_types == 'link').sum()
+    nodes = (model_types != 'link').sum()
+
+    print(f"\n=== DATAFRAME STATUS: {stage.upper()} ===")
+    print(f"Nodes (Special features): {nodes} | Edges (Links): {edges}")
+    print(f"Total Rows in DataFrame:  {len(df)}")
+    print(f"====================================\n")
+
+
 # ---------------------------------------------------------------
 class BangladeshModel(Model):
     """
@@ -120,7 +139,13 @@ class BangladeshModel(Model):
     def generate_model(self):
         df = pd.read_csv(self.file_name)
 
+        # --- NEW: Print BEFORE status ---
+        print_dataframe_status(df, stage="BEFORE OPTIMIZATION")
+
         df = optimize_network_data(df)
+
+        # --- NEW: Print AFTER status ---
+        print_dataframe_status(df, stage="AFTER OPTIMIZATION")
 
         roads = df['road'].unique().tolist()
 
@@ -191,7 +216,7 @@ class BangladeshModel(Model):
                     # Voeg de node toe aan het NetworkX netwerk
                     self.G.add_node(agent.unique_id, agent_object=agent)
 
-                    # 3. Trek ALTIJD het lijntje naar de vorige agent op deze weg
+                # 3. Trek ALTIJD het lijntje naar de vorige agent op deze weg
                 if prev_agent is not None:
                     self.G.add_edge(prev_agent.unique_id, agent.unique_id, weight=row['length'])
 
@@ -278,12 +303,92 @@ class BangladeshModel(Model):
         self.schedule.step()
 
 
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import numpy as np
+
+
+def visualize_network(model):
+    """
+    Plots the NetworkX graph. Nodes are colored by their road name,
+    and the name of the road is plotted near the middle of its segment.
+    """
+    G = model.G
+    pos = {}
+
+    # 1. Identify all unique roads to create a color palette
+    unique_roads = set()
+    for node_id in G.nodes():
+        agent = G.nodes[node_id]['agent_object']
+        unique_roads.add(agent.road_name)
+
+    unique_roads = list(unique_roads)
+
+    # 2. Generate a distinct color for each road
+    # Using the 'tab20' colormap which has 20 highly distinct colors
+    colors = plt.cm.tab20(np.linspace(0, 1, len(unique_roads)))
+    road_color_map = dict(zip(unique_roads, colors))
+
+    node_colors = []
+    # Dictionary to collect all positions per road so we can label them
+    road_positions = {road: [] for road in unique_roads}
+
+    # 3. Assign positions and colors
+    for node_id in G.nodes():
+        agent = G.nodes[node_id]['agent_object']
+        pos[node_id] = agent.pos
+        road = agent.road_name
+
+        node_colors.append(road_color_map[road])
+        road_positions[road].append(agent.pos)
+
+    # 4. Set up the plot
+    plt.figure(figsize=(14, 12))
+
+    # Draw the network
+    nx.draw(
+        G,
+        pos=pos,
+        node_color=node_colors,
+        node_size=35,
+        edge_color='gray',
+        with_labels=False,
+        alpha=0.8
+    )
+
+    # 5. Plot the road names
+    for road, positions in road_positions.items():
+        # Skip labeling if the road name is somehow blank
+        if not road or road == 'Unknown' or str(road) == 'nan':
+            continue
+
+        # Pick the middle node of this road to place the label
+        # This ensures the text actually sits on the road line
+        middle_index = len(positions) // 2
+        label_pos = positions[middle_index]
+
+        # Add the text label with a slight white background for readability
+        plt.text(
+            label_pos[0], label_pos[1],
+            road,
+            fontsize=9,
+            fontweight='bold',
+            ha='center',
+            va='center',
+            bbox=dict(facecolor='white', alpha=0.7, edgecolor='none', pad=1.5)
+        )
+
+    plt.title("Bangladesh Model - Road Network", fontsize=16)
+    plt.show()
+
+
 # EOF -----------------------------------------------------------
 if __name__ == "__main__":
     # 1. Maak een instantie van het model aan
-    # We geven even een dummy bestand mee (zorg dat de naam klopt met jouw CSV)
     test_model = BangladeshModel()
 
-    # Zodra dit model wordt aangemaakt, roept de __init__ automatisch
-    # generate_model() aan, en dán pas zie je jouw prints!
     print("\nTest run succesvol afgerond!")
+
+    # 2. Visualize the generated network
+    print("Generating visualization...")
+    visualize_network(test_model)
