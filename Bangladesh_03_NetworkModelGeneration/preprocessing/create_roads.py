@@ -56,40 +56,35 @@ def merge_bridge_data(df_roads, bmms_filepath):
 #this part is new: 
 def process_network_topology(df, start_id=1000000):
     """
-     This function is the glue of the network:
-    1. Identify intersection on the road network based on shared coordinates (rounded to 2 decimals) and mark them as 'intersection'.
-    2. guarantee bridges have highest priority never move bridges, but move sourcesinks if they are on the same location as a bridge or intersection.
-    3. move sourcesinks if they are at the same location as an intersection (but not a bridge) to the nearest link segment on the same road, so that they are not on top of each other.
-    4. assign unique IDs to each location (intersection, bridge, sourcesink, link) based on the rounded coordinates, so that N1 and N2 get the same ID for the same location.
+    Identificeert kruispunten, behoudt brug-prioriteit en zorgt dat 
+    gewone wegsegmenten niet in elkaar fuseren.
     """
-    # define location key based on rounded coordinates
-    df['lat_round'] = df['lat'].round(2)
-    df['lon_round'] = df['lon'].round(2)
+    # 1. Geef ELKE rij eerst een compleet uniek ID (behoudt weglengtes)
+    df['id'] = range(start_id, start_id + len(df))
+    
+    # 2. Bepaal overlappen met 3 decimalen (~110m). 
+    df['lat_round'] = df['lat'].round(3)
+    df['lon_round'] = df['lon'].round(3)
     df['coord_key'] = df['lat_round'].astype(str) + "_" + df['lon_round'].astype(str)
     
-    # We geven prioriteit aan model_types: bridge > sourcesink > intersection > link
-    priority_map = {'bridge': 1, 'sourcesink': 2, 'intersection': 3, 'link': 4}
+    # 3. Zoek 'keys' (plekken) waar MEERDERE wegen in hetzelfde vakje vallen
+    road_counts = df.groupby('coord_key')['road'].nunique()
+    inter_keys = road_counts[road_counts > 1].index
     
-    # identify intersections: locaitons where multiple roads share the same rounded coordinates (coord_key)
-    overlap = df.groupby('coord_key')['road'].nunique()
-    inter_keys = overlap[overlap > 1].index
+    # Markeer als intersection (alleen als het een normale link was)
     df.loc[df['coord_key'].isin(inter_keys) & (df['model_type'] == 'link'), 'model_type'] = 'intersection'
 
-    #move sourse sing if the sourse sink point is also a intersection or bridge, we move the source sink point to the nearest link segment on the same road. We keep moving until we find a link that is not an intersection or bridge.
+    # 4. SourceSink verschuiven (je bestaande logica)
     processed_roads = []
     for road_name, group in df.groupby('road'):
         group = group.sort_values('chainage').reset_index(drop=True)
-        
-        # determine the indices to check for sourcesinks at the start and end of the road
         indices = [0, len(group)-1]
         for idx in indices:
             curr = idx
             direction = 1 if idx == 0 else -1
-            # move the sourcesink if it is on the same location as a bridge or intersection, keep moving until we find a link that is not an intersection or bridge
             while 0 <= curr < len(group):
                 is_bridge = (group.loc[curr, 'model_type'] == 'bridge')
                 is_shared = (group.loc[curr, 'coord_key'] in inter_keys)
-                
                 if not is_bridge and not is_shared:
                     group.loc[curr, 'model_type'] = 'sourcesink'
                     break
@@ -98,23 +93,33 @@ def process_network_topology(df, start_id=1000000):
     
     df = pd.concat(processed_roads).reset_index(drop=True)
 
-    # assign unique IDs to each location (intersection, bridge, sourcesink, link) based on the rounded coordinates, so that N1 and N2 get the same ID for the same location. We sorteren op prioriteit zodat de 'beste' model_type per locatie wint
-    # we sort on priority so that the 'best' model_type per location wins, and we create a  list of unique locations based on the rounded coordinates, which we then use to assign unique IDs and model types to the full dataframe (so that N1 and N2 get the same ID for the same location). This way we ensure that bridges keep their location, and sourcesinks are moved if they are on the same location as a bridge or intersection, but they get the same ID as the original location.
+    # 5. ID'S GELIJKTREKKEN (Alleen voor de kruispunten!)
+    priority_map = {'bridge': 1, 'sourcesink': 2, 'intersection': 3, 'link': 4}
     df['type_prio'] = df['model_type'].map(priority_map)
-    location_master = df.sort_values('type_prio').groupby('coord_key').first().reset_index()
     
-    # unique ID's to each location (intersection, bridge, sourcesink, link) based on the rounded coordinates, so that N1 and N2 get the same ID for the same location. We sorteren op prioriteit zodat de 'beste' model_type per locatie wint
-    location_master['final_id'] = range(start_id, start_id + len(location_master))
+    for key in inter_keys:
+        mask = df['coord_key'] == key
+        # Pak de 'belangrijkste' rij op dit kruispunt
+        best_row = df[mask].sort_values('type_prio').iloc[0]
+        
+        # Forceer alle wegen op dit kruispunt om exact dit ID en Type te gebruiken
+        df.loc[mask, 'id'] = best_row['id']
+        df.loc[mask, 'model_type'] = best_row['model_type']
+        
+        # Zet ze exact op dezelfde pixel voor een strakke visuele kaart
+        df.loc[mask, 'lat'] = best_row['lat']
+        df.loc[mask, 'lon'] = best_row['lon']
+        
+    # 6. VERWIJDER ZELF-LUSSEN
+    # Als een weg heel veel bochten had op 1 kruispunt, kan hij nu twee keer hetzelfde 
+    # ID achter elkaar hebben. Dat droppen we, zodat de truck soepel doorrijdt.
+    df['prev_id'] = df.groupby('road')['id'].shift(1)
+    df = df[df['id'] != df['prev_id']].copy()
     
-    # mappings
-    id_map = location_master.set_index('coord_key')['final_id'].to_dict()
-    type_map = location_master.set_index('coord_key')['model_type'].to_dict()
-    
-    # do it on the whole  dataframe
-    df['id'] = df['coord_key'].map(id_map)
-    df['model_type'] = df['coord_key'].map(type_map)
-    
-    return df
+    # Opschonen
+    cols_to_drop = ['lat_round', 'lon_round', 'coord_key', 'type_prio', 'prev_id']
+    return df.drop(columns=[c for c in cols_to_drop if c in df.columns])
+
 
 def format_final_dataframe(df):
     # generate names for the sub parts

@@ -8,7 +8,7 @@ if not os.path.exists('../experiment'):
     os.makedirs('../experiment')
 
 # 2. Instellingen volgens Assignment 3
-run_length =  100  #5 * 24 * 60  # 5 dagen = 7200 ticks
+run_length =  7200
 seeds = [123, 456, 789, 101, 112] # 5 replicaties
 
 # Scenario's exact uit de Assignment 3 PDF

@@ -323,7 +323,7 @@ class Vehicle(Agent):
         # old code as in ass2
         self.location_index += 1
         next_id = self.path_ids[self.location_index]
-        next_infra = self.model.schedule._agents[next_id]
+        next_infra = self.model.G.nodes[next_id]['agent_object']
 
         if isinstance(next_infra, Sink):
             self.arrive_at_next(next_infra, 0)
