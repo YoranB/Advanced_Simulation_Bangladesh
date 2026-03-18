@@ -1,17 +1,17 @@
-from model import BangladeshModel
-import pandas as pd
 import os
+import pandas as pd
+# Omdat model_run.py in dezelfde map staat als model.py:
+from model import BangladeshModel
 
-# Create the experiment folder if it doesn't exist
+# 1. Maak de experimentenmap aan op het hoofdniveau (../)
 if not os.path.exists('../experiment'):
     os.makedirs('../experiment')
 
-# 5 days x 24 hours x 60 minutes = 7200 ticks
-run_length = 100
+# 2. Instellingen volgens Assignment 3
+run_length = 7200
+seeds = [123, 456, 789, 101, 112]  # 5 replicaties
 
-# 10 random seeds for 10 replications
-seeds = [123, 456, 789, 101, 112, 131, 415, 161, 718, 192]
-
+# Scenario's exact uit de Assignment 3 PDF
 scenarios = {
     0: {'A': 0, 'B': 0, 'C': 0, 'D': 0},
     1: {'A': 0, 'B': 0, 'C': 0, 'D': 5},
@@ -20,42 +20,41 @@ scenarios = {
     4: {'A': 5, 'B': 10, 'C': 20, 'D': 40}
 }
 
-print("Starting experiments...")
+print("=== START EXPERIMENTEN ASSIGNMENT 3 ===")
+# print(f"Data bron: demo-4.csv | Reistijd: {run_length} minuten")
 
-for scenario_id, probabilities in scenarios.items():
-    print(f"\n--- Running Scenario {scenario_id} ---")
+for scenario_id, probs in scenarios.items():
+    print(f"\n--- Bezig met Scenario {scenario_id} ---")
+    scenario_results = []
 
-    scenario_data = []
+    for rep, current_seed in enumerate(seeds):
+        # Initialiseer het model met de scenario-kansen
+        sim_model = BangladeshModel(seed=current_seed, bridge_probabilities=probs)
 
-    for rep, seed in enumerate(seeds):
-        print(f"  Replication {rep + 1}/10 (Seed: {seed})")
-
-        # Initialize the model with the scenario's probabilities
-        sim_model = BangladeshModel(seed=seed, bridge_probabilities=probabilities)
-
-        # Run the model
-        for _ in range(run_length):
+        # Run de simulatie voor 7200 stappen
+        for i in range(run_length):
             sim_model.step()
 
-        # Gather the metrics
-        completed_trucks = len(sim_model.travel_times)
-        if completed_trucks > 0:
-            avg_travel_time = sum(sim_model.travel_times) / completed_trucks
+        # Bereken gemiddelde reistijd van alle aangekomen trucks
+        if len(sim_model.travel_times) > 0:
+            avg_time = sum(sim_model.travel_times) / len(sim_model.travel_times)
         else:
-            avg_travel_time = None
+            avg_time = 0
 
-        scenario_data.append({
+        scenario_results.append({
             'Scenario': scenario_id,
             'Replication': rep + 1,
-            'Seed': seed,
-            'Average_Travel_Time_mins': avg_travel_time,
-            'Trucks_Finished': completed_trucks
+            'Seed': current_seed,
+            'Avg_Travel_Time': avg_time,
+            'Trucks_Arrived': len(sim_model.travel_times)
         })
 
-    # Export the scenario data to a CSV file
-    df_output = pd.DataFrame(scenario_data)
-    filename = f'../experiment/scenario_{scenario_id}.csv'
-    df_output.to_csv(filename, index=False)
-    print(f"Saved {filename}")
+    # print(f"  > Rep {rep+1} (Seed {current_seed}) klaar. Gemiddelde reistijd: {avg_time:.2f}")
 
-print("\nAll experiments completed successfully!")
+    # 3. Opslaan in de experiment map (gelegen in de hoofdmap boven 'model')
+    df_output = pd.DataFrame(scenario_results)
+    file_path = f'../experiment/scenario{scenario_id}.csv'
+    df_output.to_csv(file_path, index=False)
+    # print(f"Resultaten opgeslagen in: {file_path}")
+
+print("\n=== ALLE EXPERIMENTEN VOOR ASSIGNMENT 3 VOLTOOID ===")
