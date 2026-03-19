@@ -244,15 +244,19 @@ def format_final_dataframe(df):
 
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    input_csv = os.path.join(script_dir, "..", "data_cleaned_by_lecturer", "_roads3.csv")
-    bmms_xlsx = os.path.join(script_dir, "..", "data_cleaned_by_lecturer", "BMMS_overview.xlsx")
-    output_csv = os.path.join(script_dir, "..", "data_processed", "A3_network_roads.csv")
+
+    # Added "data" to the paths to match the new folder structure
+    input_csv = os.path.join(script_dir, "..", "data", "data_cleaned_by_lecturer", "_roads3.csv")
+    bmms_xlsx = os.path.join(script_dir, "..", "data", "data_cleaned_by_lecturer", "BMMS_overview.xlsx")
+    output_csv = os.path.join(script_dir, "..", "data", "data_processed", "A3_network_roads.csv")
 
     print("Bezig met verwerken...")
+
+    # Fallback paths (e.g., if you are running the script from the root directory instead of the preprocessing directory)
     if not os.path.exists(input_csv):
-        input_csv = "../data_cleaned_by_lecturer/_roads3.csv"
-        bmms_xlsx = "../data_cleaned_by_lecturer/BMMS_overview.xlsx"
-        output_csv = "../data_processed/A3_network_roads.csv"
+        input_csv = "data/data_cleaned_by_lecturer/_roads3.csv"
+        bmms_xlsx = "data/data_cleaned_by_lecturer/BMMS_overview.xlsx"
+        output_csv = "data/data_processed/A3_network_roads.csv"
 
     df = load_data(input_csv)
     df = filter_target_roads(df)
@@ -343,4 +347,4 @@ def main():
     plt.show()
 
 if __name__ == "__main__":
-    main()c
+    main()
