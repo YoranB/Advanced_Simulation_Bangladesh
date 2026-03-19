@@ -4,8 +4,8 @@ import pandas as pd
 from model import BangladeshModel
 
 # 1. Maak de experimentenmap aan op het hoofdniveau (../)
-if not os.path.exists('../experiment'):
-    os.makedirs('../experiment')
+if not os.path.exists('../data/experiment'):
+    os.makedirs('../data/experiment')
 
 # 2. Instellingen volgens Assignment 3
 run_length =  7200
@@ -53,7 +53,7 @@ for scenario_id, probs in scenarios.items():
 
     # 3. Opslaan in de experiment map (gelegen in de hoofdmap boven 'model')
     df_output = pd.DataFrame(scenario_results)
-    file_path = f'../experiment/scenario{scenario_id}.csv'
+    file_path = f'../data/experiment/scenario{scenario_id}.csv'
     df_output.to_csv(file_path, index=False)
     #print(f"Resultaten opgeslagen in: {file_path}")
 

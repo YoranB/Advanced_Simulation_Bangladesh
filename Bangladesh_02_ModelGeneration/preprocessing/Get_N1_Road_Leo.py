@@ -1,7 +1,7 @@
 import pandas as pd
 
 def load_data(filepath):
-    """Loads data depending on if it's a CSV or an Excel file."""
+    """Loads data_use depending on if it's a CSV or an Excel file."""
     filepath_str = str(filepath).lower()
     if filepath_str.endswith('.xlsx'):
         return pd.read_excel(filepath)
@@ -119,10 +119,10 @@ def main():
     output_filepath = "../data_processed/N1_roads.csv"
     target_road = 'N1'
     
-    # 1. Load data
+    # 1. Load data_use
     df = load_data(input_filepath)
 
-    # 2. Filter data
+    # 2. Filter data_use
     df = filter_by_road(df, road_name=target_road)
 
     # 3. Calculate segment lengths from chainage 
@@ -156,7 +156,7 @@ def main():
         print(bridges['condition'].value_counts().to_string())
     # ------------------------------------------
 
-    # 9. Save data
+    # 9. Save data_use
     save_data(df, output_filepath)
 
 if __name__ == "__main__":

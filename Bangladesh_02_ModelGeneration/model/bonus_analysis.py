@@ -31,7 +31,7 @@ for scenario_id, probs in scenarios.items():
         for _ in range(run_length):
             sim_model.step()
         
-        # Extract the stopwatch data from every bridge
+        # Extract the stopwatch data_use from every bridge
         for agent in sim_model.schedule.agents:
             if isinstance(agent, Bridge):
                 bridge_data.append({

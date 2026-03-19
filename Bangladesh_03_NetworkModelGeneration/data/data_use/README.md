@@ -11,7 +11,7 @@ Version:
 
 ## Introduction
 
-The simple transport model demo, see [../model/model.py](../model/model.py) for EPA133a Advanced Simulation course Assignment 3, takes a `csv` input data file that specifies the infrastructure model components to be generated. The data format used **by the demo model** is described here.
+The simple transport model demo, see [../model/model.py](../../model/model.py) for EPA133a Advanced Simulation course Assignment 3, takes a `csv` input data file that specifies the infrastructure model components to be generated. The data format used **by the demo model** is described here.
 
 ## Format
 

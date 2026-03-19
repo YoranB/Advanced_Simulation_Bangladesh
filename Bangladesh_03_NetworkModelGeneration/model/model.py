@@ -96,7 +96,7 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    file_name = '../data/demo-4.csv' 
+    file_name = '../data/data_use/demo-4.csv'
     #added the bridge probabilities here in init again for the experiments
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0,  bridge_probabilities=None):
@@ -130,7 +130,7 @@ class BangladeshModel(Model):
 
         Warning: the labels are the same as the csv column labels
         """
-        df = pd.read_csv('../data/demo-4.csv')
+        df = pd.read_csv('../data/data_use/demo-4.csv')
         # a list of names of roads to be generated
         # TODO You can also read in the road column to generate this list automatically 
         #we changed this, so take all roads 
@@ -239,10 +239,6 @@ class BangladeshModel(Model):
                 intersection_count += 1
             elif isinstance(agent, Bridge):
                 bridge_count += 1
-                
-        print(f"\n--- INFRATRUCTUUR OVERZICHT ---")
-        print(f"Totaal aantal kruispunten (Intersections): {intersection_count}")
-        print(f"Totaal aantal bruggen (Bridges): {bridge_count}")
 
         # 2. De Eiland Analyse
         islands = list(nx.connected_components(self.G))
