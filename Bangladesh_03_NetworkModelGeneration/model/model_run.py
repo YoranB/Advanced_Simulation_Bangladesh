@@ -20,7 +20,7 @@ scenarios = {
     4: {'A': 5, 'B': 10, 'C': 20, 'D': 40}
 }
 
-print("=== START EXPERIMENTEN ASSIGNMENT 3 ===")
+print("START EXPERIMENTEN")
 #print(f"Data bron: demo-4.csv | Reistijd: {run_length} minuten")
 
 for scenario_id, probs in scenarios.items():
@@ -48,8 +48,7 @@ for scenario_id, probs in scenarios.items():
             'Avg_Travel_Time': avg_time,
             'Trucks_Arrived': len(sim_model.travel_times)
         })
-        
-       # print(f"  > Rep {rep+1} (Seed {current_seed}) klaar. Gemiddelde reistijd: {avg_time:.2f}")
+
 
     # 3. Opslaan in de experiment map (gelegen in de hoofdmap boven 'model')
     df_output = pd.DataFrame(scenario_results)
@@ -57,4 +56,4 @@ for scenario_id, probs in scenarios.items():
     df_output.to_csv(file_path, index=False)
     #print(f"Resultaten opgeslagen in: {file_path}")
 
-print("\n=== ALLE EXPERIMENTEN VOOR ASSIGNMENT 3 VOLTOOID ===")
+print("\n ALLE EXPERIMENTENVOLTOOID")
