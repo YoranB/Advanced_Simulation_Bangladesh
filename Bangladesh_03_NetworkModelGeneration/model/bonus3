@@ -4,166 +4,170 @@ import pandas as pd
 from itertools import combinations
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+import numpy as np
 
-# --- PATH SETUP ---
-# Make the paths bulletproof by anchoring them to where this python file lives
+#file paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
-shapefile_path = os.path.join(script_dir, '..', 'data', 'roads.shp')
-group_data_path = os.path.join(script_dir, '..', 'data', 'demo-4.csv')
+shapefile_path = os.path.join(script_dir, '..', 'data', 'data_use', 'roads.shp')
+group_data_path = os.path.join(script_dir, '..', "data", "data_processed", "A3_network_roads.csv")
 
 def main():
-    # =========================================================================
-    # PART 1: THE GEOMETRIC METHOD (BONUS)
-    # =========================================================================
-    print("--- STARTING PART 1: GEOMETRIC METHOD ---")
-    print("Loading Shapefile from data folder...")
-    
+  
+    #data extraction 
     roads_gdf = gpd.read_file(shapefile_path)
 
-    # Project to UTM 46N to measure physical length in km
+    #project to UTM 46N to measure physical length in km
     roads_metric = roads_gdf.to_crs(epsg=32646) 
     roads_metric['length_km'] = roads_metric.geometry.length / 1000
 
-    # Clean road names and calculate total lengths
+    #clean road names and calculate total lengths
     roads_metric['clean_ref'] = roads_metric['ref'].str.replace(' ', '').str.upper()
     road_lengths = roads_metric.groupby('clean_ref')['length_km'].sum()
 
-    # Filter for N1 and N2 family roads longer than 25km
+    #filter for N1 and N2 family roads longer than 25km
     target_roads = road_lengths[
         (road_lengths.index.str.startswith('N1') | road_lengths.index.str.startswith('N2')) & 
-        (road_lengths > 25)
-    ].index.tolist()
+        (road_lengths > 25)].index.tolist()
 
-    # Merge road segments into continuous lines
+    #merging road segments into continuous lines
     final_selection = roads_gdf.copy()
     final_selection['clean_ref'] = final_selection['ref'].str.replace(' ', '').str.upper()
     selection_gdf = final_selection[final_selection['clean_ref'].isin(target_roads)].dissolve(by='clean_ref')
 
-    # Generate all pairwise combinations to find intersections
+    #generating all pairwise combinations to find intersections
     all_intersections = []
     tolerance = 0.001 # 100 meters search radius
 
     for r1, r2 in combinations(selection_gdf.index, 2):
         g1, g2 = selection_gdf.loc[r1, 'geometry'], selection_gdf.loc[r2, 'geometry']
         
-        # Check if the two roads ever come within 100m of each other
+        #checking if the two roads ever come within 100m of each other
         if g1.distance(g2) < tolerance:
-            # Draw a temporary 100m search radius around road 1, and find where road 2 enters it.
             overlap_zone = g1.buffer(tolerance).intersection(g2)
             
-            # If a road loops it enters the search radius twice.
             if hasattr(overlap_zone, 'geoms'):
                 pieces = list(overlap_zone.geoms)
             else:
                 pieces = [overlap_zone]
                 
-            # Extract the exact center coordinate of each junction and save it
             for piece in pieces:
                 pt = piece.centroid
                 all_intersections.append({'Road_1': r1, 'Road_2': r2, 'Lon': round(pt.x, 6), 'Lat': round(pt.y, 6)})
 
-    # Cluster duplicate crossings within 1km
+    #handle duplicates and close points (especially for N1/N2 which have a long shared part of road)
     df_geo_intersections = pd.DataFrame(all_intersections)
-    df_geo_intersections['Lat_cluster'] = df_geo_intersections['Lat'].round(2)
-    df_geo_intersections['Lon_cluster'] = df_geo_intersections['Lon'].round(2)
-    df_geo_intersections = df_geo_intersections.drop_duplicates(subset=['Road_1', 'Road_2', 'Lat_cluster', 'Lon_cluster'])
-    df_geo_intersections = df_geo_intersections.drop(columns=['Lat_cluster', 'Lon_cluster'])
+    
+    def haversine_km(lat1, lon1, lat2, lon2):
+        R = 6371.0
+        lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
+        dlat, dlon = lat2 - lat1, lon2 - lon1
+        a = np.sin(dlat/2)**2 + np.cos(lat1)*np.cos(lat2)*np.sin(dlon/2)**2
+        return 2 * R * np.arcsin(np.sqrt(a))
 
-    # Keep only intersections connected directly to N1 or N2
+    cleaned_intersections = []
+    
+    for (r1, r2), group in df_geo_intersections.groupby(['Road_1', 'Road_2']):
+        #hardcoding N1 and N2 only diverge once in reality. 
+        if set([r1, r2]) == {'N1', 'N2'}:
+            best_pt = group.loc[group['Lat'].idxmax()]
+            cleaned_intersections.append(best_pt)
+            continue
+            
+        #for all other roads we use a standard 5km zipper exclusion
+        selected = []
+        for _, row in group.iterrows():
+            too_close = False
+            for s in selected:
+                if haversine_km(row['Lat'], row['Lon'], s['Lat'], s['Lon']) < 5.0:
+                    too_close = True
+                    break
+            if not too_close:
+                selected.append(row)
+        cleaned_intersections.extend(selected)
+
+    df_geo_intersections = pd.DataFrame(cleaned_intersections)
+
+    #keeping only intersections connected directly to N1 or N2
     primary_highways = ['N1', 'N2']
     final_intersections = df_geo_intersections[
         (df_geo_intersections['Road_1'].isin(primary_highways)) | 
-        (df_geo_intersections['Road_2'].isin(primary_highways))
-    ].sort_values(by=['Road_1', 'Road_2'])
-
-    # Filter map lines to show only the connected backbone
-    connected_roads = set(final_intersections['Road_1']).union(set(final_intersections['Road_2']))
-    selection_gdf = selection_gdf[selection_gdf.index.isin(connected_roads)]
-
-    # Generate the Geometric Map
-    fig1, ax1 = plt.subplots(figsize=(10, 10), facecolor='white')
-
-    other_roads = selection_gdf[~selection_gdf.index.isin(['N1', 'N2'])]
-    other_roads.plot(ax=ax1, color='gray', linewidth=3, zorder=1)
-
-    if 'N1' in selection_gdf.index:
-        selection_gdf.loc[['N1']].plot(ax=ax1, color='blue', linewidth=5, zorder=2)
-    if 'N2' in selection_gdf.index:
-        selection_gdf.loc[['N2']].plot(ax=ax1, color='green', linewidth=5, zorder=3)
-
-    # Plot the intersections
-    ax1.scatter(final_intersections['Lon'], final_intersections['Lat'], 
-               color='red', marker='X', s=120, zorder=4, edgecolors='black')
-
-    # Add road name tags
-    for idx, row in selection_gdf.iterrows():
-        pt = row.geometry.representative_point()
-        weight = 'bold' if idx in ['N1', 'N2'] else 'normal'
-        color = 'blue' if idx == 'N1' else 'green' if idx == 'N2' else 'black'
-        
-        ax1.annotate(idx, (pt.x, pt.y), color=color, fontsize=10, fontweight=weight,
-                    ha='center', va='center',
-                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='gray', boxstyle='round,pad=0.2'),
-                    zorder=5)
-
-    # Formatting and legend
-    ax1.set_title("N1 & N2 Network (Geometric > 25km Filter)", fontsize=16, fontweight='bold')
-    ax1.set_xlabel("Longitude", fontsize=12)
-    ax1.set_ylabel("Latitude", fontsize=12)
-
-    custom_legend1 = [
-        Line2D([0], [0], color='blue', lw=5, label='N1 Highway'),
-        Line2D([0], [0], color='green', lw=5, label='N2 Highway'),
-        Line2D([0], [0], color='gray', lw=3, label='Connected Branches'),
-        Line2D([0], [0], color='white', marker='X', markerfacecolor='red', markeredgecolor='black', markersize=10, label='Verified Intersections')
-    ]
-    ax1.legend(handles=custom_legend1, loc='lower right', fontsize=11, shadow=True)
-    ax1.grid(True, linestyle='--', alpha=0.5)
-    fig1.tight_layout()
-
-    geo_save_path = os.path.join(script_dir, 'Assignment_3_Network_Final.png')
-    fig1.savefig(geo_save_path, dpi=300, bbox_inches='tight')
-    plt.show()
-
-    print(final_intersections.to_string(index=False))
-
-    # Export the Nodes for Mesa
-    csv_save_path = os.path.join(script_dir, 'bonus_intersections.csv')
-    final_intersections.to_csv(csv_save_path, index=False)
-    print(f"\nGeometric Results saved to {csv_save_path}")
-    print(f"Geometric Plot saved to: {geo_save_path}\n")
+        (df_geo_intersections['Road_2'].isin(primary_highways))].sort_values(by=['Road_1', 'Road_2'])
 
 
-    # =========================================================================
-    # PART 2: THE GROUP'S ROUNDING METHOD
-    # =========================================================================
-    print("--- STARTING PART 2: GROUP'S ROUNDING METHOD ---")
-    print("Loading group's processed network data...")
-    
+
+    #data extraction of data created by our create_roads.py
     df_group = pd.read_csv(group_data_path)
 
-    # Generate the Map
-    fig2, ax2 = plt.subplots(figsize=(10, 10), facecolor='white')
+    #extracting intersections using shared IDs
+    road_counts_per_id = df_group.groupby('id')['road'].nunique()
+    shared_ids = road_counts_per_id[road_counts_per_id > 1].index
+    intersections = df_group[df_group['id'].isin(shared_ids)].drop_duplicates(subset=['id'])
+    
+    unique_intersections = len(intersections)
 
-    # Plot the roads (Connecting the dots)
+    #direct overlay final plot    
+    matched_count = 0
+    group_unmatched = list(intersections.index)
+    geo_unmatched = []
+    match_reports = []
+
+    #matching
+    for _, geo_pt in final_intersections.iterrows():
+        min_dist = float('inf')
+        best_match_idx = -1
+        best_grp_pt = None
+        
+        for g_idx, grp_pt in intersections.iterrows():
+            dist = haversine_km(geo_pt['Lat'], geo_pt['Lon'], grp_pt['lat'], grp_pt['lon'])
+            if dist < min_dist:
+                min_dist = dist
+                best_match_idx = g_idx
+                best_grp_pt = grp_pt
+                
+        if min_dist <= 2.5:
+            matched_count += 1
+            match_reports.append({
+                'roads': f"{geo_pt['Road_1']} & {geo_pt['Road_2']}",
+                'dist': min_dist,
+                'geo_loc': f"({geo_pt['Lat']:.3f}, {geo_pt['Lon']:.3f})",
+                'grp_loc': f"({best_grp_pt['lat']:.3f}, {best_grp_pt['lon']:.3f})"
+            })
+            if best_match_idx in group_unmatched:
+                group_unmatched.remove(best_match_idx)
+        else:
+            geo_unmatched.append(geo_pt)
+
+    avg_deviation = sum([m['dist'] for m in match_reports]) / len(match_reports) if match_reports else 0
+
+    #reporting
+    print(f"Average distance: {avg_deviation:.3f} km\n")
+    
+    print("Matched intersections")
+    for m in match_reports:
+        print(f"{m['roads']:<11} | Deviation: {m['dist']:.3f} km | Geo: {m['geo_loc']} vs Group: {m['grp_loc']}")
+
+    fig, ax = plt.subplots(figsize=(12, 12), facecolor='white')
+
+    #plot the base roads using own data
     for road_name, road_data in df_group.groupby('road'):
         lons = road_data['lon'].values
         lats = road_data['lat'].values
         
         if road_name == 'N1':
-            ax2.plot(lons, lats, color='blue', linewidth=5, zorder=2)
+            ax.plot(lons, lats, color='blue', linewidth=5, zorder=2)
         elif road_name == 'N2':
-            ax2.plot(lons, lats, color='green', linewidth=5, zorder=3)
+            ax.plot(lons, lats, color='green', linewidth=5, zorder=3)
         else:
-            ax2.plot(lons, lats, color='gray', linewidth=3, zorder=1)
+            ax.plot(lons, lats, color='gray', linewidth=3, zorder=1)
 
-    # Plot the intersections
-    intersections = df_group[df_group['model_type'] == 'intersection'].drop_duplicates(subset=['id'])
+    #plotting the intersections overlay
+    ax.scatter(intersections['lon'], intersections['lat'], 
+               color='lime', marker='o', s=250, zorder=4, edgecolors='black', alpha=0.7)
+    
+    ax.scatter(final_intersections['Lon'], final_intersections['Lat'], 
+               color='red', marker='X', s=100, zorder=5, edgecolors='black')
 
-    ax2.scatter(intersections['lon'], intersections['lat'], 
-               color='red', marker='X', s=120, zorder=4, edgecolors='black')
-
-    # Add road name tags
+    #adding road name tags
     for road_name, road_data in df_group.groupby('road'):
         mid_idx = len(road_data) // 2
         pt_x = road_data.iloc[mid_idx]['lon']
@@ -172,40 +176,30 @@ def main():
         weight = 'bold' if road_name in ['N1', 'N2'] else 'normal'
         color = 'blue' if road_name == 'N1' else 'green' if road_name == 'N2' else 'black'
         
-        ax2.annotate(road_name, (pt_x, pt_y), color=color, fontsize=10, fontweight=weight,
+        ax.annotate(road_name, (pt_x, pt_y), color=color, fontsize=10, fontweight=weight,
                     ha='center', va='center',
-                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='gray', boxstyle='round,pad=0.2'),
-                    zorder=5)
+                    bbox=dict(facecolor='white', alpha=0.9, edgecolor='gray', boxstyle='round,pad=0.2'),
+                    zorder=6)
 
-    # Formatting and legend
-    ax2.set_title("N1 & N2 Network (Group's Rounding Method)", fontsize=16, fontweight='bold')
-    ax2.set_xlabel("Longitude", fontsize=12)
-    ax2.set_ylabel("Latitude", fontsize=12)
+    ax.set_title("Combined intersections", fontsize=18, fontweight='bold')
+    ax.set_xlabel("Longitude", fontsize=12)
+    ax.set_ylabel("Latitude", fontsize=12)
 
-    custom_legend2 = [
-        Line2D([0], [0], color='blue', lw=5, label='N1 Highway'),
-        Line2D([0], [0], color='green', lw=5, label='N2 Highway'),
+    custom_legend = [
+        Line2D([0], [0], color='blue', lw=5, label='N1'),
+        Line2D([0], [0], color='green', lw=5, label='N2'),
         Line2D([0], [0], color='gray', lw=3, label='Connected Branches'),
-        Line2D([0], [0], color='white', marker='X', markerfacecolor='red', markeredgecolor='black', markersize=10, label='Rounding Intersections')
+        Line2D([0], [0], color='white', marker='o', markerfacecolor='lime', markeredgecolor='black', markersize=12, label='Original Method (O)'),
+        Line2D([0], [0], color='white', marker='X', markerfacecolor='red', markeredgecolor='black', markersize=10, label='Geometric Method (X)')
     ]
-    ax2.legend(handles=custom_legend2, loc='lower right', fontsize=11, shadow=True)
-    ax2.grid(True, linestyle='--', alpha=0.5)
-    fig2.tight_layout()
+    ax.legend(handles=custom_legend, loc='lower right', fontsize=12, shadow=True)
+    ax.grid(True, linestyle='--', alpha=0.5)
+    fig.tight_layout()
 
-    # Save plot
-    group_save_path = os.path.join(script_dir, 'Assignment_3_Network_Group.png')
-    fig2.savefig(group_save_path, dpi=300, bbox_inches='tight')
+    #saving plot
+    final_save_path = os.path.join(script_dir, 'Assignment_3_Network_Final_Overlay.png')
+    fig.savefig(final_save_path, dpi=300, bbox_inches='tight')
     plt.show()
-
-    print(f"Group Plot successfully saved to: {group_save_path}\n")
-
-    # --- PRINT FINAL COMPARISON STATS ---
-    print("--- INTERSECTION COMPARISON RESULTS ---")
-    total_rows = (df_group['model_type'] == 'intersection').sum()
-    unique_intersections = len(intersections)
-    
-    print(f"GEOMETRIC METHOD: {len(final_intersections)} precise junction coordinates found.")
-    print(f"GROUP METHOD:     {total_rows} rows tagged as 'intersection', reducing down to {unique_intersections} physical locations.")
 
 if __name__ == "__main__":
     main()
