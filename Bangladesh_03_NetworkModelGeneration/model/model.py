@@ -176,10 +176,8 @@ class BangladeshModel(Model):
             df_combined['lon'].max(), 0.05 
         )
         # ContinuousSpace from the Mesa package;
-        # not to be confused with the SimpleContinuousModule visualization
         self.space = ContinuousSpace(x_max, y_max, True, x_min, y_min)
-        
-#:This was changed: building the roads and the network in one go, instead of building the roads first and then trying to connect them with a separate loop. This way we can use NetworkX to check if a node already exists before creating it, which is crucial for correctly handling intersections and avoiding duplicates.
+
         for df_road in df_objects_all:
             prev_agent = None  
             for _, row in df_road.iterrows():
@@ -225,7 +223,7 @@ class BangladeshModel(Model):
                 
                 prev_agent = agent
 
-        # --- NETWORK CHECK & VISUALISATIE (NA de loops!) ---
+        # NETWORK CHECK
         self.check_network_connectivity()
 
     def check_network_connectivity(self):
@@ -314,10 +312,6 @@ class BangladeshModel(Model):
 
 # EOF -----------------------------------------------------------
 if __name__ == "__main__":
-    # 1. Maak een instantie van het model aan
-    # We geven even een dummy bestand mee (zorg dat de naam klopt met jouw CSV)
+
     test_model = BangladeshModel()
-    
-    # Zodra dit model wordt aangemaakt, roept de __init__ automatisch 
-    # generate_model() aan, en dán pas zie je jouw prints!
     print("\nTest run succesvol afgerond!")
