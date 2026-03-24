@@ -1,0 +1,320 @@
+from mesa import Model
+from mesa.time import BaseScheduler
+from mesa.space import ContinuousSpace
+from components import Source, Sink, SourceSink, Bridge, Link, Intersection
+import pandas as pd
+from collections import defaultdict
+import networkx as nx 
+import matplotlib.pyplot as plt
+
+# ---------------------------------------------------------------
+def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
+    """
+    Set the HTML continuous space canvas bounding box (for visualization)
+    give the min and max latitudes and Longitudes in Decimal Degrees (DD)
+
+    Add white borders at edges (default 2%) of the bounding box
+    """
+
+    lat_edge = (lat_max - lat_min) * edge_ratio
+    lon_edge = (lon_max - lon_min) * edge_ratio
+
+    x_max = lon_max + lon_edge
+    y_max = lat_min - lat_edge
+    x_min = lon_min - lon_edge
+    y_min = lat_max + lat_edge
+    return y_min, y_max, x_min, x_max
+
+def optimize_network_data(df):
+    """
+    Merges consecutive 'link' segments on the same road into a single link,
+    summing their lengths to drastically reduce the number of agents.
+    """
+    optimized_rows = []
+
+        # We do this per road so we never accidentally merge links from different roads
+    for road in df['road'].unique():
+        road_df = df[df['road'] == road]
+
+        current_link = None
+
+        for _, row in road_df.iterrows():
+            model_type = row['model_type'].strip().lower()
+
+            if model_type == 'link':
+                if current_link is None:
+                        # Start a new combined link
+                    current_link = row.to_dict()
+                else:
+                        # Add the length of this segment to the running total
+                    current_link['length'] += row['length']
+                        # We keep the 'lat' and 'lon' of the very first segment,
+                        # which is fine since visual exactness matters less than logical length.
+            else:
+                    # We hit a bridge, intersection, source, or sink!
+                    # 1. Save the accumulated link if we were building one
+                if current_link is not None:
+                    optimized_rows.append(current_link)
+                    current_link = None
+
+                    # 2. Save this special feature exactly as it is
+                optimized_rows.append(row.to_dict())
+
+            # If the road ends with a link, make sure to save it!
+        if current_link is not None:
+            optimized_rows.append(current_link)
+
+        # Return a clean, heavily reduced DataFrame
+    return pd.DataFrame(optimized_rows)
+# ---------------------------------------------------------------
+class BangladeshModel(Model):
+    """
+    The main (top-level) simulation model
+
+    One tick represents one minute; this can be changed
+    but the distance calculation need to be adapted accordingly
+
+    Class Attributes:
+    -----------------
+    step_time: int
+        step_time = 1 # 1 step is 1 min
+
+    path_ids_dict: defaultdict
+        Key: (origin, destination)
+        Value: the shortest path (Infra component IDs) from an origin to a destination
+
+        Only straight paths in the Demo are added into the dict;
+        when there is a more complex network layout, the paths need to be managed differently
+
+    sources: list
+        all sources in the network
+
+    sinks: list
+        all sinks in the network
+
+    """
+
+    step_time = 1
+
+    file_name = '../data/data_use/demo-4.csv'
+    #added the bridge probabilities here in init again for the experiments
+
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0,  bridge_probabilities=None):
+
+        self.schedule = BaseScheduler(self)
+        self.running = True
+        self.path_ids_dict = defaultdict(lambda: pd.Series())
+        self.space = None
+        self.sources = []
+        self.sinks = [] 
+        self.G = nx.Graph() # the network graph, so we can do path modeling
+
+
+
+        # Store the probabilities for the current scenario (defaults to Scenario 0)
+        if bridge_probabilities is None:
+            self.bridge_probabilities = {'A': 0.0, 'B': 0.0, 'C': 0.0, 'D': 0.0}
+        else:
+            self.bridge_probabilities = bridge_probabilities 
+
+        self.travel_times = []
+
+        self.generate_model()
+
+
+    
+
+    def generate_model(self): 
+        """
+        generate the simulation model according to the csv file component information
+
+        Warning: the labels are the same as the csv column labels
+        """
+        df = pd.read_csv('../data/data_processed/A3_network_roads.csv')  # same data as A3
+
+        # A4: ADDED — load AADT data and compute average truck_AADT per road
+        df_aadt = pd.read_csv('../data/data_processed/traffic_aadt.csv')
+        road_truck_aadt = df_aadt.groupby('road')['truck_AADT'].mean().to_dict()
+
+        #did this it now takes road unique to list
+        df = optimize_network_data(df)
+        roads = df['road'].unique().tolist()
+
+        df_objects_all = []
+        for road in roads: 
+            # Select all the objects on a particular road in the original order as in the cvs
+            df_objects_on_road = df[df['road'] == road]
+
+            if not df_objects_on_road.empty:
+                df_objects_all.append(df_objects_on_road)
+                
+                """
+                Set the path 
+                1. get the serie of object IDs on a given road in the cvs in the original order
+                2. add the (straight) path to the path_ids_dict
+                3. put the path in reversed order and reindex
+                4. add the path to the path_ids_dict so that the vehicles can drive backwards too
+                """
+                
+                path_ids = df_objects_on_road['id']
+                path_ids.reset_index(inplace=True, drop=True)
+                self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
+                self.path_ids_dict[path_ids[0], None] = path_ids
+                path_ids = path_ids[::-1]
+                path_ids.reset_index(inplace=True, drop=True)
+                self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
+                self.path_ids_dict[path_ids[0], None] = path_ids 
+
+
+
+        
+        # put back to df with selected roads so that min and max and be easily calculated
+        df_combined = pd.concat(df_objects_all)
+        y_min, y_max, x_min, x_max = set_lat_lon_bound(
+            df_combined['lat'].min(),
+            df_combined['lat'].max(),
+            df_combined['lon'].min(), 
+            df_combined['lon'].max(), 0.05 
+        )
+        # ContinuousSpace from the Mesa package;
+        self.space = ContinuousSpace(x_max, y_max, True, x_min, y_min)
+
+        for df_road in df_objects_all:
+            prev_agent = None  
+            for _, row in df_road.iterrows():
+                agent_id = int(row['id']) 
+                
+                # Check of agent al bestaat (cruciaal voor kruispunten!)
+                if self.G.has_node(agent_id):
+                    agent = self.G.nodes[agent_id]['agent_object']
+                else:
+                    model_type = row['model_type'].strip()
+                    name = str(row['name']).strip() if pd.notna(row['name']) else ""
+
+                    # Maak de juiste agent aan
+                    # A4: ADDED — look up average truck AADT for this road to set generation rate
+                    aadt = road_truck_aadt.get(row['road'], None)
+                    if model_type == 'sourcesink':
+                        agent = SourceSink(agent_id, self, row['length'], name, row['road'], truck_aadt=aadt)  # A4: CHANGED
+                        self.sources.append(agent.unique_id)
+                        self.sinks.append(agent.unique_id)
+                    elif model_type == 'source':
+                        agent = Source(agent_id, self, row['length'], name, row['road'], truck_aadt=aadt)  # A4: CHANGED
+                        self.sources.append(agent.unique_id)
+                    elif model_type == 'sink':
+                        agent = Sink(agent_id, self, row['length'], name, row['road'])
+                        self.sinks.append(agent.unique_id)
+                    elif model_type == 'bridge':
+                        agent = Bridge(agent_id, self, row['length'], name, row['road'], condition=row['condition']) 
+                    elif model_type == 'intersection':
+                        agent = Intersection(agent_id, self, row['length'], name, row['road'])
+                    else: # link
+                        agent = Link(agent_id, self, row['length'], name, row['road'])
+
+                    # Voeg toe aan Mesa
+                    self.schedule.add(agent)
+                    self.space.place_agent(agent, (row['lon'], row['lat']))
+                    agent.pos = (row['lon'], row['lat']) 
+
+                    # Voeg node toe aan NetworkX
+                    self.G.add_node(agent.unique_id, agent_object=agent, pos=(row['lon'], row['lat'])) 
+
+                # Maak de verbinding (edge) met het vorige punt op de weg
+                if prev_agent is not None:
+                    # Gebruik de lengte van de huidige row als gewicht voor Dijkstra
+                    self.G.add_edge(prev_agent.unique_id, agent.unique_id, weight=row['length'])
+                
+                prev_agent = agent
+
+        # NETWORK CHECK
+        self.check_network_connectivity()
+
+    def check_network_connectivity(self):
+        # 1. Tel het aantal specifieke agents in het netwerk
+        intersection_count = 0
+        bridge_count = 0
+        
+        for node_id in self.G.nodes():
+            agent = self.G.nodes[node_id]['agent_object']
+            if isinstance(agent, Intersection):
+                intersection_count += 1
+            elif isinstance(agent, Bridge):
+                bridge_count += 1
+
+        # 2. De Eiland Analyse
+        islands = list(nx.connected_components(self.G))
+        print(f"\n--- Analyse van losse eilanden ({len(islands)} in totaal) ---")
+        
+        for i, island in enumerate(islands):
+            roads_in_island = set()
+            for node_id in island:
+                agent = self.G.nodes[node_id]['agent_object']
+                
+                # We proberen de wegnaam te vinden
+                road_name = getattr(agent, 'road', None) 
+                if road_name is None:
+                    road_name = getattr(agent, 'road_name', "Onbekende weg")
+                
+                roads_in_island.add(road_name)
+            
+            print(f"Eiland {i+1} ({len(island)} nodes) bevat (o.a.) deze wegen: {list(roads_in_island)[:5]}...")
+
+    def get_random_route(self, source):
+        """
+        pick up a random route given an origin
+        """
+        while True:
+            # different source and sink
+            sink = self.random.choice(self.sinks)
+            if sink is not source:
+                break
+        return self.path_ids_dict[source, sink]
+      
+    def get_route(self, source):
+        """
+        Calculates a random route using NetworkX and Dijkstra's algorithm.
+        """
+        # 1 find all reachable sinks from the source (we only want to pick a sink that is actually reachable, otherwise the truck will get stuck and that's no fun for anyone)
+        reachable_sinks = []
+        for sink in self.sinks:
+            if sink != source and nx.has_path(self.G, source, sink):
+                reachable_sinks.append(sink)
+
+        # 2 If the node is completely isolated, stay parked. We return a list with only the source, so that the truck will stay on its place and not move at all. We also print a warning in the console, so we can keep track of how many nodes are isolated and maybe investigate why.
+        if not reachable_sinks:
+            print(f"Waarschuwing: Node {source} is isolated. Truck will stay parked.")
+            return [source]
+
+        # 3 Pick a random sink ONLY from the reachable ones
+        sink = self.random.choice(reachable_sinks)
+
+        # 4. Check de cache 
+        # We check if we already calculated the route between this source and sink before, and if so, we return the cached route. This way we avoid redundant calculations and improve performance, especially if there are many trucks that need to calculate routes between the same pairs of nodes.
+        cache_key = f"route_{source}_{sink}"
+        if cache_key in self.path_ids_dict:
+            return self.path_ids_dict[cache_key]
+
+        # 5 Calculate the route using Dijkstra's algorithm, and we use the edge weights (lengths) to find the shortest path. This way we ensure that the trucks take the most efficient route between their origin and destination, which is more realistic and leads to more interesting dynamics in the simulation.
+        path = nx.shortest_path(self.G, source=source, target=sink, weight='weight')
+        
+        # Save the calculated path in the cache, so we can reuse it later if needed. We use a unique key for each source-sink pair, so we can easily retrieve the correct path when needed.
+        self.path_ids_dict[cache_key] = path
+        return path 
+    
+    def get_straight_route(self, source):
+        """
+        pick up a straight route given an origin
+        """
+        return self.path_ids_dict[source, None]
+
+    def step(self):
+        """
+        Advance the simulation by one step.
+        """
+        self.schedule.step()
+
+# EOF -----------------------------------------------------------
+if __name__ == "__main__":
+
+    test_model = BangladeshModel()
+    print("\nTest run succesvol afgerond!")
