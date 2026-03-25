@@ -59,23 +59,23 @@ class Bridge(Infra):
         self.condition = condition
         # New for BONUS: Track total delay caused by this bridge
         self.total_delay_time = 0
-        # Blocked out this part of the code
-        # # TODO
-        #self.delay_time = self.random.randrange(0, 10)
-        # print(self.delay_time) 
-        #this is supposed to be at bridge level so when making a bridge it has to be broken/not, not everytime the function delay time gets called 
-        # if it can not find bridge_prob, then use A:, B: c: etc
-        probs = getattr(self.model, 'bridge_probabilities', {'A': 0, 'B': 0, 'C': 0, 'D': 0})
-        breakdown_chance = probs.get(self.condition, 0.0)
-                
-        # Roll a random number between 0.0 and 1.0. 
-        # If it's less than our breakdown chance, the bridge is broken!
-        if self.random.random() < (breakdown_chance / 100.0): # Dividing by 100 if you input percentages like 5, 10, 20
-            self.is_broken = True
-        else:
-            self.is_broken = False
-    #Added this method 
-    # TODO  
+        # A4: CHANGED — bridges start intact; flood event triggers failures dynamically
+        self.is_broken = False
+        self.broke_during_flood = False  # A4: ADDED — True if bridge failed during a flood event
+
+    # A4: ADDED — called by model._trigger_flood() at flood tick
+    def trigger_failure(self, failure_prob):
+        """
+        Roll against failure_prob (0–1). If the bridge is currently intact and
+        the roll fails, mark it broken and record that it broke during a flood.
+        Returns True if the bridge just broke, False otherwise.
+        """
+        if not self.is_broken:
+            if self.random.random() < failure_prob:
+                self.is_broken = True
+                self.broke_during_flood = True  # A4: ADDED
+                return True
+        return False
 
 
     def get_delay_time(self):
@@ -344,6 +344,7 @@ class Vehicle(Agent):
             # Je hebt gecheckt dat het generated_at_step is, dus dit is top!
             travel_time = self.removed_at_step - self.generated_at_step
             self.model.travel_times.append(travel_time)
+            self.model.travel_time_log.append((self.removed_at_step, travel_time))  # A4: ADDED — for pre/post-flood time-series
             
             self.location.remove(self)
             return

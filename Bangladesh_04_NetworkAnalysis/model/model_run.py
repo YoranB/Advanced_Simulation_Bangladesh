@@ -6,72 +6,115 @@ from components import Bridge, Link, Intersection, Source, Sink, SourceSink
 if not os.path.exists('../data/experiment'):
     os.makedirs('../data/experiment')
 
-# 2. Instellingen volgens Assignment 3
-run_length =  7200
-seeds = [123, 456, 789, 101, 112] # 5 replicaties
+# ── Experiment settings ────────────────────────────────────────────────────
+run_length = 7200   # ticks (= minutes; 7200 min = 120 hours)
+seeds = [123, 456, 789, 101, 112]  # 5 replicaties
 
-# Scenario's exact uit de Assignment 3 PDF
+# ── Flood failure parameters ───────────────────────────────────────────────
+# Base failure probabilities per bridge condition when a flood hits.
+# Motivated by Mirza (2002): major Bangladesh floods damage 25-40% of rural
+# infrastructure; structurally deficient (D) bridges in floodplains face up to
+# 80% damage rates. Condition A bridges are largely intact; B/C progressively worse.
+FLOOD_BASE_PROBS = {'A': 0.10, 'B': 0.25, 'C': 0.50, 'D': 0.80}
+
+# Road-level flood risk multipliers (spatial differentiation).
+# Source: Mirza (2002) & WRI Aqueduct (2023) riverine flood hazard data.
+# N1 crosses the Jamuna/Brahmaputra floodplain (highest risk);
+# N2 runs through the northeast hills near Sylhet (lower riverine risk).
+ROAD_FLOOD_RISK = {
+    'N1':   1.0,   # Jamuna floodplain — highest riverine flood exposure
+    'N106': 0.9,   # N1 side road — same floodplain zone
+    'N2':   0.4,   # Northeast hills (Sylhet) — lower riverine, flash flood only
+    'N204': 0.4,   # N2 side road
+    'N207': 0.4,   # N2 side road
+    'N208': 0.5,   # Intermediate zone
+}
+
+# ── Scenario definitions ───────────────────────────────────────────────────
+# Iterative design: each scenario builds on insight from the previous one.
+#   Scenario 0: Baseline — establishes pre-flood travel times
+#   Scenario 1: Small flood — moderate intensity (×0.5), reveals first damage signal
+#   Scenario 2: High intensity flood — full spatial differentiation, maximises contrast
+#
+# All floods hit at tick 1440 (24 h into the simulation), giving a clean
+# 24 h pre-flood window and 96 h post-flood window for comparison.
 scenarios = {
-    0: {'A': 0, 'B': 0, 'C': 0, 'D': 0},
-    1: {'A': 0, 'B': 0, 'C': 0, 'D': 5},
-    2: {'A': 0, 'B': 0, 'C': 5, 'D': 10},
-    3: {'A': 0, 'B': 5, 'C': 10, 'D': 20},
-    4: {'A': 5, 'B': 10, 'C': 20, 'D': 40}
+    0: {'flood_event_ticks': [],      'flood_intensity': 0.0},  # baseline
+    1: {'flood_event_ticks': [1440],  'flood_intensity': 0.5},  # small flood
+    2: {'flood_event_ticks': [1440],  'flood_intensity': 1.0},  # high intensity flood
 }
 
 print("START EXPERIMENTEN")
-#print(f"Data bron: demo-4.csv | Reistijd: {run_length} minuten")
 
-for scenario_id, probs in scenarios.items():
+for scenario_id, cfg in scenarios.items():
     print(f"\n--- Bezig met Scenario {scenario_id} ---")
     scenario_results = []
-    infra_results = []  # A4: ADDED — per-infra criticality/vulnerability data
+    infra_results    = []
+    timeseries_rows  = []  # A4: ADDED — per-truck (tick, travel_time) for pre/post analysis
 
     for rep, current_seed in enumerate(seeds):
-        # Initialiseer het model met de scenario-kansen
-        sim_model = BangladeshModel(seed=current_seed, bridge_probabilities=probs)
+        sim_model = BangladeshModel(
+            seed=current_seed,
+            bridge_probabilities={'A': 0, 'B': 0, 'C': 0, 'D': 0},  # static failures off; flood handles this
+            flood_event_ticks=cfg['flood_event_ticks'],
+            flood_intensity=cfg['flood_intensity'],
+            flood_base_probs=FLOOD_BASE_PROBS,
+            road_flood_risk=ROAD_FLOOD_RISK,
+        )
 
-        # Run de simulatie voor 7200 stappen
         for i in range(run_length):
             sim_model.step()
 
-        # Bereken gemiddelde reistijd van alle aangekomen trucks
-        if len(sim_model.travel_times) > 0:
-            avg_time = sum(sim_model.travel_times) / len(sim_model.travel_times)
-        else:
-            avg_time = 0
+        # Summary per replication
+        avg_time = (sum(sim_model.travel_times) / len(sim_model.travel_times)
+                    if sim_model.travel_times else 0)
 
         scenario_results.append({
-            'Scenario': scenario_id,
-            'Replication': rep + 1,
-            'Seed': current_seed,
+            'Scenario':        scenario_id,
+            'Replication':     rep + 1,
+            'Seed':            current_seed,
             'Avg_Travel_Time': avg_time,
-            'Trucks_Arrived': len(sim_model.travel_times)
+            'Trucks_Arrived':  len(sim_model.travel_times),
         })
 
-        # A4: ADDED — collect per-infra criticality + vulnerability data after each run
+        # Per-infra data (criticality + flood outcome)
         for node_id in sim_model.G.nodes():
             agent = sim_model.G.nodes[node_id]['agent_object']
             infra_results.append({
-                'Scenario': scenario_id,
-                'Replication': rep + 1,
-                'Seed': current_seed,
-                'agent_id': agent.unique_id,
-                'agent_type': type(agent).__name__,
-                'name': agent.name,
-                'road': agent.road_name,
-                'condition': getattr(agent, 'condition', None),
-                'is_broken': getattr(agent, 'is_broken', None),
+                'Scenario':              scenario_id,
+                'Replication':           rep + 1,
+                'Seed':                  current_seed,
+                'agent_id':              agent.unique_id,
+                'agent_type':            type(agent).__name__,
+                'name':                  agent.name,
+                'road':                  agent.road_name,
+                'condition':             getattr(agent, 'condition', None),
+                'is_broken':             getattr(agent, 'is_broken', None),
+                'broke_during_flood':    getattr(agent, 'broke_during_flood', None),  # A4: ADDED
                 'total_vehicles_passed': agent.total_vehicles_passed,
-                'length': agent.length,
+                'length':                agent.length,
             })
 
-    # Opslaan: summary per scenario
-    df_output = pd.DataFrame(scenario_results)
-    df_output.to_csv(f'../data/experiment/scenario{scenario_id}.csv', index=False)
+        # A4: ADDED — time-series rows (tick of arrival + travel time)
+        for tick, tt in sim_model.travel_time_log:
+            timeseries_rows.append({
+                'Scenario':    scenario_id,
+                'Replication': rep + 1,
+                'Seed':        current_seed,
+                'tick':        tick,
+                'travel_time': tt,
+                'phase':       'pre_flood' if (cfg['flood_event_ticks'] and tick < cfg['flood_event_ticks'][0])
+                                else ('post_flood' if cfg['flood_event_ticks'] else 'no_flood'),
+            })
 
-    # A4: ADDED — opslaan: per-infra data for criticality/vulnerability analysis
-    df_infra = pd.DataFrame(infra_results)
-    df_infra.to_csv(f'../data/experiment/scenario{scenario_id}_infra.csv', index=False)
+    # Save outputs
+    pd.DataFrame(scenario_results).to_csv(
+        f'../data/experiment/scenario{scenario_id}.csv', index=False)
+    pd.DataFrame(infra_results).to_csv(
+        f'../data/experiment/scenario{scenario_id}_infra.csv', index=False)
+    pd.DataFrame(timeseries_rows).to_csv(
+        f'../data/experiment/scenario{scenario_id}_timeseries.csv', index=False)  # A4: ADDED
 
-print("\n ALLE EXPERIMENTENVOLTOOID")
+    print(f"  Scenario {scenario_id} opgeslagen.")
+
+print("\n ALLE EXPERIMENTEN VOLTOOID")

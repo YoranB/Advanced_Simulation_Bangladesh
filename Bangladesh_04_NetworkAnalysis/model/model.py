@@ -99,7 +99,10 @@ class BangladeshModel(Model):
     file_name = '../data/data_use/demo-4.csv'
     #added the bridge probabilities here in init again for the experiments
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0,  bridge_probabilities=None):
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0,
+                 bridge_probabilities=None,
+                 flood_event_ticks=None, flood_intensity=0.0,
+                 flood_base_probs=None, road_flood_risk=None):  # A4: ADDED — flood experiment parameters
 
         self.schedule = BaseScheduler(self)
         self.running = True
@@ -115,9 +118,25 @@ class BangladeshModel(Model):
         if bridge_probabilities is None:
             self.bridge_probabilities = {'A': 0.0, 'B': 0.0, 'C': 0.0, 'D': 0.0}
         else:
-            self.bridge_probabilities = bridge_probabilities 
+            self.bridge_probabilities = bridge_probabilities
+
+        # A4: ADDED — flood event configuration
+        self.flood_event_ticks = flood_event_ticks or []
+        self.flood_intensity = flood_intensity
+        self.flood_base_probs = flood_base_probs or {'A': 0.10, 'B': 0.25, 'C': 0.50, 'D': 0.80}
+        # Road-level flood risk multipliers motivated by Mirza (2002) & WRI Aqueduct spatial data
+        self.road_flood_risk = road_flood_risk or {
+            'N1':   1.0,   # Jamuna floodplain — highest riverine flood exposure
+            'N106': 0.9,   # N1 side road — same floodplain zone
+            'N2':   0.4,   # Northeast hills (Sylhet) — lower riverine, flash flood only
+            'N204': 0.4,   # N2 side road
+            'N207': 0.4,   # N2 side road
+            'N208': 0.5,   # Intermediate zone (default)
+        }
+        self._flood_ticks_triggered = set()  # A4: ADDED — avoid double-triggering
 
         self.travel_times = []
+        self.travel_time_log = []  # A4: ADDED — list of (tick, travel_time) tuples for time-series analysis
 
         self.generate_model()
 
@@ -307,10 +326,34 @@ class BangladeshModel(Model):
         """
         return self.path_ids_dict[source, None]
 
+    def _trigger_flood(self):  # A4: ADDED — dynamic flood event
+        """
+        Trigger a flood event: each bridge gets a failure roll based on
+        its condition × road flood risk × flood intensity.
+        Effective prob = base_prob[condition] × road_flood_risk[road] × flood_intensity
+        """
+        broken_count = 0
+        for node_id in self.G.nodes():
+            agent = self.G.nodes[node_id]['agent_object']
+            if isinstance(agent, Bridge):
+                cond = str(getattr(agent, 'condition', '')).strip().upper()
+                base_p = self.flood_base_probs.get(cond, 0.0)
+                road_r = self.road_flood_risk.get(agent.road_name, 0.5)
+                effective_p = base_p * road_r * self.flood_intensity
+                if agent.trigger_failure(effective_p):
+                    broken_count += 1
+        print(f'[Flood @ tick {self.schedule.steps}] intensity={self.flood_intensity:.1f} — {broken_count} bridges broken')
+
     def step(self):
         """
         Advance the simulation by one step.
         """
+        # A4: ADDED — check if a flood event fires on this tick
+        current_tick = self.schedule.steps
+        for flood_tick in self.flood_event_ticks:
+            if current_tick == flood_tick and flood_tick not in self._flood_ticks_triggered:
+                self._trigger_flood()
+                self._flood_ticks_triggered.add(flood_tick)
         self.schedule.step()
 
 # EOF -----------------------------------------------------------
