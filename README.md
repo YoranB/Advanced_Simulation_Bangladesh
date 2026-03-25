@@ -1,0 +1,94 @@
+
+# Advanced Simulation: Bangladesh Infrastructure Network
+
+This repository contains the code, data, and models for simulating and analyzing the road and bridge infrastructure network in Bangladesh. The project is structured into four main phases, moving from initial data cleaning and exploratory data analysis (EDA) to advanced agent-based network modeling and traffic analysis. 
+
+Focusing on complex systems modeling using Python, Mesa, and geographic/network data.
+
+## Project Structure
+
+The repository is divided into four main directories, each representing a sequential step in the simulation and analysis process:
+
+### 1. `Bangladesh_01_DataQuality`
+Focuses on the ingestion, cleaning, and validation of raw infrastructure data.
+* **`notebooks/`**: Contains Jupyter notebooks for Exploratory Data Analysis (EDA) on roads (`01_eda_roads.ipynb`), bridges (`02_eda_bridges.ipynb`), and data validation (`03_validation.ipynb`).
+* **`src/`**: Python scripts for data cleaning pipelines (`clean_bridges.py`, `clean_roads.py`, `utils.py`).
+* **`main.py`**: The main executable to run the data cleaning pipeline.
+* Outputs processed CSV files (e.g., cleaned BMMS overview, outliers report) into the `data/Processed/` directory.
+
+### 2. `Bangladesh_02_ModelGeneration`
+Introduces the basic Agent-Based Model (ABM) using continuous space.
+* **`model/`**: Contains the core simulation logic.
+  * `model.py` and `components.py`: Define the Mesa model and agent behaviors.
+  * `model_run.py` and `A2_model_viz.py`: Scripts to run and visualize the model.
+  * `ContinuousSpace/`: Custom modules for continuous space visualization using JavaScript/HTML.
+* **`experiment/`**: Contains various scenario definitions (`scenario0.csv` to `scenario8.csv`) used to test the model under different conditions.
+
+### 3. `Bangladesh_03_NetworkModelGeneration`
+Advances the simulation by transforming the spatial data into a routable network model.
+* **`preprocessing/`**: Scripts like `create_roads.py` to generate the network.
+* **`data/data_use/`**: Contains geographic shapefiles (`roads.shp`, `.dbf`, `.prj`) used to build the spatial graph.
+* **`model/`**: An updated version of the model that utilizes network graphs for agent routing and movement.
+
+### 4. `Bangladesh_04_NetworkAnalysis`
+Focuses on integrating real-world traffic data and performing network vulnerability/capacity analysis.
+* **`preprocessing/`**: Contains `parse_traffic.ipynb` for scraping and parsing raw HTML traffic data into usable formats.
+* **`data/data_raw/`**: Includes raw traffic data files for major national highways (e.g., N1, N2, N102).
+* **`model/`**: The finalized simulation model that incorporates Annual Average Daily Traffic (AADT) to analyze network flows and bottlenecks.
+
+## Prerequisites & Installation
+
+This project relies heavily on Python for data processing and Agent-Based Modeling (Mesa). 
+
+1. **Clone the repository**:
+   ```bash
+   git clone [https://github.com/yourusername/advanced_simulation_bangladesh.git](https://github.com/yourusername/advanced_simulation_bangladesh.git)
+   cd advanced_simulation_bangladesh
+   ```
+
+2. **Set up a virtual environment** (recommended):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**:
+   Each sub-folder contains its own `requirements.txt`. To install the dependencies for a specific phase, navigate to that folder and run:
+   ```bash
+   cd Bangladesh_01_DataQuality
+   pip install -r requirements.txt
+   ```
+   *(Typical dependencies include `pandas`, `geopandas`, `networkx`, `mesa`, `matplotlib`, and `jupyter`.)*
+
+## Usage
+
+### Running Data Cleaning (Phase 1)
+To run the automated data cleaning pipeline:
+```bash
+cd Bangladesh_01_DataQuality
+python main.py
+```
+
+### Running Exploratory Notebooks
+To view the EDA or traffic parsing notebooks, start Jupyter from the respective directory:
+```bash
+cd Bangladesh_01_DataQuality
+jupyter notebook
+```
+
+### Running the Simulation Models (Phases 2, 3, & 4)
+Each modeling phase has its own run and visualization scripts. For example, to run the network analysis model:
+```bash
+cd Bangladesh_04_NetworkAnalysis/model
+python model_viz.py
+```
+This will typically launch a local web server (often at `http://127.0.0.1:8521`) where you can interact with the Mesa visualization dashboard.
+
+## Data Sources
+
+The data used in this project includes:
+* **BMMS (Bangladesh Bridge Management System)**: Details on bridge conditions, locations, and lengths.
+* **Road Network Data**: Shapefiles and LRP (Location Reference Point) data detailing the national, regional, and district roads.
+* **Traffic Data**: AADT (Annual Average Daily Traffic) statistics parsed from official reports to simulate realistic traffic loads.
+
+*Note: Raw data is provided in the respective `data/` or `data/raw/` folders within each assignment directory. Processed data is generated by running the notebooks and scripts.*
