@@ -120,7 +120,7 @@ class BangladeshModel(Model):
         else:
             self.bridge_probabilities = bridge_probabilities
 
-        # A4: ADDED — flood event configuration
+        # flood event configuration
         self.flood_event_ticks = flood_event_ticks or []
         self.flood_intensity = flood_intensity
         self.flood_base_probs = flood_base_probs or {'A': 0.10, 'B': 0.25, 'C': 0.50, 'D': 0.80}
@@ -133,10 +133,10 @@ class BangladeshModel(Model):
             'N207': 0.4,   # N2 side road
             'N208': 0.5,   # Intermediate zone (default)
         }
-        self._flood_ticks_triggered = set()  # A4: ADDED — avoid double-triggering
+        self._flood_ticks_triggered = set() #avoid double-triggering
 
         self.travel_times = []
-        self.travel_time_log = []  # A4: ADDED — list of (tick, travel_time) tuples for time-series analysis
+        self.travel_time_log = [] #list of (tick, travel_time) tuples for time-series analysis
 
         self.generate_model()
 
@@ -151,7 +151,7 @@ class BangladeshModel(Model):
         """
         df = pd.read_csv('../data/data_processed/A3_network_roads.csv')  # same data as A3
 
-        # A4: ADDED — load AADT data and compute average truck_AADT per road
+        # load AADT data and compute average truck_AADT per road
         df_aadt = pd.read_csv('../data/data_processed/traffic_aadt.csv')
         road_truck_aadt = df_aadt.groupby('road')['truck_AADT'].mean().to_dict()
 
@@ -211,7 +211,7 @@ class BangladeshModel(Model):
                     name = str(row['name']).strip() if pd.notna(row['name']) else ""
 
                     # Maak de juiste agent aan
-                    # A4: ADDED — look up average truck AADT for this road to set generation rate
+                    #look up average truck AADT for this road to set generation rate
                     aadt = road_truck_aadt.get(row['road'], None)
                     if model_type == 'sourcesink':
                         agent = SourceSink(agent_id, self, row['length'], name, row['road'], truck_aadt=aadt)  # A4: CHANGED
@@ -348,7 +348,7 @@ class BangladeshModel(Model):
         """
         Advance the simulation by one step.
         """
-        # A4: ADDED — check if a flood event fires on this tick
+        #check if a flood event fires on this tick
         current_tick = self.schedule.steps
         for flood_tick in self.flood_event_ticks:
             if current_tick == flood_tick and flood_tick not in self._flood_ticks_triggered:

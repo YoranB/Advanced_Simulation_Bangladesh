@@ -57,13 +57,13 @@ class Bridge(Infra):
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
-        # New for BONUS: Track total delay caused by this bridge
+        # Track total delay caused by this bridge
         self.total_delay_time = 0
-        # A4: CHANGED — bridges start intact; flood event triggers failures dynamically
+        # bridges start intact; flood event triggers failures dynamically
         self.is_broken = False
-        self.broke_during_flood = False  # A4: ADDED — True if bridge failed during a flood event
+        self.broke_during_flood = False  # True if bridge failed during a flood event
 
-    # A4: ADDED — called by model._trigger_flood() at flood tick
+    # called by model._trigger_flood() at flood tick
     def trigger_failure(self, failure_prob):
         """
         Roll against failure_prob (0–1). If the bridge is currently intact and
@@ -73,7 +73,7 @@ class Bridge(Infra):
         if not self.is_broken:
             if self.random.random() < failure_prob:
                 self.is_broken = True
-                self.broke_during_flood = True  # A4: ADDED
+                self.broke_during_flood = True
                 return True
         return False
 
@@ -94,11 +94,9 @@ class Bridge(Infra):
                 delay = self.random.randint(15, 60)
             else:
                 delay = self.random.randint(10, 20)
-            
-            # NEW for BONUS: Add this truck's delay to the bridge's stopwatch
+
             self.total_delay_time += delay  
-            
-            # Now we can return it!
+
             return delay
         else: 
         # If the random number is higher, the bridge is fine. No delay.
@@ -159,15 +157,14 @@ class Source(Infra):
     generation_frequency = 5  # default fallback (used when no AADT data available)
     vehicle_generated_flag = False
 
-    # A4: ADDED — accept truck_aadt so each source generates at a road-proportional rate
+    # accept truck_aadt so each source generates at a road-proportional rate
     def __init__(self, unique_id, model, length=0, name='Unknown', road_name='Unknown', truck_aadt=None):
         super().__init__(unique_id, model, length, name, road_name)
         if truck_aadt is not None and truck_aadt > 0:
             # Convert daily AADT to per-minute rate, then to ticks-per-truck.
             # AADT / 1440 min/day = trucks per minute. Invert for ticks between trucks.
-            # We cap at min 1 tick and max 60 ticks (1 hr) to keep simulation sensible.
             trucks_per_minute = truck_aadt / 1440.0
-            self.generation_frequency = max(1, min(60, int(round(1.0 / trucks_per_minute))))  # A4: ADDED
+            self.generation_frequency = max(1, min(60, int(round(1.0 / trucks_per_minute))))
         # else: keep class-level default of 5
 
     def step(self):
@@ -332,7 +329,6 @@ class Vehicle(Agent):
             self.model.schedule.remove(self)
             return
 
-        # old code as in ass2
         self.location_index += 1
         next_id = self.path_ids[self.location_index]
         next_infra = self.model.G.nodes[next_id]['agent_object']
@@ -344,7 +340,7 @@ class Vehicle(Agent):
             # Je hebt gecheckt dat het generated_at_step is, dus dit is top!
             travel_time = self.removed_at_step - self.generated_at_step
             self.model.travel_times.append(travel_time)
-            self.model.travel_time_log.append((self.removed_at_step, travel_time))  # A4: ADDED — for pre/post-flood time-series
+            self.model.travel_time_log.append((self.removed_at_step, travel_time))
             
             self.location.remove(self)
             return
@@ -369,6 +365,6 @@ class Vehicle(Agent):
         self.location = next_infra
         self.location_offset = location_offset
         self.location.vehicle_count += 1
-        self.location.total_vehicles_passed += 1  # A4: ADDED — increment criticality counter
+        self.location.total_vehicles_passed += 1
 
 # EOF -----------------------------------------------------------
